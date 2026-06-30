@@ -2,6 +2,8 @@
 实验2: 硬编码 vs Agent编排 对比
 不调API，全部Mock。快速出结果。
 """
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import os,sys,io,time,copy,logging,json
 sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8',errors='replace')
 os.environ['CUDA_VISIBLE_DEVICES']=''

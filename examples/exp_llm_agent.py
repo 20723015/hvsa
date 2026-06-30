@@ -8,6 +8,8 @@
     python exp_llm_agent.py --backend anthropic  # 真实 Claude API (需设置 ANTHROPIC_API_KEY)
     python exp_llm_agent.py --backend openai     # 真实 OpenAI API (需设置 OPENAI_API_KEY)
 """
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
 import copy

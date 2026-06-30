@@ -1,6 +1,8 @@
 """
 Agent 开销测量实验 — 不跑训练，纯测 Agent 调用延迟
 """
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time, sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 

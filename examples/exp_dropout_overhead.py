@@ -6,6 +6,8 @@ Setup: N=300 users, M=30 edge servers, d=10,000, single TA.
 Scope: user masking + cloud unmasking (no Edge LHH / verification).
 Surviving users do not upload recovery shares; CS receives M edge aggregates + TA mask.
 """
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from __future__ import annotations
 

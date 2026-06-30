@@ -7,6 +7,8 @@
     python exp_noniid.py --dlg                # 跑 DLG 攻击防御
     python exp_noniid.py --all                # 全部实验
 """
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import copy, logging, sys, time
 import numpy as np
