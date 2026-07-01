@@ -4,7 +4,7 @@ import logging
 import numpy as np
 
 try:
-    from utils import LHH, SIG
+    from utils import LHH, QUANTIZE_SCALE, SIG
 except ImportError:
     print("错误: 无法从 utils.py 导入 LHH 或 SIG。")
     sys.exit(1)
@@ -268,3 +268,177 @@ class EdgeServer:
         else:
             logger.error(f"EdgeServer {self.id}: 哈希不匹配 (LHS != RHS)。")
             return False
+
+    # ============================================================
+    #  研究点2: buffer/checkpoint 半异步方法
+    # ============================================================
+
+    def p2_start_package(self, base_version: int, base_hash: bytes,
+                         package_token: str):
+        """point2: 启动一组新的组包训练.
+
+        Args:
+            base_version: 本次组包基于的全局模型版本 r_k
+            base_hash: h_base(r_k)
+            package_token: 唯一标识 e.g. "edge_0:v0:p1"
+        """
+        self._p2_base_version = base_version
+        self._p2_base_hash = base_hash
+        self._p2_package_token = package_token
+        self._p2_online_users: list[str] = []
+        self._p2_masked_gradients: list[np.ndarray] = []
+        self._p2_ready = False
+
+    def p2_receive_masked_gradient(self, msg_bytes: bytes, package_token: str,
+                                    base_version: int):
+        """point2: 接收用户上传，校验 package_token 和 base_version."""
+        try:
+            data = pickle.loads(msg_bytes)
+            user_id = data['user_id']
+            gradient_int = data['masked_gradient']
+
+            if package_token != self._p2_package_token:
+                return
+            if base_version != self._p2_base_version:
+                return
+            if user_id in self._p2_online_users:
+                return
+
+            self._p2_masked_gradients.append(gradient_int)
+            self._p2_online_users.append(user_id)
+
+        except Exception as e:
+            logger.error(f"EdgeServer {self.id}: p2接收梯度出错: {e}")
+
+    def p2_seal_group_package(self, tick: int = 0) -> 'GroupPackage':
+        """point2: 封组，生成 GroupPackage (Π_k).
+
+        对应文档 Sec.4.2: 聚合掩码和 → LHH → 签名 → 上报 TA.
+        """
+        from point2_types import GroupPackage
+
+        pre_aggregated = np.sum(np.array(self._p2_masked_gradients), axis=0)
+        H_k = LHH.Hash(self.lhh_pp, pre_aggregated)
+
+        # 签名: (edge_id, package_token, base_hash, digest(users), n_k, H_k)
+        import hashlib
+        user_digest = hashlib.sha256(
+            ",".join(sorted(self._p2_online_users)).encode()
+        ).digest()
+        sig_msg = pickle.dumps((
+            self.id, self._p2_package_token, self._p2_base_hash,
+            user_digest, len(self._p2_online_users), H_k
+        ))
+        assert isinstance(self.my_sign_priv_key, bytes), \
+            f"sign_priv_key type={type(self.my_sign_priv_key)}"
+        signature = SIG.sign(sig_msg, self.my_sign_priv_key)
+
+        # 上报 TA
+        self.ta.p2_receive_package_online_list(
+            package_token=self._p2_package_token,
+            edge_id=self.id,
+            base_version=self._p2_base_version,
+            online_users=self._p2_online_users,
+        )
+
+        pkg = GroupPackage(
+            edge_id=self.id,
+            package_token=self._p2_package_token,
+            base_version=self._p2_base_version,
+            base_hash=self._p2_base_hash,
+            online_users=list(self._p2_online_users),
+            n_k=len(self._p2_online_users),
+            masked_sum_int=pre_aggregated,
+            H_k=H_k,
+            signature=signature,
+            created_tick=tick,
+        )
+
+        logger.info(f"EdgeServer {self.id}: p2组包 {self._p2_package_token} "
+                     f"已封装 n={pkg.n_k} base_v={self._p2_base_version}")
+        return pkg
+
+    def p2_verify_checkpoint(self, bundle: dict) -> bool:
+        """point2: 验证 checkpoint 结果.
+
+        对应文档 Sec.4.6:
+        1. 验签名
+        2. 验证 LHH: H_sum^raw * H_mask^raw = ∏ H_k
+        3. 公开重算补偿后最终模型
+
+        Args:
+            bundle: {
+                'checkpoint_version': int,
+                'selected_packages': list[GroupPackage],
+                'raw_sum_int': np.ndarray,
+                'M_Q': np.ndarray,
+                'H_mask_raw': object,
+                'final_model': np.ndarray,
+                'gamma_vcm': float,
+                'global_model_history': dict[int, np.ndarray],
+            }
+        """
+        if not self.enable_verification:
+            return True
+
+        pkgs = bundle['selected_packages']
+        raw_sum_int = bundle['raw_sum_int']
+        H_mask_raw = bundle['H_mask_raw']
+        final_model = bundle['final_model']
+        gamma_vcm = bundle['gamma_vcm']
+        history = bundle.get('global_model_history', {})
+
+        # 1. 验签名 + 聚合 RHS
+        try:
+            self.all_es_pub_keys = self.ta.get_all_es_public_keys()
+        except Exception:
+            pass
+
+        import hashlib
+        aggregated_rhs = None
+        for pkg in pkgs:
+            if pkg.edge_id not in self.all_es_pub_keys:
+                logger.error(f"EdgeServer {self.id}: 未知 {pkg.edge_id}")
+                return False
+
+            user_digest = hashlib.sha256(
+                ",".join(sorted(pkg.online_users)).encode()
+            ).digest()
+            sig_msg = pickle.dumps((
+                pkg.edge_id, pkg.package_token, pkg.base_hash,
+                user_digest, pkg.n_k, pkg.H_k
+            ))
+            if not SIG.verify(sig_msg, pkg.signature,
+                              self.all_es_pub_keys[pkg.edge_id]):
+                logger.error(f"EdgeServer {self.id}: {pkg.edge_id} 签名无效")
+                return False
+
+            aggregated_rhs = (pkg.H_k if aggregated_rhs is None
+                              else LHH.Add(aggregated_rhs, pkg.H_k))
+
+        # 2. LHH 验证 raw sum
+        H_sum_raw = LHH.Hash(self.lhh_pp, raw_sum_int)
+        lhs = LHH.Add(H_sum_raw, H_mask_raw)
+        if lhs != aggregated_rhs:
+            logger.error(f"EdgeServer {self.id}: p2 LHH mismatch")
+            return False
+
+        # 3. 公开规则重算补偿后最终模型
+        N_Q = sum(pkg.n_k for pkg in pkgs)
+        v = bundle['checkpoint_version']
+        raw_float = raw_sum_int.astype(np.float64) / QUANTIZE_SCALE
+
+        total_comp = np.zeros_like(raw_float)
+        for pkg in pkgs:
+            r_k = pkg.base_version
+            if r_k < v and r_k in history:
+                G_k = history[v].astype(np.float64) - history[r_k].astype(np.float64)
+                total_comp += pkg.n_k * gamma_vcm * G_k
+
+        expected_final = (raw_float + total_comp) / N_Q
+        if not np.allclose(expected_final, final_model, rtol=1e-4, atol=1e-6):
+            logger.error(f"EdgeServer {self.id}: p2 最终模型重算不匹配")
+            return False
+
+        logger.info(f"EdgeServer {self.id}: p2 checkpoint {v} 验证通过")
+        return True

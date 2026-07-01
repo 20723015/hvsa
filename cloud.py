@@ -152,3 +152,183 @@ class CloudServer:
         except Exception as e:
             logger.error(f"CloudServer {self.id}: 最终处理失败: {e}")
             return None, None, None
+
+    # ============================================================
+    #  研究点2: buffer/checkpoint 半异步方法
+    # ============================================================
+
+    def point2_reset(self, initial_model_vector: np.ndarray,
+                     initial_version: int = 0):
+        """初始化 point2 专用状态.
+
+        Args:
+            initial_model_vector: W(0) 初始全局模型 (float64)
+            initial_version: v=0
+        """
+        self.p2_current_version: int = initial_version
+        self.p2_global_model_history: dict[int, np.ndarray] = {
+            initial_version: initial_model_vector.astype(np.float64).copy()
+        }
+        self.p2_checkpoint_log: list['CheckpointResult'] = []
+        self.p2_package_buffer: dict[str, 'GroupPackage'] = {}
+        # 每个 edge 上一次 selected 的 package_token (用于公平约束)
+        self.p2_edge_last_selected: dict[str, str] = {}
+
+    def p2_hash_current_model(self) -> bytes:
+        """返回当前最新全局模型的哈希."""
+        import hashlib
+        v = self.p2_current_version
+        W = self.p2_global_model_history[v]
+        return hashlib.sha256(W.tobytes()).digest()
+
+    def p2_receive_group_package(self, pkg: 'GroupPackage'):
+        """point2: 接收组包入 buffer.
+
+        对应文档 Sec.4.4: 每组最多一个待处理包，新包替换旧包.
+        """
+        edge_id = pkg.edge_id
+        old = self.p2_package_buffer.get(edge_id)
+        if old is not None and old.package_token != (
+                self.p2_edge_last_selected.get(edge_id)):
+            pass  # 旧包还没被消费 → 替换
+
+        self.p2_package_buffer[edge_id] = pkg
+        logger.info(f"CloudServer: p2 buffer ← {pkg.package_token} "
+                     f"edge={edge_id} n={pkg.n_k} base_v={pkg.base_version} "
+                     f"buffer_size={len(self.p2_package_buffer)}")
+
+    def p2_prune_expired_packages(self, s_max: int) -> list[str]:
+        """移除超过 s_max 陈旧度的组包.
+
+        Returns:
+            removed_tokens: 被移除的 package_token 列表
+        """
+        v = self.p2_current_version
+        removed = []
+        for edge_id, pkg in list(self.p2_package_buffer.items()):
+            staleness = v - pkg.base_version
+            if staleness > s_max:
+                del self.p2_package_buffer[edge_id]
+                removed.append(pkg.package_token)
+                logger.info(f"CloudServer: p2 expired {pkg.package_token} "
+                             f"staleness={staleness}>{s_max}")
+        return removed
+
+    def p2_select_checkpoint(self, K: int, s_max: int) -> list['GroupPackage']:
+        """point2: 从 buffer 选择 K 个最早到达的合法组包.
+
+        对应文档 Sec.4.4: 按到达顺序选最早的 K 个.
+        """
+        self.p2_prune_expired_packages(s_max)
+
+        if len(self.p2_package_buffer) < K:
+            return []
+
+        sorted_pkgs = sorted(
+            self.p2_package_buffer.values(),
+            key=lambda p: p.created_tick
+        )
+        selected = sorted_pkgs[:K]
+
+        logger.info(f"CloudServer: p2 checkpoint select K={K} from "
+                     f"buffer_size={len(self.p2_package_buffer)} "
+                     f"selected={[p.package_token for p in selected]}")
+        return selected
+
+    def p2_recover_raw_sum(self, selected_packages: list['GroupPackage'],
+                           M_Q: np.ndarray) -> np.ndarray:
+        """point2: 恢复 checkpoint 的 raw sum.
+
+        W_sum^raw(v) = Σ W̄_k(r_k) - M_Q(v)
+        """
+        W_bar_Q = np.zeros(self._gradient_dim, dtype=np.int64)
+        for pkg in selected_packages:
+            W_bar_Q += pkg.masked_sum_int
+        return W_bar_Q - M_Q
+
+    def p2_apply_vcm_and_average(self, selected_packages: list['GroupPackage'],
+                                 raw_sum_int: np.ndarray,
+                                 gamma_vcm: float = 1.0) -> tuple:
+        """point2: Direct-VCM 后置补偿 + 参数平均.
+
+        对应文档 Sec.4.5:
+        - raw_sum_float = raw_sum_int / QUANTIZE_SCALE
+        - C_k(v) = n_k(r_k) · γ_vcm · (W(v) - W(r_k))
+        - corrected = raw_sum_float + Σ C_k
+        - W(v+1) = corrected / N_Q
+
+        Returns:
+            (corrected_sum_float, final_model, compensation_map)
+        """
+        v = self.p2_current_version
+        W_v = self.p2_global_model_history[v]
+
+        raw_float = raw_sum_int.astype(np.float64) / QUANTIZE_SCALE
+        total_comp = np.zeros_like(raw_float)
+        comp_map = {}
+
+        for pkg in selected_packages:
+            r_k = pkg.base_version
+            if r_k < v:
+                W_rk = self.p2_global_model_history.get(r_k)
+                if W_rk is not None:
+                    G_k = W_v.astype(np.float64) - W_rk.astype(np.float64)
+                    C_k = pkg.n_k * gamma_vcm * G_k
+                    total_comp += C_k
+                    comp_map[pkg.package_token] = float(np.linalg.norm(C_k))
+            else:
+                comp_map[pkg.package_token] = 0.0
+
+        corrected = raw_float + total_comp
+        N_Q = sum(pkg.n_k for pkg in selected_packages)
+        final_model = corrected / N_Q
+
+        logger.info(f"CloudServer: p2 VCM v={v} N_Q={N_Q} "
+                     f"gamma_vcm={gamma_vcm} stale_packages={len(comp_map)-sum(1 for v in comp_map.values() if v==0)}")
+
+        return corrected, final_model, comp_map
+
+    def p2_commit_checkpoint(self, selected_packages: list['GroupPackage'],
+                             final_model: np.ndarray,
+                             raw_sum_int: np.ndarray,
+                             M_Q: np.ndarray,
+                             H_mask_raw: object,
+                             corrected_sum: np.ndarray,
+                             comp_map: dict) -> 'CheckpointResult':
+        """point2: 提交 checkpoint, 更新全局状态.
+
+        - 移除 buffer 中已消费的组包
+        - 记录版本历史
+        - v += 1
+        - 返回 CheckpointResult
+        """
+        from point2_types import CheckpointResult
+
+        # 从 buffer 移除
+        for pkg in selected_packages:
+            self.p2_package_buffer.pop(pkg.edge_id, None)
+            self.p2_edge_last_selected[pkg.edge_id] = pkg.package_token
+
+        v = self.p2_current_version
+        new_v = v + 1
+        self.p2_global_model_history[new_v] = final_model.copy()
+        self.p2_current_version = new_v
+
+        result = CheckpointResult(
+            version=v,
+            selected_packages=list(selected_packages),
+            N_Q=sum(pkg.n_k for pkg in selected_packages),
+            raw_sum_int=raw_sum_int,
+            raw_sum_float=raw_sum_int.astype(np.float64) / QUANTIZE_SCALE,
+            M_Q=M_Q,
+            H_mask_raw=H_mask_raw,
+            corrected_sum_float=corrected_sum,
+            final_model=final_model,
+            compensation_per_package=comp_map,
+            verification_passed=False,
+        )
+
+        self.p2_checkpoint_log.append(result)
+        logger.info(f"CloudServer: p2 checkpoint {v} committed → W({new_v})")
+
+        return result

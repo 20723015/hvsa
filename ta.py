@@ -154,3 +154,52 @@ class TrustedAuthority:
 
         self.h_mask_all = LHH.Hash(self.lhh_pp, global_mask)
         logger.info(f"TA {self.id} (R{self._current_round}): H_mask 计算完成。")
+
+    # ============================================================
+    #  研究点2: buffer/checkpoint 半异步方法
+    #  不破坏研究点1的同步接口。
+    # ============================================================
+
+    def point2_reset(self):
+        """初始化/重置 point2 专用状态."""
+        self._p2_package_users: dict[str, list[str]] = {}  # package_token -> [user_ids]
+        self._p2_checkpoint_h_mask: dict[int, object] = {}  # checkpoint_id -> H_mask
+        self._p2_checkpoint_M_Q: dict[int, np.ndarray] = {}  # checkpoint_id -> M_Q
+
+    def p2_receive_package_online_list(self, package_token: str, edge_id: str,
+                                        base_version: int, online_users: list[str]):
+        """point2: ES 上报组包在线用户.
+
+        对应文档 Sec.4.3: TA 按组包记录参与集合，
+        不向 Cloud 单独释放单个组包的 M_k。
+        """
+        self._p2_package_users[package_token] = list(online_users)
+        logger.debug(f"TA {self.id}: p2收到组包 {package_token} "
+                     f"edge={edge_id} base_v={base_version} n={len(online_users)}")
+
+    def p2_build_checkpoint_mask(self, selected_packages: list) -> tuple:
+        """point2: 仅对 checkpoint 选中的组包集合返回聚合掩码.
+
+        对应文档 Sec.4.3 + Sec.4.5:
+        - 只计算 M_Q(v) = Σ M_k(r_k) for Π_k ∈ Q(v)
+        - 不提前释放任何单组 M_k
+
+        Args:
+            selected_packages: list of GroupPackage
+
+        Returns:
+            (M_Q, H_mask_raw): 聚合掩码和及其 LHH 哈希
+        """
+        M_Q = np.zeros(self.gradient_dim, dtype=np.int64)
+        for pkg in selected_packages:
+            users = self._p2_package_users.get(pkg.package_token, [])
+            if users:
+                M_k = self.compute_global_mask(users, pkg.package_token)
+                M_Q += M_k
+
+        H_mask_raw = LHH.Hash(self.lhh_pp, M_Q)
+
+        logger.info(f"TA {self.id}: p2 checkpoint mask built, "
+                    f"packages={len(selected_packages)} n_users_tracked={len(self._p2_package_users)}")
+
+        return M_Q, H_mask_raw

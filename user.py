@@ -113,3 +113,88 @@ class User:
             logger.info(f"User {self.id}: 已成功设置新的全局模型。")
         except Exception as e:
             logger.error(f"User {self.id}: 设置全局模型失败: {e}")
+
+    # ============================================================
+    #  研究点2: stale reuse + 本地缓存
+    #  对应文档 Sec.4.2 + Sec.6
+    # ============================================================
+
+    def point2_init_cache(self):
+        """初始化 point2 缓存状态."""
+        self._p2_cached_flat: np.ndarray | None = None   # w_i^old
+        self._p2_last_accepted_version: int = -1          # t_i^last
+        self._p2_pending_plain_flat: np.ndarray | None = None
+
+    def p2_set_accepted_cache(self, flat_model: np.ndarray, version: int):
+        """Checkpoint 成功后刷新本地缓存."""
+        self._p2_cached_flat = flat_model.astype(np.float64).copy()
+        self._p2_last_accepted_version = version
+
+    def p2_train_mix_mask_and_upload(
+        self,
+        global_flat: np.ndarray,
+        global_version: int,
+        package_token: str,
+        model_meta: list,
+        train_loader,
+        local_epochs: int,
+        lr: float,
+        staleness_beta: float = 0.3,
+    ) -> np.ndarray | None:
+        """point2: 训练 → stale reuse 混合 → 掩码 → 上传.
+
+        对应文档 Sec.4.2:
+        1. 设置全局模型 W(global_version)
+        2. 本地训练 → w_i^new
+        3. Stale reuse 混合: w_i = α_i * w_new + (1-α_i) * w_old
+        4. 掩码上传
+
+        Args:
+            global_flat: 当前全局模型展平向量
+            global_version: 当前全局版本 v
+            package_token: 组包标识
+            model_meta: 模型结构元数据
+            train_loader: 训练数据
+            local_epochs: 本地训练轮数
+            lr: 学习率
+            staleness_beta: β_c, stale reuse 衰减参数
+
+        Returns:
+            uploaded mixed flat (plaintext), or None on failure
+        """
+        try:
+            # 1. 设置全局模型并训练
+            unflatten_parameters(self.model, global_flat, model_meta)
+            local_train(self.model, train_loader, local_epochs, lr)
+
+            # 2. 获取训练后新模型
+            new_flat, _ = flatten_parameters(self.model)
+
+            # 3. Stale reuse 混合
+            if self._p2_cached_flat is not None and self._p2_last_accepted_version >= 0:
+                E_i = global_version - self._p2_last_accepted_version
+                if E_i > 0:
+                    import math
+                    alpha_i = math.exp(-staleness_beta * E_i)
+                    mixed_flat = (alpha_i * new_flat +
+                                  (1.0 - alpha_i) * self._p2_cached_flat)
+                else:
+                    mixed_flat = new_flat
+            else:
+                mixed_flat = new_flat
+
+            self._p2_pending_plain_flat = mixed_flat.astype(np.float64).copy()
+
+            # 4. 量化 + 掩码 + 上传 (不传 server，只返回 masked 向量)
+            dim = mixed_flat.shape[0]
+            model_int = (mixed_flat * QUANTIZE_SCALE).astype(np.int64)
+            mask_int = PRG.mask_int(self._ta_seed, self.id, package_token, dim)
+            masked_int = model_int + mask_int
+
+            return masked_int
+
+        except Exception as e:
+            logger.error(f"User {self.id}: point2训练/混合/掩码失败: {e}")
+            import traceback
+            traceback.print_exc()
+            return None
