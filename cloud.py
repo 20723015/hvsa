@@ -177,6 +177,8 @@ class CloudServer:
         self.p2_defer_counters: dict[str, int] = {}
         # 组包到达时间记录: package_token → arrival_tick
         self.p2_arrival_ticks: dict[str, int] = {}
+        # 累计过期组包数
+        self.p2_expired_total: int = 0
 
     def p2_hash_current_model(self) -> bytes:
         """返回当前最新全局模型的哈希."""
@@ -220,6 +222,7 @@ class CloudServer:
                 removed.append(pkg.package_token)
                 logger.info(f"CloudServer: p2 expired {pkg.package_token} "
                              f"staleness={staleness}>{s_max}")
+        self.p2_expired_total += len(removed)
         return removed
 
     def p2_select_checkpoint(self, K: int, s_max: int,

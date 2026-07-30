@@ -152,14 +152,13 @@ def run_point2_simulation(args: argparse.Namespace):
 
     # 指标追踪
     p2_metrics = {
-        'checkpoint_ticks': [],      # 每个 checkpoint 完成时的 tick
-        'wait_times': [],            # 每个 selected 组包的等待时间
-        'stale_gain': 0.0,           # 累计 stale reuse 对准确率的贡献 (近似)
-        'comp_gain': 0.0,            # 累计 compensation 贡献
-        'expired_count': 0,          # 过期组包总数
+        'checkpoint_ticks': [],       # 每个 checkpoint 完成时的 tick
+        'wait_times': [],             # 每个 selected 组包的等待时间
+        'stale_reuse_counts': [],     # 每个 checkpoint 中复用了 stale 的客户端数
+        'comp_gain': 0.0,             # 累计 compensation 贡献
+        'expired_buffer_count': 0,    # 从 buffer 因过期移除的组包总数
         'duplicate_contributions': 0, # 重复贡献数 (exactly-once 违反计数)
-        'fairness_variance': [],      # 各组被选中次数的方差
-        'throughput': [],            # 每个 checkpoint 的样本量吞吐
+        'throughput': [],             # 每个 checkpoint 的样本量吞吐
     }
 
     # 为每个用户设置样本量 (每一轮均匀)
@@ -178,6 +177,7 @@ def run_point2_simulation(args: argparse.Namespace):
     while checkpoint_count < args.max_checkpoints and current_tick < args.max_ticks:
         current_tick += 1
         cloud._gradient_dim = dim  # ensure dim is set for raw sum recovery
+        tick_stale_reuse_count = 0  # 本 tick 中所有组包的 stale reuse 总人次
 
         # 4a. 对 idle edge 启动新 package
         for e in edges:
@@ -245,9 +245,11 @@ def run_point2_simulation(args: argparse.Namespace):
                         _pkl.dumps(msg), pkg_token, base_v,
                         sample_size=cfg['samples_per_user'])
                     online_count += 1
+                    # ES 封组前确认接收 → 立即清除 stale 候选 (文档 L305-307)
                     has_stale, _ = u.p2_get_stale_info()
                     if has_stale:
-                        stale_reuse_count += 1
+                        tick_stale_reuse_count += 1
+                    u.p2_confirm_consumed()
 
                 # 封组
                 if e._p2_online_users:
@@ -341,17 +343,11 @@ def run_point2_simulation(args: argparse.Namespace):
             result.verification_passed = all_passed
 
             if all_passed:
-                # 被选中组的在线用户确认消费，清除 stale 候选
-                for pkg in selected:
-                    for uid in pkg.online_users:
-                        u = next((uu for uu in users if uu.id == uid), None)
-                        if u:
-                            u.p2_confirm_consumed()
-
                 checkpoint_count += 1
 
                 # 指标记录
                 p2_metrics['checkpoint_ticks'].append(current_tick)
+                p2_metrics['stale_reuse_counts'].append(tick_stale_reuse_count)
                 for pkg in selected:
                     wait_time = (current_tick -
                                  cloud.p2_arrival_ticks.get(pkg.package_token, 0))
@@ -373,7 +369,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     f"✓ Ckp {checkpoint_count} (tick {current_tick}): "
                     f"v{result.version}→v{cloud.p2_current_version} "
                     f"N_Q={result.N_Q} S_Q={result.S_Q} comp={sum(comp_map.values()):.4f} "
-                    f"stale_users={stale_reuse_count} Acc={acc:.2f}%"
+                    f"stale_users={tick_stale_reuse_count} Acc={acc:.2f}%"
                 )
 
         # 每 10 tick 打印一次状态
@@ -387,13 +383,16 @@ def run_point2_simulation(args: argparse.Namespace):
     wc_elapsed = time.time() - wc_start_time
     avg_wait = np.mean(p2_metrics['wait_times']) if p2_metrics['wait_times'] else 0
     max_wait = np.max(p2_metrics['wait_times']) if p2_metrics['wait_times'] else 0
-    total_expired = sum(
+    # 组包过期率: 从 buffer 因 s_k > s_max 移除的组包数
+    expired_from_buffer = cloud.p2_expired_total
+    # stale 组包: checkpoint 中被选中且 base_version < version 的包数
+    stale_in_checkpoint = sum(
         1 for r in cloud.p2_checkpoint_log
         for p in r.selected_packages
         if p.base_version < r.version
     )
-    # 过期率: 从 buffer 过期移除的占比
-    expired_from_buffer = getattr(cloud, 'p2_expired_total', 0)
+    # stale reuse: 所有 checkpoint 中复用了 stale 的客户端总人次
+    total_stale_reuses = sum(p2_metrics['stale_reuse_counts'])
     # 公平性: 各 edge 被选中次数的方差
     edge_select_counts = {e.id: 0 for e in edges}
     for r in cloud.p2_checkpoint_log:
@@ -413,8 +412,9 @@ def run_point2_simulation(args: argparse.Namespace):
     logger.info(f"  平均等待: {avg_wait:.1f} ticks")
     logger.info(f"  最大等待: {max_wait:.1f} ticks")
     logger.info(f"  Compensation gain: {p2_metrics['comp_gain']:.4f}")
-    logger.info(f"  Stale reuse count (has_stale): check log above")
-    logger.info(f"  组包过期数 (stale in checkpoint): {total_expired}")
+    logger.info(f"  Stale reuse 总人次: {total_stale_reuses}")
+    logger.info(f"  组包过期移除数: {expired_from_buffer}")
+    logger.info(f"  Checkpoint 中 stale 组包数: {stale_in_checkpoint}")
     logger.info(f"  组间公平性 (选中次数方差): {fairness_var:.4f}")
     logger.info(f"  有效吞吐量 (sample/tick): {np.mean(p2_metrics['throughput']):.1f}" if p2_metrics['throughput'] else "  有效吞吐量: N/A")
     logger.info(f"  Verification passed: {sum(1 for r in cloud.p2_checkpoint_log if r.verification_passed)}/{len(cloud.p2_checkpoint_log)}")
@@ -467,12 +467,16 @@ def run_point2_simulation(args: argparse.Namespace):
         checkpoint_Ns=np.array([r.N_Q for r in cloud.p2_checkpoint_log]),
         checkpoint_Ss=np.array([r.S_Q for r in cloud.p2_checkpoint_log]),
         wait_times=np.array(p2_metrics['wait_times']),
+        stale_reuse_counts=np.array(p2_metrics['stale_reuse_counts']),
         checkpoint_ticks=np.array(p2_metrics['checkpoint_ticks']),
         wall_clock=wc_elapsed,
         final_acc=final_acc,
         avg_wait=avg_wait,
         fairness_var=fairness_var,
         comp_gain=p2_metrics['comp_gain'],
+        expired_buffer_count=expired_from_buffer,
+        stale_in_checkpoint=stale_in_checkpoint,
+        total_stale_reuses=total_stale_reuses,
         config=str(args),
     )
     logger.info("数据已保存.")
