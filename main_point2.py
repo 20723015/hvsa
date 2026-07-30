@@ -174,10 +174,10 @@ def run_point2_simulation(args: argparse.Namespace):
     logger.info(f"ES delay profiles (ticks): {edge_delay}")
 
     # --- 4. 主循环 ---
+    pending_stale_reuse_count = 0  # checkpoint 间累计，checkpoint 触发后清零
     while checkpoint_count < args.max_checkpoints and current_tick < args.max_ticks:
         current_tick += 1
         cloud._gradient_dim = dim  # ensure dim is set for raw sum recovery
-        tick_stale_reuse_count = 0  # 本 tick 中所有组包的 stale reuse 总人次
 
         # 4a. 对 idle edge 启动新 package
         for e in edges:
@@ -248,7 +248,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     # ES 封组前确认接收 → 立即清除 stale 候选 (文档 L305-307)
                     has_stale, _ = u.p2_get_stale_info()
                     if has_stale:
-                        tick_stale_reuse_count += 1
+                        pending_stale_reuse_count += 1
                     u.p2_confirm_consumed()
 
                 # 封组
@@ -347,7 +347,8 @@ def run_point2_simulation(args: argparse.Namespace):
 
                 # 指标记录
                 p2_metrics['checkpoint_ticks'].append(current_tick)
-                p2_metrics['stale_reuse_counts'].append(tick_stale_reuse_count)
+                p2_metrics['stale_reuse_counts'].append(pending_stale_reuse_count)
+                pending_stale_reuse_count = 0
                 for pkg in selected:
                     wait_time = (current_tick -
                                  cloud.p2_arrival_ticks.get(pkg.package_token, 0))
@@ -369,7 +370,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     f"✓ Ckp {checkpoint_count} (tick {current_tick}): "
                     f"v{result.version}→v{cloud.p2_current_version} "
                     f"N_Q={result.N_Q} S_Q={result.S_Q} comp={sum(comp_map.values()):.4f} "
-                    f"stale_users={tick_stale_reuse_count} Acc={acc:.2f}%"
+                    f"stale_users={p2_metrics['stale_reuse_counts'][-1]} Acc={acc:.2f}%"
                 )
 
         # 每 10 tick 打印一次状态
