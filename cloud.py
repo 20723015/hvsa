@@ -173,6 +173,10 @@ class CloudServer:
         self.p2_package_buffer: dict[str, 'GroupPackage'] = {}
         # 每个 edge 上一次 selected 的 package_token (用于公平约束)
         self.p2_edge_last_selected: dict[str, str] = {}
+        # 公平计数器: edge_id → 连续未被选中次数
+        self.p2_defer_counters: dict[str, int] = {}
+        # 组包到达时间记录: package_token → arrival_tick
+        self.p2_arrival_ticks: dict[str, int] = {}
 
     def p2_hash_current_model(self) -> bytes:
         """返回当前最新全局模型的哈希."""
@@ -181,7 +185,7 @@ class CloudServer:
         W = self.p2_global_model_history[v]
         return hashlib.sha256(W.tobytes()).digest()
 
-    def p2_receive_group_package(self, pkg: 'GroupPackage'):
+    def p2_receive_group_package(self, pkg: 'GroupPackage', arrival_tick: int = 0):
         """point2: 接收组包入 buffer.
 
         对应文档 Sec.4.4: 每组最多一个待处理包，新包替换旧包.
@@ -193,8 +197,12 @@ class CloudServer:
             pass  # 旧包还没被消费 → 替换
 
         self.p2_package_buffer[edge_id] = pkg
+        self.p2_arrival_ticks[pkg.package_token] = arrival_tick
+        # 新到达的组包初始化公平计数器
+        if edge_id not in self.p2_defer_counters:
+            self.p2_defer_counters[edge_id] = 0
         logger.info(f"CloudServer: p2 buffer ← {pkg.package_token} "
-                     f"edge={edge_id} n={pkg.n_k} base_v={pkg.base_version} "
+                     f"edge={edge_id} n={pkg.n_k} S={pkg.S_k} base_v={pkg.base_version} "
                      f"buffer_size={len(self.p2_package_buffer)}")
 
     def p2_prune_expired_packages(self, s_max: int) -> list[str]:
@@ -214,24 +222,88 @@ class CloudServer:
                              f"staleness={staleness}>{s_max}")
         return removed
 
-    def p2_select_checkpoint(self, K: int, s_max: int) -> list['GroupPackage']:
-        """point2: 从 buffer 选择 K 个最早到达的合法组包.
+    def p2_select_checkpoint(self, K: int, s_max: int,
+                            current_tick: int = 0,
+                            delta_timeout: int = 0,
+                            policy: str = 'fifo',
+                            D_fair: int = 2) -> list['GroupPackage']:
+        """point2: 从 buffer 选择 K 个合法组包.
 
-        对应文档 Sec.4.4: 按到达顺序选最早的 K 个.
+        对应文档 Sec.4.4 + Sec 8.1 调度增强:
+        - 常规: |B_legal| >= K → 按策略选 K 个
+        - 超时: 最早组包等待 >= delta_timeout → 保守 checkpoint (1 <= n < K)
+        - policy: fifo / fresh_first / fair_fresh_first
         """
-        self.p2_prune_expired_packages(s_max)
+        removed = self.p2_prune_expired_packages(s_max)
+        # 移除过期包对应的公平计数器
+        for token in removed:
+            for eid, pkg in list(self.p2_package_buffer.items()):
+                if pkg.package_token == token:
+                    self.p2_defer_counters.pop(eid, None)
+                    break
 
-        if len(self.p2_package_buffer) < K:
+        if len(self.p2_package_buffer) == 0:
             return []
 
-        sorted_pkgs = sorted(
+        # 按 created_tick 排序 (用于 FIFO 和 超时检测)
+        sorted_by_arrival = sorted(
             self.p2_package_buffer.values(),
             key=lambda p: p.created_tick
         )
-        selected = sorted_pkgs[:K]
 
-        logger.info(f"CloudServer: p2 checkpoint select K={K} from "
-                     f"buffer_size={len(self.p2_package_buffer)} "
+        # 超时触发检测
+        timeout_triggered = False
+        if delta_timeout > 0 and 1 <= len(self.p2_package_buffer) < K:
+            earliest = sorted_by_arrival[0]
+            wait_time = current_tick - earliest.created_tick
+            if wait_time >= delta_timeout:
+                timeout_triggered = True
+                logger.info(f"CloudServer: p2 timeout triggered "
+                            f"(wait={wait_time} >= {delta_timeout})")
+
+        if not timeout_triggered and len(self.p2_package_buffer) < K:
+            return []
+
+        # 按策略选择
+        if policy == 'fifo':
+            selected = sorted_by_arrival[:K]
+        elif policy == 'fresh_first':
+            sorted_by_fresh = sorted(
+                self.p2_package_buffer.values(),
+                key=lambda p: (self.p2_current_version - p.base_version)
+            )
+            selected = sorted_by_fresh[:K]
+        elif policy == 'fair_fresh_first':
+            # 先选 c_k >= D_fair 的保底候选
+            guaranteed = []
+            for pkg in sorted_by_arrival:
+                eid = pkg.edge_id
+                defer = self.p2_defer_counters.get(eid, 0)
+                if defer >= D_fair:
+                    guaranteed.append(pkg)
+            # 剩余名额按 fresh-first 填充
+            remaining_slots = max(0, K - len(guaranteed))
+            remaining_candidates = [p for p in sorted_by_arrival if p not in guaranteed]
+            sorted_remaining = sorted(
+                remaining_candidates,
+                key=lambda p: (self.p2_current_version - p.base_version)
+            )
+            selected = guaranteed + sorted_remaining[:remaining_slots]
+        else:
+            selected = sorted_by_arrival[:K]
+
+        # 更新公平计数器
+        selected_edge_ids = {p.edge_id for p in selected}
+        for pkg in sorted_by_arrival:
+            eid = pkg.edge_id
+            if eid in selected_edge_ids:
+                self.p2_defer_counters[eid] = 0
+            else:
+                self.p2_defer_counters[eid] = self.p2_defer_counters.get(eid, 0) + 1
+
+        trigger_mode = "timeout" if timeout_triggered else "normal"
+        logger.info(f"CloudServer: p2 checkpoint select ({trigger_mode}, {policy}) "
+                     f"K={K} from buffer={len(self.p2_package_buffer)} "
                      f"selected={[p.package_token for p in selected]}")
         return selected
 
@@ -251,11 +323,11 @@ class CloudServer:
                                  gamma_vcm: float = 1.0) -> tuple:
         """point2: Direct-VCM 后置补偿 + 参数平均.
 
-        对应文档 Sec.4.5:
+        对应文档 Sec.4.5 (终版，使用样本量 S_k):
         - raw_sum_float = raw_sum_int / QUANTIZE_SCALE
-        - C_k(v) = n_k(r_k) · γ_vcm · (W(v) - W(r_k))
+        - C_k(v) = S_k(r_k) · γ_vcm · (W(v) - W(r_k))
         - corrected = raw_sum_float + Σ C_k
-        - W(v+1) = corrected / N_Q
+        - W(v+1) = corrected / S_Q(v)
 
         Returns:
             (corrected_sum_float, final_model, compensation_map)
@@ -273,17 +345,17 @@ class CloudServer:
                 W_rk = self.p2_global_model_history.get(r_k)
                 if W_rk is not None:
                     G_k = W_v.astype(np.float64) - W_rk.astype(np.float64)
-                    C_k = pkg.n_k * gamma_vcm * G_k
+                    C_k = pkg.S_k * gamma_vcm * G_k
                     total_comp += C_k
                     comp_map[pkg.package_token] = float(np.linalg.norm(C_k))
             else:
                 comp_map[pkg.package_token] = 0.0
 
         corrected = raw_float + total_comp
-        N_Q = sum(pkg.n_k for pkg in selected_packages)
-        final_model = corrected / N_Q
+        S_Q = sum(pkg.S_k for pkg in selected_packages)
+        final_model = corrected / S_Q
 
-        logger.info(f"CloudServer: p2 VCM v={v} N_Q={N_Q} "
+        logger.info(f"CloudServer: p2 VCM v={v} S_Q={S_Q} "
                      f"gamma_vcm={gamma_vcm} stale_packages={len(comp_map)-sum(1 for v in comp_map.values() if v==0)}")
 
         return corrected, final_model, comp_map
@@ -304,6 +376,8 @@ class CloudServer:
         """
         from point2_types import CheckpointResult
 
+        S_Q = sum(pkg.S_k for pkg in selected_packages)
+
         # 从 buffer 移除
         for pkg in selected_packages:
             self.p2_package_buffer.pop(pkg.edge_id, None)
@@ -318,6 +392,7 @@ class CloudServer:
             version=v,
             selected_packages=list(selected_packages),
             N_Q=sum(pkg.n_k for pkg in selected_packages),
+            S_Q=S_Q,
             raw_sum_int=raw_sum_int,
             raw_sum_float=raw_sum_int.astype(np.float64) / QUANTIZE_SCALE,
             M_Q=M_Q,
@@ -329,6 +404,7 @@ class CloudServer:
         )
 
         self.p2_checkpoint_log.append(result)
-        logger.info(f"CloudServer: p2 checkpoint {v} committed → W({new_v})")
+        logger.info(f"CloudServer: p2 checkpoint {v} committed → W({new_v}) "
+                     f"N_Q={result.N_Q} S_Q={S_Q}")
 
         return result

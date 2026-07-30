@@ -24,6 +24,7 @@ class GroupPackage:
     base_hash: bytes                       # h_base(r_k): W(base_version) 的哈希
     online_users: List[str]                # U_online^k(r_k)
     n_k: int                               # |U_online^k(r_k)|
+    S_k: int                               # Σ s_i^k: 组内总样本量
     masked_sum_int: np.ndarray             # W̄_k(r_k): int64 掩码和
     H_k: object                            # LHH.Hash result (NIST P-256 Point)
     signature: bytes                       # Ed25519 σ_k(r_k)
@@ -40,6 +41,7 @@ class CheckpointResult:
     version: int                           # v: checkpoint 序号
     selected_packages: List[GroupPackage]  # Q(v)
     N_Q: int                               # 总参与客户端数
+    S_Q: int                               # Σ S_k: 总样本量
     raw_sum_int: np.ndarray                # W_sum^raw(v): int64
     raw_sum_float: np.ndarray              # 解量化后的 raw sum (float64)
     M_Q: np.ndarray                        # TA 返回的聚合掩码 (int64)

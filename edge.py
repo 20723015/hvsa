@@ -287,10 +287,11 @@ class EdgeServer:
         self._p2_package_token = package_token
         self._p2_online_users: list[str] = []
         self._p2_masked_gradients: list[np.ndarray] = []
+        self._p2_user_samples: dict[str, int] = {}    # user_id → s_i
         self._p2_ready = False
 
     def p2_receive_masked_gradient(self, msg_bytes: bytes, package_token: str,
-                                    base_version: int):
+                                    base_version: int, sample_size: int = 0):
         """point2: 接收用户上传，校验 package_token 和 base_version."""
         try:
             data = pickle.loads(msg_bytes)
@@ -306,6 +307,7 @@ class EdgeServer:
 
             self._p2_masked_gradients.append(gradient_int)
             self._p2_online_users.append(user_id)
+            self._p2_user_samples[user_id] = sample_size
 
         except Exception as e:
             logger.error(f"EdgeServer {self.id}: p2接收梯度出错: {e}")
@@ -320,14 +322,17 @@ class EdgeServer:
         pre_aggregated = np.sum(np.array(self._p2_masked_gradients), axis=0)
         H_k = LHH.Hash(self.lhh_pp, pre_aggregated)
 
-        # 签名: (edge_id, package_token, base_hash, digest(users), n_k, H_k)
+        n_k = len(self._p2_online_users)
+        S_k = sum(self._p2_user_samples.values())
+
+        # 签名: (edge_id, package_token, base_hash, digest(users), n_k, S_k, H_k)
         import hashlib
         user_digest = hashlib.sha256(
             ",".join(sorted(self._p2_online_users)).encode()
         ).digest()
         sig_msg = pickle.dumps((
             self.id, self._p2_package_token, self._p2_base_hash,
-            user_digest, len(self._p2_online_users), H_k
+            user_digest, n_k, S_k, H_k
         ))
         assert isinstance(self.my_sign_priv_key, bytes), \
             f"sign_priv_key type={type(self.my_sign_priv_key)}"
@@ -347,7 +352,8 @@ class EdgeServer:
             base_version=self._p2_base_version,
             base_hash=self._p2_base_hash,
             online_users=list(self._p2_online_users),
-            n_k=len(self._p2_online_users),
+            n_k=n_k,
+            S_k=S_k,
             masked_sum_int=pre_aggregated,
             H_k=H_k,
             signature=signature,
@@ -355,7 +361,7 @@ class EdgeServer:
         )
 
         logger.info(f"EdgeServer {self.id}: p2组包 {self._p2_package_token} "
-                     f"已封装 n={pkg.n_k} base_v={self._p2_base_version}")
+                     f"已封装 n={n_k} S={S_k} base_v={self._p2_base_version}")
         return pkg
 
     def p2_verify_checkpoint(self, bundle: dict) -> bool:
@@ -406,7 +412,7 @@ class EdgeServer:
             ).digest()
             sig_msg = pickle.dumps((
                 pkg.edge_id, pkg.package_token, pkg.base_hash,
-                user_digest, pkg.n_k, pkg.H_k
+                user_digest, pkg.n_k, pkg.S_k, pkg.H_k
             ))
             if not SIG.verify(sig_msg, pkg.signature,
                               self.all_es_pub_keys[pkg.edge_id]):
@@ -423,8 +429,8 @@ class EdgeServer:
             logger.error(f"EdgeServer {self.id}: p2 LHH mismatch")
             return False
 
-        # 3. 公开规则重算补偿后最终模型
-        N_Q = sum(pkg.n_k for pkg in pkgs)
+        # 3. 公开规则重算补偿后最终模型 (使用 S_k)
+        S_Q = sum(pkg.S_k for pkg in pkgs)
         v = bundle['checkpoint_version']
         raw_float = raw_sum_int.astype(np.float64) / QUANTIZE_SCALE
 
@@ -433,9 +439,9 @@ class EdgeServer:
             r_k = pkg.base_version
             if r_k < v and r_k in history:
                 G_k = history[v].astype(np.float64) - history[r_k].astype(np.float64)
-                total_comp += pkg.n_k * gamma_vcm * G_k
+                total_comp += pkg.S_k * gamma_vcm * G_k
 
-        expected_final = (raw_float + total_comp) / N_Q
+        expected_final = (raw_float + total_comp) / S_Q
         if not np.allclose(expected_final, final_model, rtol=1e-4, atol=1e-6):
             logger.error(f"EdgeServer {self.id}: p2 最终模型重算不匹配")
             return False

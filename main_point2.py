@@ -22,6 +22,7 @@ from user import User
 from edge import EdgeServer
 from cloud import CloudServer
 from ta import TrustedAuthority
+from utils import LHH
 import models
 from datasets import load_data, distribute_data
 
@@ -50,12 +51,18 @@ DEFAULT_ARGS = {
     'max_ticks': 200,           # 最大模拟 tick
     'gamma_vcm': 1.0,           # Direct-VCM 补偿强度
     'staleness_beta': 0.3,      # β_c: stale reuse 衰减
-    'dropout_rate': 0.1,        # 每 tick 客户端掉线率
-    'enable_stale_reuse': False,
+    'dropout_rate': 0.1,        # 每 tick 客户端训练前掉线率
+    'upload_dropout_rate': 0.0,  # 训练后上传丢包率 (控制 stale 来源)
+    'reuse_rule': 'ours',       # 复用规则: none / mafsa / ours
+    'rho_max': 0.5,             # stale 结果最大权重 (仅 ours)
     'enable_vcm': False,
     'enable_verification': False,
     'min_delay': 1,             # 最快组几个 tick
     'max_delay': 5,             # 最慢组几个 tick
+    'delta_timeout': 0,         # 超时触发时限 (0=禁用)
+    'policy': 'fifo',           # 缓冲选择策略: fifo / fresh_first / fair_fresh_first
+    'D_fair': 2,                # 公平保底阈值 (仅 fair 策略)
+    'attack': 'none',           # 攻击类型: none / tamper_global / tamper_manifest / drop_replace_pkg
 }
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -128,6 +135,7 @@ def run_point2_simulation(args: argparse.Namespace):
     # --- 3. 模拟状态 ---
     current_tick: int = 0
     checkpoint_count: int = 0
+    wc_start_time = time.time()
     acc_history: list[tuple[int, float]] = []
     W_v = init_flat.astype(np.float64).copy()
 
@@ -141,6 +149,22 @@ def run_point2_simulation(args: argparse.Namespace):
     edge_base_v: dict[str, int] = {e.id: 0 for e in edges}
 
     rng = np.random.default_rng(42)
+
+    # 指标追踪
+    p2_metrics = {
+        'checkpoint_ticks': [],      # 每个 checkpoint 完成时的 tick
+        'wait_times': [],            # 每个 selected 组包的等待时间
+        'stale_gain': 0.0,           # 累计 stale reuse 对准确率的贡献 (近似)
+        'comp_gain': 0.0,            # 累计 compensation 贡献
+        'expired_count': 0,          # 过期组包总数
+        'duplicate_contributions': 0, # 重复贡献数 (exactly-once 违反计数)
+        'fairness_variance': [],      # 各组被选中次数的方差
+        'throughput': [],            # 每个 checkpoint 的样本量吞吐
+    }
+
+    # 为每个用户设置样本量 (每一轮均匀)
+    for u in users:
+        u.p2_set_sample_size(cfg['samples_per_user'])
 
     # 提前分组: 给每个 edge 分配固定的 delay profile
     edge_delay: dict[str, int] = {}
@@ -184,52 +208,62 @@ def run_point2_simulation(args: argparse.Namespace):
 
                 # 用户训练 + stale reuse 混合 + 掩码上传
                 online_count = 0
+                stale_reuse_count = 0
                 for u in users:
                     if user_edge_map[u.id] != e:
                         continue
                     if rng.random() < args.dropout_rate:
-                        continue
+                        continue  # 训练前掉线
 
                     loader = user_loaders_map[u.id]
+                    reuse_rule = args.reuse_rule
 
-                    if args.enable_stale_reuse:
-                        masked_int = u.p2_train_mix_mask_and_upload(
-                            global_flat=cloud.p2_global_model_history[base_v],
-                            global_version=base_v,
-                            package_token=pkg_token,
-                            model_meta=model_meta,
-                            train_loader=loader,
-                            local_epochs=cfg['local_epochs'],
-                            lr=cfg['lr'],
-                            staleness_beta=args.staleness_beta,
-                        )
-                    else:
-                        # 无 stale reuse: 训练后直接掩码
-                        u.set_global_model(
-                            cloud.p2_global_model_history[base_v], model_meta)
-                        u.local_train(loader, cfg['local_epochs'], cfg['lr'])
-                        new_flat, _ = models.flatten_parameters(u.model)
-                        dim_f = new_flat.shape[0]
-                        model_int = (new_flat * 1_000_000).astype(np.int64)
-                        mask_int = u._generate_ta_mask_int(pkg_token, dim_f)
-                        masked_int = model_int + mask_int
+                    masked_int = u.p2_train_mix_mask_and_upload(
+                        global_flat=cloud.p2_global_model_history[base_v],
+                        global_version=base_v,
+                        package_token=pkg_token,
+                        model_meta=model_meta,
+                        train_loader=loader,
+                        local_epochs=cfg['local_epochs'],
+                        lr=cfg['lr'],
+                        staleness_beta=args.staleness_beta,
+                        reuse_rule=reuse_rule,
+                        rho_max=args.rho_max,
+                    )
 
-                    if masked_int is not None:
-                        import pickle as _pkl
-                        msg = {"user_id": u.id, "masked_gradient": masked_int}
-                        e.p2_receive_masked_gradient(
-                            _pkl.dumps(msg), pkg_token, base_v)
-                        online_count += 1
+                    if masked_int is None:
+                        continue
+
+                    # 训练后上传丢包 (产生 stale 候选的来源)
+                    if rng.random() < args.upload_dropout_rate:
+                        u.p2_confirm_upload_failed()
+                        continue
+
+                    import pickle as _pkl
+                    msg = {"user_id": u.id, "masked_gradient": masked_int}
+                    e.p2_receive_masked_gradient(
+                        _pkl.dumps(msg), pkg_token, base_v,
+                        sample_size=cfg['samples_per_user'])
+                    online_count += 1
+                    has_stale, _ = u.p2_get_stale_info()
+                    if has_stale:
+                        stale_reuse_count += 1
 
                 # 封组
                 if e._p2_online_users:
                     pkg = e.p2_seal_group_package(tick=current_tick)
-                    cloud.p2_receive_group_package(pkg)
+                    cloud.p2_receive_group_package(pkg, arrival_tick=current_tick)
 
                 edge_state[e.id] = 'idle'
 
         # 4c. Checkpoint 触发
-        selected = cloud.p2_select_checkpoint(K=args.K, s_max=args.s_max)
+        selected = cloud.p2_select_checkpoint(
+            K=args.K, s_max=args.s_max,
+            current_tick=current_tick,
+            delta_timeout=args.delta_timeout,
+            policy=args.policy,
+            D_fair=args.D_fair,
+        )
 
         if selected:
             # TA 构建 checkpoint 掩码
@@ -243,10 +277,46 @@ def run_point2_simulation(args: argparse.Namespace):
             corrected_sum, final_model, comp_map = cloud.p2_apply_vcm_and_average(
                 selected, raw_sum_int, gamma_vcm=gamma)
 
-            # 提交 checkpoint
-            result = cloud.p2_commit_checkpoint(
-                selected, final_model, raw_sum_int, M_Q, H_mask_raw,
-                corrected_sum, comp_map)
+            # 攻击注入 (独立于性能基线, 仅攻击实验时启用)
+            if args.attack == 'tamper_global':
+                tampered = final_model + rng.normal(0, 0.01, final_model.shape)
+                logger.warning(f"Tick {current_tick}: [ATTACK] tamper_global")
+                result = cloud.p2_commit_checkpoint(
+                    selected, tampered, raw_sum_int, M_Q, H_mask_raw,
+                    corrected_sum, comp_map)
+            elif args.attack == 'tamper_manifest':
+                # 篡改选中的组包集合 (注入一个不存在的组包)
+                from point2_types import GroupPackage
+                fake_pkg = GroupPackage(
+                    edge_id="fake_edge", package_token="fake:pkg",
+                    base_version=0, base_hash=b'\x00',
+                    online_users=["fake_u"], n_k=1, S_k=100,
+                    masked_sum_int=np.zeros(dim, dtype=np.int64),
+                    H_k=LHH.Hash(ta.lhh_pp, np.zeros(dim, dtype=np.int64)),
+                    signature=b'\x00', created_tick=current_tick,
+                )
+                selected_attacked = selected + [fake_pkg]
+                logger.warning(f"Tick {current_tick}: [ATTACK] tamper_manifest")
+                result = cloud.p2_commit_checkpoint(
+                    selected_attacked, final_model, raw_sum_int, M_Q, H_mask_raw,
+                    corrected_sum, comp_map)
+            elif args.attack == 'drop_replace_pkg':
+                # 漏聚合某个组包
+                if len(selected) > 1:
+                    selected_attacked = selected[:-1]
+                    logger.warning(f"Tick {current_tick}: [ATTACK] drop_replace_pkg "
+                                    f"(removed {selected[-1].package_token})")
+                    result = cloud.p2_commit_checkpoint(
+                        selected_attacked, final_model, raw_sum_int, M_Q, H_mask_raw,
+                        corrected_sum, comp_map)
+                else:
+                    result = cloud.p2_commit_checkpoint(
+                        selected, final_model, raw_sum_int, M_Q, H_mask_raw,
+                        corrected_sum, comp_map)
+            else:
+                result = cloud.p2_commit_checkpoint(
+                    selected, final_model, raw_sum_int, M_Q, H_mask_raw,
+                    corrected_sum, comp_map)
 
             # ES 验证
             bundle = {
@@ -271,15 +341,27 @@ def run_point2_simulation(args: argparse.Namespace):
             result.verification_passed = all_passed
 
             if all_passed:
-                # 被选中组的用户更新缓存
+                # 被选中组的在线用户确认消费，清除 stale 候选
                 for pkg in selected:
                     for uid in pkg.online_users:
                         u = next((uu for uu in users if uu.id == uid), None)
                         if u:
-                            u.p2_set_accepted_cache(
-                                final_model, cloud.p2_current_version)
+                            u.p2_confirm_consumed()
 
                 checkpoint_count += 1
+
+                # 指标记录
+                p2_metrics['checkpoint_ticks'].append(current_tick)
+                for pkg in selected:
+                    wait_time = (current_tick -
+                                 cloud.p2_arrival_ticks.get(pkg.package_token, 0))
+                    p2_metrics['wait_times'].append(wait_time)
+                p2_metrics['comp_gain'] += sum(comp_map.values())
+                # throughput: 每 tick 处理的有效样本数
+                prev_tick = (p2_metrics['checkpoint_ticks'][-2]
+                            if len(p2_metrics['checkpoint_ticks']) > 1 else 0)
+                p2_metrics['throughput'].append(
+                    result.S_Q / max(1, p2_metrics['checkpoint_ticks'][-1] - prev_tick))
 
                 # 评估
                 eval_model = copy.deepcopy(init_model)
@@ -290,8 +372,8 @@ def run_point2_simulation(args: argparse.Namespace):
                 logger.info(
                     f"✓ Ckp {checkpoint_count} (tick {current_tick}): "
                     f"v{result.version}→v{cloud.p2_current_version} "
-                    f"N_Q={result.N_Q} comp={sum(comp_map.values()):.4f} "
-                    f"Acc={acc:.2f}%"
+                    f"N_Q={result.N_Q} S_Q={result.S_Q} comp={sum(comp_map.values()):.4f} "
+                    f"stale_users={stale_reuse_count} Acc={acc:.2f}%"
                 )
 
         # 每 10 tick 打印一次状态
@@ -301,10 +383,41 @@ def run_point2_simulation(args: argparse.Namespace):
                 f"checkpoints={checkpoint_count} v={cloud.p2_current_version}"
             )
 
-    # --- 5. 结果 ---
+    # --- 5. 指标汇总 ---
+    wc_elapsed = time.time() - wc_start_time
+    avg_wait = np.mean(p2_metrics['wait_times']) if p2_metrics['wait_times'] else 0
+    max_wait = np.max(p2_metrics['wait_times']) if p2_metrics['wait_times'] else 0
+    total_expired = sum(
+        1 for r in cloud.p2_checkpoint_log
+        for p in r.selected_packages
+        if p.base_version < r.version
+    )
+    # 过期率: 从 buffer 过期移除的占比
+    expired_from_buffer = getattr(cloud, 'p2_expired_total', 0)
+    # 公平性: 各 edge 被选中次数的方差
+    edge_select_counts = {e.id: 0 for e in edges}
+    for r in cloud.p2_checkpoint_log:
+        for p in r.selected_packages:
+            edge_select_counts[p.edge_id] = edge_select_counts.get(p.edge_id, 0) + 1
+    fairness_var = float(np.var(list(edge_select_counts.values())))
+
+    # 最终准确率
+    final_acc = acc_history[-1][1] if acc_history else 0.0
+
     logger.info(f"\n=== 模拟完成: {checkpoint_count} checkpoints, "
-                 f"{current_tick} ticks ===")
+                 f"{current_tick} ticks, 墙钟 {wc_elapsed:.1f}s ===")
     logger.info(f"Accuracy history: {acc_history}")
+    logger.info(f"--- 指标 ---")
+    logger.info(f"  最终准确率: {final_acc:.2f}%")
+    logger.info(f"  墙钟时间: {wc_elapsed:.1f}s")
+    logger.info(f"  平均等待: {avg_wait:.1f} ticks")
+    logger.info(f"  最大等待: {max_wait:.1f} ticks")
+    logger.info(f"  Compensation gain: {p2_metrics['comp_gain']:.4f}")
+    logger.info(f"  Stale reuse count (has_stale): check log above")
+    logger.info(f"  组包过期数 (stale in checkpoint): {total_expired}")
+    logger.info(f"  组间公平性 (选中次数方差): {fairness_var:.4f}")
+    logger.info(f"  有效吞吐量 (sample/tick): {np.mean(p2_metrics['throughput']):.1f}" if p2_metrics['throughput'] else "  有效吞吐量: N/A")
+    logger.info(f"  Verification passed: {sum(1 for r in cloud.p2_checkpoint_log if r.verification_passed)}/{len(cloud.p2_checkpoint_log)}")
 
     # --- 6. 画图 ---
     if acc_history:
@@ -320,24 +433,24 @@ def run_point2_simulation(args: argparse.Namespace):
         axes[0].set_xlabel('Checkpoint')
         axes[0].set_ylabel('Test Accuracy (%)')
         title_parts = [f'{args.dataset}']
-        if args.enable_stale_reuse:
-            title_parts.append('+StaleReuse')
+        if args.reuse_rule != 'none':
+            title_parts.append(f'+StaleReuse({args.reuse_rule})')
         if args.enable_vcm:
             title_parts.append('+VCM')
         axes[0].set_title(' '.join(title_parts))
         axes[0].grid(True, linestyle='--', alpha=0.6)
 
         # 右: Checkpoint 规模统计
-        Ns = [r.N_Q for r in cloud.p2_checkpoint_log]
+        Ss = [r.S_Q for r in cloud.p2_checkpoint_log]
         stale_counts = [
             sum(1 for p in r.selected_packages if p.base_version < r.version)
             for r in cloud.p2_checkpoint_log
         ]
-        x = range(1, len(Ns) + 1)
-        axes[1].bar(x, Ns, alpha=0.6, label='Total users N_Q')
+        x = range(1, len(Ss) + 1)
+        axes[1].bar(x, Ss, alpha=0.6, label='Total samples S_Q')
         axes[1].bar(x, stale_counts, alpha=0.8, label='Stale packages')
         axes[1].set_xlabel('Checkpoint')
-        axes[1].set_ylabel('Count')
+        axes[1].set_ylabel('Count / Samples')
         axes[1].set_title('Checkpoint Composition')
         axes[1].legend()
         axes[1].grid(True, linestyle='--', alpha=0.6)
@@ -352,6 +465,14 @@ def run_point2_simulation(args: argparse.Namespace):
         f'point2_data_{args.dataset}_{timestamp}.npz',
         acc_history=np.array(acc_history),
         checkpoint_Ns=np.array([r.N_Q for r in cloud.p2_checkpoint_log]),
+        checkpoint_Ss=np.array([r.S_Q for r in cloud.p2_checkpoint_log]),
+        wait_times=np.array(p2_metrics['wait_times']),
+        checkpoint_ticks=np.array(p2_metrics['checkpoint_ticks']),
+        wall_clock=wc_elapsed,
+        final_acc=final_acc,
+        avg_wait=avg_wait,
+        fairness_var=fairness_var,
+        comp_gain=p2_metrics['comp_gain'],
         config=str(args),
     )
     logger.info("数据已保存.")
@@ -370,12 +491,28 @@ if __name__ == "__main__":
     parser.add_argument('--s-max', type=int, default=3, help='max staleness')
     parser.add_argument('--max-checkpoints', type=int, default=20)
     parser.add_argument('--max-ticks', type=int, default=300)
-    parser.add_argument('--gamma-vcm', type=float, default=1.0)
-    parser.add_argument('--staleness-beta', type=float, default=0.3)
-    parser.add_argument('--dropout-rate', type=float, default=0.1)
-    parser.add_argument('--stale-reuse', action='store_true')
-    parser.add_argument('--vcm', action='store_true')
+    # stale reuse (E5: 三规则消融)
+    parser.add_argument('--reuse-rule', default='ours', choices=['none', 'mafsa', 'ours'],
+                        help='stale reuse rule')
+    parser.add_argument('--rho-max', type=float, default=0.5, help='max stale weight (ours only)')
+    parser.add_argument('--staleness-beta', type=float, default=0.3, help='beta_c decay')
+    # VCM
+    parser.add_argument('--vcm', action='store_true', help='enable Direct-VCM compensation')
+    parser.add_argument('--gamma-vcm', type=float, default=1.0, help='VCM compensation strength')
+    # buffer/checkpoint
+    parser.add_argument('--delta-timeout', type=int, default=0, help='timeout trigger limit (0=disabled)')
+    parser.add_argument('--policy', default='fifo', choices=['fifo', 'fresh_first', 'fair_fresh_first'],
+                        help='buffer selection policy')
+    parser.add_argument('--D-fair', type=int, default=2, help='fairness defer threshold')
+    # dropout
+    parser.add_argument('--dropout-rate', type=float, default=0.1, help='pre-training dropout rate')
+    parser.add_argument('--upload-dropout-rate', type=float, default=0.0,
+                        help='post-training upload failure rate (stale source)')
+    # verification & attack
     parser.add_argument('--verify', action='store_true', help='enable LHH/Ed25519 verification')
+    parser.add_argument('--attack', default='none',
+                        choices=['none', 'tamper_global', 'tamper_manifest', 'drop_replace_pkg'],
+                        help='attack type (separate from performance baseline)')
 
     args = parser.parse_args()
     run_point2_simulation(args)
