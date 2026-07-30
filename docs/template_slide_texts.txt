@@ -1,0 +1,54 @@
+--- slide 1 ---
+TAPFed: Threshold Secure Aggregation for | Privacy-Preserving Federated Learning | TAPFED：PPFL的阈值安全聚合
+北京交通大学
+TDSC 2024
+--- slide 2 ---
+TAPFed: Threshold Secure Aggregation for Privacy-Preserving Federated Learning | 
+针对问题：
+研究方案：
+1.基于现有的多客户端函数加密MCFE，设计了一种阈值函数加密（TFE）方案，该方案能够与独立和分散的聚合器进行安全聚合，同时容忍有限数量的恶意聚合器 | 2.设计了基于TFE方案的PPFL框架TAPFED，不需要安全的飞地硬件或去中心化聚合器的P2P连接，避免单点故障。 | 
+1.现有的单聚合器安全聚合方法(THE,MIFE,MCFE，成对掩码)对梯度推断攻击有脆弱性，而HE易受隔离攻击和重放攻击 | 2.现有多聚合器安全聚合，需要使用安全隔离硬件或多方安全计算（MPC）技术。需要复杂的点对点通信协议和大规模数据交换，导致系统的可扩展性差,并且存在单点故障问题。 | 
+--- slide 3 ---
+研究内容一：阈值函数加密方案
+针对问题： | 为了解决单点故障和可扩展性的问题，TAPFed构建在多聚合器架构上，以抵御潜在的推理攻击。这与现有的基于秘密共享的多方计算原语不同，因为它不需要聚合器之间的任何对等通信。 |  | 
+研究方案：
+Setup(λ)：初始化加密系统，生成公共参数和主私钥。 | SKDistribute:将加密密钥分发给每个加密实体（例如参与方）。 | DKGenerate:生成功能解密密钥，使能解密特定的加密数据。 | Encrypt：使用加密密钥加密数据。 | ShareDecrypt：每个解密实体使用自己的解密密钥对加密数据进行解密，最后返回部分解密后的结果。解密开始之前，首先检查解密实体 S 的大小。如果参与的聚合器数量 ∣S∣ 大于或等于阈值t，解密过程才会继续进行。否则，解密失败。 | CombineDecrypt:合并部分解密的结果，恢复最终的计算结果（如内积）。函数首先验证所有聚合器提供的部分解密密文的第一部分否一致。不一致的聚合器将停止解密。这确保了没有错误的解密信息被用于恢复最终结果。
+--- slide 4 ---
+研究内容二：TapFED聚合框架
+ | TDSA-Protect：函数对参与方的本地模型更新进行加密，确保训练过程中数据的隐私性，可以选择是否使用差分隐私增强保护。 |  |  | TDSA-Aggregate:聚合来自参与方的加密模型更新,聚合器根据接收到的加密信息请求功能解密密钥dk，并提供模型权重和当前训练轮次的标签，使用生成的dk部分解密， 使用ShareDec 算法得到聚合后的模型更新。 |  | 加密标签确保了每轮训练的加密模型更新不会混淆，避免跨轮次的加密模型更新被错误地合并 |  |  | TDSA-Recover：用加密基础设施提供的解密算法 CombineDec 对聚合器返回的消息进行解密，恢复最终的全局聚合模型。 |  |  |  
+--- slide 5 ---
+实验
+ |  | 模型：CNN |  | 数据集： CIFAR-10, MNIST |  |  | 对比实验： |  | Ordinary FL：不使用任何安全聚合设置的训练方法。 |  | PHE-FL ：使用基于 Paillier 加密的安全聚合设置进行训练。 |  | HybridOne ：使用基于 阈值 Paillier 的安全聚合设置进行训练。 |  | HybridAlpha：使用基于 MIFE 的安全聚合设置进行训练。 |  | DeTrust-FL：使用基于 DMCFE 的安全聚合设置进行训练。 |  |  |  | 
+--- slide 6 ---
+实验
+ |  | 1.def init_crypto：初始化加密系统，包括密钥分发器和每个客户端的加密实例 |  |  |  |  |  | 
+关键参数：sec_param决定生成素数的位数(加密的强度) ,eta决定生成密钥的维度,n,s,t
+生成群的大素数p和生成元g
+--- slide 7 ---
+实验
+ |  | 2.def setup：对应文献Setup(λ, η, t, s, n)：生成公共参数，和主密钥 |  |  |  |  |  | 
+msk主密钥内容：W,U，g_alpha，g_alphaW
+公共参数pp：p,g,eta,s,t(阈值（,n,sec_param
+--- slide 8 ---
+实验
+ |  | 3.def get_private_keys对应文献SKDistribute(pp, msk, ei)：将主密钥分发给每个加密实体（客户端） |  |  |  |  |  | 
+sk密钥内容：pp公参，g_alpha，g_alphaW，U
+--- slide 9 ---
+实验
+ |  | 4.def encrypt：对应文献Encrypt(ski,xi, l)：客户端对训练后的参数进行加密，得出两个密文ct0，ct1 |  |  |  |  |  | 
+# 计算 g^(alpha[i]) * r % p
+# 计算 g^(plaintext[i] + u[i] * H(label)) % p
+--- slide 10 ---
+实验
+ |  | 5.def get_decrption_key：对应文献DKGenerate(pp, msk, ydidx, l)：为聚合器生成解密密钥dkv0，dkv1 |  |  |  |  |  | 
+根据credentials 和标签 label(验证加密的唯一性)，为每个聚合器，分别对每个参与训练的客户端生成解密密钥dk v0 和 dkv1。
+--- slide 11 ---
+实验
+ |  | 6.def share_decrypt：对应文献ShareDecrypt(pp, {JxiK}i∈{1,...,n}, y dkj, S):聚合器解密密文 |  |  |  |  |  | 
+解密后生成ct0_prime、ct1_prime 和 ct2_prime的部分解密的密文，等待发送回客户端，客户端进行完全解密
+--- slide 12 ---
+实验
+ |  | 7.def combine_decrypt：对应文献CombineDecrypt(pp, {JctKj}j∈{1,..,s′}):客户端进行完全解密 |  |  |  | 
+--- slide 13 ---
+感谢各位老师批评指正！
+北京交通大学
