@@ -32,7 +32,7 @@
 - 验证主体仍然是 `ES`，即 edge-centric verification
 - 威胁模型只防范不可信 `CS/Cloud` 对 checkpoint 选中聚合结果的篡改，不把 `ES` 作为攻击者
 - 因此密码学验证只需覆盖 `CS \to ES` 交付的解掩码后 `raw sum`；`ES` 验证通过后，再执行公开确定性的组级补偿与 `FedAvg` 归一化
-- 本章自洽性主要由密码学验证等式和模型训练/补偿公式保证，ACK、原子提交和缓存并发控制等属于实现完善项，不作为主协议数学成立的额外前提
+- 本章自洽性主要由密码学验证等式和模型训练/补偿公式保证。为避免重复贡献，协议声明 exactly-once 语义：每个客户端更新与每个组包携带唯一标识，Cloud/TA 对已成功聚合的组包拒绝重放；完整的 ACK 握手、原子提交与缓存并发控制属实现完善项，不作为主协议数学成立的额外前提。
 
 ### 2.2 异步口径
 
@@ -52,12 +52,12 @@
 
 ### 2.4 权重与组间补偿口径
 
-为保证 strict `FedAvg` 与掩码、`LHH` 验证链路同时成立，本章将“客户端本地混合”“样本量加权平均”和“组间补偿”明确区分：
+为保证样本量加权聚合骨架与掩码、`LHH` 验证链路同时成立，本章将”客户端本地混合””样本量加权平均”和”组间补偿”明确区分：
 
 - 客户端本地 stale 结果权重 `\rho_i`，满足 `0 \le \rho_i \le \rho_{\max} \le 0.5`
-- 客户端样本量 `s_i^k` 对应的组内 strict `FedAvg` 加权
+- 客户端样本量 `s_i^k` 对应的组内 strict sample-weighted 求和
 - 组级总样本量 `S_k(t_k)` 对应的 checkpoint 聚合权重
-- checkpoint 级总样本量 `S_Q(t)` 对应的最终 strict `FedAvg` 归一化
+- checkpoint 级总样本量 `S_Q(t)` 对应的最终 `FedAvg`-form 归一化
 - 在 `raw sum` 完成 `LHH` 验证后，引入 `DVAFL` 的 `Direct-VCM` 风格公开确定性组间补偿
 
 本章主协议中 **不引入解掩码前的组间连续非等权系数**。也就是说，不再把
@@ -229,7 +229,9 @@ w_i^{\mathit{MAFSA}}
       + (1 - \alpha_i) \cdot w_i^{\mathit{stale}}
 ```
 
-按该公式，随着 `E_i` 增大，当前新结果的权重 `\alpha_i` 减小，而 stale 结果的权重 `1-\alpha_i` 增大。考虑到版本间隔越大时 stale 结果与当前优化方向的偏差风险通常更高，本文将指数衰减量改为直接控制 stale 结果，并增加 `\rho_{\max}` 上界。因此，本章应表述为“**受 MAFSA stale-result reuse 启发的安全聚合兼容及时效性修正**”，而不是“直接采用 MAFSA 的加权公式”。
+按该公式，随着 `E_i` 增大，当前新结果的权重 `\alpha_i` 减小，而 stale 结果的权重 `1-\alpha_i` 增大。考虑到版本间隔越大时 stale 结果与当前优化方向的偏差风险通常更高，本文将指数衰减量改为直接控制 stale 结果，并增加 `\rho_{\max}` 上界。因此，本章应表述为”**受 MAFSA stale-result reuse 启发的安全聚合兼容及时效性修正**”，而不是”直接采用 MAFSA 的加权公式”。
+
+此外需界定 stale 来源差异：本文沿用 MAFSA 在参数空间直接融合 fresh/stale local models 的基本形式，但将 stale 来源限定为已完成训练却因掉线或上传超时未被 ES 接收的单次结果；该定义不包含 MAFSA 中客户端掉线期间沿本地模型轨迹持续训练的假设。基版本对齐的更新量混合（先对齐到同一基版本再融合）作为更严格的扩展，留作消融项，不进入主协议。
 
 随后客户端对该混合结果加掩码上传：
 
@@ -513,7 +515,7 @@ G_k(t) = W(t) - W(t_k)
 C_k(t) = S_k(t_k) · γ_{\mathit{vcm}} · G_k(t), \quad \Pi_k(t_k) \in Q(t),\ t_k < t
 ```
 
-之所以采用 `S_k(t_k)` 而不是 `n_k(t_k)`，是因为 `W_{\mathit{sum}}^{\mathit{raw}}(t)` 本身处在“样本量加权和”的量纲中，组间补偿项也必须保持相同量纲，才能与 strict `FedAvg` 的最终归一化一致。
+之所以采用 `S_k(t_k)` 而不是 `n_k(t_k)`，是因为 `W_{\mathit{sum}}^{\mathit{raw}}(t)` 本身处在”样本量加权和”的量纲中，组间补偿项也必须保持相同量纲，才能与 `FedAvg`-form 最终归一化一致。
 
 于是，本次 checkpoint 的补偿后明文和为：
 
@@ -528,9 +530,9 @@ W_{\mathit{sum}}^{\mathit{corr}}(t) = W_{\mathit{sum}}^{\mathit{raw}}(t)
 W(t+1) = W_{\mathit{sum}}^{\mathit{corr}}(t) / S_Q(t)
 ```
 
-若所有在线客户端样本量近似相同，则有 `S_k(t_k) \propto n_k(t_k)`，此时本章 strict `FedAvg` 口径会自然退化为前一版按客户端个数平均的写法。
+若所有在线客户端样本量近似相同，则有 `S_k(t_k) \propto n_k(t_k)`，此时本章 `FedAvg`-form 归一化会自然退化为前一版按客户端个数平均的写法。
 
-也就是说，本章最终版保留的是”strict `FedAvg` 样本量加权平均 + 公开确定性组间补偿”的语义：
+也就是说，本章最终版保留的是”样本量加权的 `FedAvg`-form 聚合骨架 + 公开确定性组间补偿”的语义：
 
 - 先在客户端本地完成 `stale reuse` 混合
 - 再在组内形成“样本量加权明文模型和 + 普通掩码和”
@@ -590,7 +592,7 @@ W(t+1) = W_{\mathit{sum}}^{\mathit{corr}}(t) / S_Q(t)
 S_Q(t) = \sum_{\Pi_k(t_k) \in Q(t)} S_k(t_k)
 ```
 
-各 `ES` 将本地重构得到的 `W(t+1)` 作为本次 checkpoint 的可信最终模型，下发给各自组内的客户端用于下一轮本地训练。若 Cloud 也广播了一个 `W(t+1)`，`ES` 可对其做哈希一致性检查（例如 `\mathsf{Hash}(W_{\mathit{ES}}) = \mathsf{Hash}(W_{\mathit{Cloud}})`），但这是可选的传输完整性比对，不是密码学验证步骤——因为 Cloud 此时已不再是需要被防范的攻击面：`raw sum` 的正确性已被 Step 2 的 LHH 等式判定，补偿和平均的每一步都可以由 `ES` 用公开量独立复现。
+各 `ES` 将本地重构得到的 `W(t+1)` 作为本次 checkpoint 的可信最终模型，下发给各自组内的客户端用于下一轮本地训练。若 Cloud 也广播了一个 `W(t+1)`，`ES` 可对其做哈希一致性检查（例如 `\mathsf{Hash}(W_{\mathit{ES}}) = \mathsf{Hash}(W_{\mathit{Cloud}})`），但这是可选的传输完整性比对，不是密码学验证步骤。规范结果以 `ES` 本地派生为准：`raw sum` 的正确性已被 Step 2 的 LHH 等式判定，补偿和平均的每一步都可由 `ES` 用公开量独立复现；Cloud 广播的 `W(t+1)` 仅作参考，不被直接信任。
 
 本章的安全边界由此收口为：
 
@@ -796,7 +798,7 @@ W(2) = W_{\mathit{sum}}^{\mathit{corr}}(1) / (S_4(0) + S_5(0) + S_1(1))
 
 - 它发生在客户端本地、掩码之前
 - TA 仍然只按实际参与集合计算掩码和
-- Cloud 仍然只做组包求和、解掩码、公开补偿和 strict `FedAvg` 归一化
+- Cloud 仍然只做组包求和、解掩码、公开补偿和 `FedAvg`-form 归一化
 - `ES` 仍然先做”签名验证 + LHH 关系验证”，再按公开规则本地重构最终模型并下发给所属客户端
 
 如果将组内 `stale reuse` 纳入正式方案，则第四章的结构可以稳定表述为：
@@ -823,16 +825,15 @@ W(2) = W_{\mathit{sum}}^{\mathit{corr}}(1) / (S_4(0) + S_5(0) + S_1(1))
 
 ## 8. 实验方案
 
-建议实验主线保留六组，既能体现组间半异步，也能把组内 `stale reuse` 与组间补偿单独打出来：
+建议实验主线保留五组，既能体现组间半异步，也能把组内 `stale reuse` 与组间补偿单独打出来：
 
 1. `Sync-HVSA`
 2. `Grouped-HVSA + Inter-Group Sync`
 3. `Grouped-HVSA + Buffer/Checkpoint Semi-Async`
 4. `Grouped-HVSA + Buffer/Checkpoint Semi-Async + Intra-Group Stale Reuse`
 5. `Grouped-HVSA + Buffer/Checkpoint Semi-Async + Intra-Group Stale Reuse + Direct-VCM Group Compensation`
-6. `Grouped-HVSA + Buffer/Checkpoint Semi-Async + Intra-Group Stale Reuse + Direct-VCM Group Compensation + Tampering Attack`
 
-攻击实验只做三类即可：
+攻击实验以第 5 组（完整方案）为基座，叠加三类篡改攻击，与性能基线分开报告。攻击实验只做三类即可：
 
 - 篡改本次 checkpoint 输出的全局模型
 - 篡改 `checkpoint_manifest(t)`，即篡改已公布的 checkpoint 选中集合或其中组包元数据
@@ -857,7 +858,7 @@ W(2) = W_{\mathit{sum}}^{\mathit{corr}}(1) / (S_4(0) + S_5(0) + S_1(1))
 
 | 参数 | 含义 | 消融 |
 |------|------|------|
-| `K` | checkpoint 触发阈值 | 固定 `K = 3`，不做消融 |
+| `K` | checkpoint 触发阈值 | `K ∈ {2, 3, 5}` 敏感性测试 |
 | `s_max` | 最大陈旧度（过期阈值） | `s_max ∈ {2, 3, 5}` 敏感性测试 |
 | `Δ_timeout` | 超时触发时限 | 可做开关对比，不做网格搜索 |
 | `policy` | 缓冲选择策略 | `FIFO / Fresh-first / Fairness-aware Fresh-first` |
