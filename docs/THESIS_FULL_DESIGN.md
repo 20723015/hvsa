@@ -143,6 +143,7 @@ VerifyNet、VeriFL、VLMRS、GPVO-FL 等通过同态哈希/签名/承诺实现�
 - **显式出界**：manifest 漏选/调度审查属 anti-censorship，不作主协议安全保证（P2）；全局模型为共识量，不作攻击面。
 - **样本量自报**：`s_i^k` 为客户端自报，防虚报属客户端数据可信问题，出界。
 - **exactly-once 语义声明**：每个客户端更新与组包携带唯一标识，Cloud/TA 对已聚合组包拒绝重放；完整 ACK 握手/原子提交/缓存并发属实现完善项，不作主协议数学前提。
+- **单TA 信任边界与不合谋假设**：TA 仅持有掩码种子与在线集合，不接收 masked model（`w̄_i^k` 或 `W̄_k`）；Cloud/ES 持有 masked model 但无掩码。隐私依赖二者职责分离，故假设 **TA 不与 Cloud 或 ES 合谋**（trusted-dealer 式安全聚合标准前提）。此假设为单TA轻量架构的固有代价；门限化 TA 以消除单点信任列为第10章展望，不在本文威胁模型内。
 
 ## 3.3 预备知识（密码学原语）
 
@@ -347,7 +348,7 @@ W(t+1)        = W_sum^corr(t) / S_Q(t)         (S_Q=Σ S_k, FedAvg-form 归一�
 
 ## 8.2 隐私保持
 
-stale 混合在掩码前本地完成，ES/Cloud 仅见一条 masked model；TA 仅按参与集合求掩码，不知 `ρ_i`/`w_stale`。
+stale 混合在掩码前本地完成，ES/Cloud 仅见一条 masked model；TA 仅按参与集合求掩码，不知 `ρ_i`/`w_stale`。在 3.2 不合谋假设下，ES/Cloud 持 masked model 无法解掩码，TA 持掩码无法还原明文——职责分离保证客户端参数不被任何单一实体恢复。
 
 ## 8.3 收敛启发式讨论
 
