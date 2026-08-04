@@ -149,6 +149,30 @@ ABLATIONS = [
      "note": "adaptive s_max 代码待实现，当前仅占位"},
 ]
 
+# 机制交互检验 (THESIS_FULL_DESIGN 4.5.4 I1/I2): 各机制与架构开关的耦合
+# I1: VCM 增益在 checkpoint on/off 下应显著不同 (补偿仅对 mixed-version 生效)
+# I2: reuse 增益在 buffer on/off 下应显著不同 (复用机会随半异步时间线增多)
+INTERACTION_CHECKS = [
+    {"id": "I1", "label": "interaction-vcm-x-checkpoint",
+     "desc": "VCM 增益 × checkpoint 开关 (补偿仅对 mixed-version 生效)",
+     "variants": [
+        ("ckptOff_vcmOff", "-K 5 --s-max 10 --delta-timeout 0 --reuse-rule none --gamma-vcm 0"),
+        ("ckptOff_vcmOn",  "-K 5 --s-max 10 --delta-timeout 0 --reuse-rule none --vcm --gamma-vcm 1.0"),
+        ("ckptOn_vcmOff",  "-K 3 --s-max 3 --reuse-rule none --gamma-vcm 0"),
+        ("ckptOn_vcmOn",   "-K 3 --s-max 3 --reuse-rule none --vcm --gamma-vcm 1.0"),
+    ],
+     "base_args": ""},
+    {"id": "I2", "label": "interaction-reuse-x-buffer",
+     "desc": "stale reuse 增益 × buffer 开关 (复用机会随半异步时间线增多)",
+     "variants": [
+        ("bufOff_reuseOff", "-K 5 --s-max 10 --delta-timeout 0 --reuse-rule none --gamma-vcm 0"),
+        ("bufOff_reuseOn",  "-K 5 --s-max 10 --delta-timeout 0 --reuse-rule ours --rho-max 0.5 --staleness-beta 0.3 --upload-dropout-rate 0.2 --gamma-vcm 0"),
+        ("bufOn_reuseOff",  "-K 3 --s-max 3 --reuse-rule none --gamma-vcm 0"),
+        ("bufOn_reuseOn",   "-K 3 --s-max 3 --reuse-rule ours --rho-max 0.5 --staleness-beta 0.3 --upload-dropout-rate 0.2 --gamma-vcm 0"),
+    ],
+     "base_args": ""},
+]
+
 # 三类攻击实验 (以 G5 完整方案为基座)
 ATTACKS = [
     {"id": "ATK1", "label": "attack-tamper-global",
@@ -309,6 +333,7 @@ def main():
         run_block("五组主实验 (文档 L830-834)", MAIN_GROUPS)
 
     if not args.only or args.only == "ablation":
+        run_block("机制交互检验 (协同证据 I1/I2)", INTERACTION_CHECKS)
         for i, abl in enumerate(ABLATIONS, 1):
             if i in skip_range:
                 print(f"\n--- 跳过消融 {i}: {abl['label']} ---")
