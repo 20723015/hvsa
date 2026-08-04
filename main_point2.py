@@ -41,30 +41,6 @@ DATASET_CONFIGS = {
     },
 }
 
-DEFAULT_ARGS = {
-    'dataset': 'MNIST',
-    'num_edge_servers': 5,
-    'users_per_edge': 4,
-    'K': 3,                     # checkpoint 触发阈值
-    's_max': 3,                 # 最大陈旧度
-    'max_checkpoints': 20,     # 最多 checkpoint 数
-    'max_ticks': 200,           # 最大模拟 tick
-    'gamma_vcm': 1.0,           # Direct-VCM 补偿强度
-    'staleness_beta': 0.3,      # β_c: stale reuse 衰减
-    'dropout_rate': 0.1,        # 每 tick 客户端训练前掉线率
-    'upload_dropout_rate': 0.0,  # 训练后上传丢包率 (控制 stale 来源)
-    'reuse_rule': 'ours',       # 复用规则: none / mafsa / ours
-    'rho_max': 0.5,             # stale 结果最大权重 (仅 ours)
-    'enable_vcm': False,
-    'enable_verification': False,
-    'min_delay': 1,             # 最快组几个 tick
-    'max_delay': 5,             # 最慢组几个 tick
-    'delta_timeout': 0,         # 超时触发时限 (0=禁用)
-    'policy': 'fifo',           # 缓冲选择策略: fifo / fresh_first / fair_fresh_first
-    'D_fair': 2,                # 公平保底阈值 (仅 fair 策略)
-    'attack': 'none',           # 攻击类型: none / tamper_global / tamper_manifest / drop_replace_pkg
-}
-
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -113,7 +89,7 @@ def run_point2_simulation(args: argparse.Namespace):
     for i in range(args.num_edge_servers):
         es = EdgeServer(
             id=f"edge_{i}", cloud_server=cloud, ta=ta,
-            enable_verification=args.enable_verification,
+            enable_verification=args.verify,
         )
         edges.append(es)
 
@@ -275,16 +251,18 @@ def run_point2_simulation(args: argparse.Namespace):
             raw_sum_int = cloud.p2_recover_raw_sum(selected, M_Q)
 
             # Direct-VCM 补偿
-            gamma = args.gamma_vcm if args.enable_vcm else 0.0
+            gamma = args.gamma_vcm if args.vcm else 0.0
             corrected_sum, final_model, comp_map = cloud.p2_apply_vcm_and_average(
                 selected, raw_sum_int, gamma_vcm=gamma)
 
             # 攻击注入 (独立于性能基线, 仅攻击实验时启用)
             if args.attack == 'tamper_global':
-                tampered = final_model + rng.normal(0, 0.01, final_model.shape)
-                logger.warning(f"Tick {current_tick}: [ATTACK] tamper_global")
+                # Cloud 篡改 W_sum^raw: 归约到 Theorem 4.1 (i), 应被 Step 2 LHH 等式检测
+                tampered_raw = raw_sum_int.copy()
+                tampered_raw[0] += 1
+                logger.warning(f"Tick {current_tick}: [ATTACK] tamper_global (W_sum^raw[0]+=1)")
                 result = cloud.p2_commit_checkpoint(
-                    selected, tampered, raw_sum_int, M_Q, H_mask_raw,
+                    selected, final_model, tampered_raw, M_Q, H_mask_raw,
                     corrected_sum, comp_map)
             elif args.attack == 'tamper_manifest':
                 # 篡改选中的组包集合 (注入一个不存在的组包)
@@ -404,6 +382,13 @@ def run_point2_simulation(args: argparse.Namespace):
     # 最终准确率
     final_acc = acc_history[-1][1] if acc_history else 0.0
 
+    # 验证统计 (攻击实验的 tampering detection rate)
+    verify_total = len(cloud.p2_checkpoint_log)
+    verify_pass = sum(1 for r in cloud.p2_checkpoint_log if r.verification_passed)
+    attack_detected = 0.0
+    if args.attack != 'none' and verify_total > 0:
+        attack_detected = (verify_total - verify_pass) / verify_total
+
     logger.info(f"\n=== 模拟完成: {checkpoint_count} checkpoints, "
                  f"{current_tick} ticks, 墙钟 {wc_elapsed:.1f}s ===")
     logger.info(f"Accuracy history: {acc_history}")
@@ -418,7 +403,9 @@ def run_point2_simulation(args: argparse.Namespace):
     logger.info(f"  Checkpoint 中 stale 组包数: {stale_in_checkpoint}")
     logger.info(f"  组间公平性 (选中次数方差): {fairness_var:.4f}")
     logger.info(f"  有效吞吐量 (sample/tick): {np.mean(p2_metrics['throughput']):.1f}" if p2_metrics['throughput'] else "  有效吞吐量: N/A")
-    logger.info(f"  Verification passed: {sum(1 for r in cloud.p2_checkpoint_log if r.verification_passed)}/{len(cloud.p2_checkpoint_log)}")
+    logger.info(f"  验证通过: {verify_pass}/{verify_total}")
+    if args.attack != 'none':
+        logger.info(f"  Attack detection rate: {attack_detected:.2%}")
 
     # --- 6. 画图 ---
     if acc_history:
@@ -436,7 +423,7 @@ def run_point2_simulation(args: argparse.Namespace):
         title_parts = [f'{args.dataset}']
         if args.reuse_rule != 'none':
             title_parts.append(f'+StaleReuse({args.reuse_rule})')
-        if args.enable_vcm:
+        if args.vcm:
             title_parts.append('+VCM')
         axes[0].set_title(' '.join(title_parts))
         axes[0].grid(True, linestyle='--', alpha=0.6)
@@ -478,6 +465,9 @@ def run_point2_simulation(args: argparse.Namespace):
         expired_buffer_count=expired_from_buffer,
         stale_in_checkpoint=stale_in_checkpoint,
         total_stale_reuses=total_stale_reuses,
+        verify_pass_count=verify_pass,
+        verify_total_count=verify_total,
+        attack_detected=attack_detected,
         config=str(args),
     )
     logger.info("数据已保存.")
@@ -496,6 +486,9 @@ if __name__ == "__main__":
     parser.add_argument('--s-max', type=int, default=3, help='max staleness')
     parser.add_argument('--max-checkpoints', type=int, default=20)
     parser.add_argument('--max-ticks', type=int, default=300)
+    # 组间异构时延 (ticks)
+    parser.add_argument('--min-delay', type=int, default=1, help='fastest group delay (ticks)')
+    parser.add_argument('--max-delay', type=int, default=5, help='slowest group delay (ticks)')
     # stale reuse (E5: 三规则消融)
     parser.add_argument('--reuse-rule', default='ours', choices=['none', 'mafsa', 'ours'],
                         help='stale reuse rule')

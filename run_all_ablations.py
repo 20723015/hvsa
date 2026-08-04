@@ -247,6 +247,9 @@ def collect_npz_results(out_dir: str) -> list[dict]:
             total_stale = int(d.get("total_stale_reuses", 0))
             expired = int(d.get("expired_buffer_count", 0))
             fairness = float(d.get("fairness_var", 0))
+            verify_pass = int(d.get("verify_pass_count", 0))
+            verify_total = int(d.get("verify_total_count", 0))
+            attack_detected = float(d.get("attack_detected", 0))
             config = str(d.get("config", ""))
             rows.append({
                 "file": os.path.basename(npz_path),
@@ -257,6 +260,10 @@ def collect_npz_results(out_dir: str) -> list[dict]:
                 "total_stale": total_stale,
                 "expired": expired,
                 "fairness_var": round(fairness, 4),
+                "verify_pass": verify_pass,
+                "verify_total": verify_total,
+                "attack_detected": attack_detected,
+                "is_attack": ("attack=" in config and "attack='none'" not in config),
                 "config": config,
                 "acc_history": (
                     acc.tolist() if acc is not None and len(acc.shape) > 0 else []
@@ -384,13 +391,16 @@ def main():
         f.write(f"研究点2 批量消融实验  数据集={args.dataset}  {ts}\n")
         f.write(f"{'='*60}\n")
         if npz_rows:
-            f.write(f"{'实验':<40} {'Acc%':>8} {'墙钟s':>8} {'等待':>6} {'CompGain':>10} {'Stale':>6} {'过期':>5}\n")
-            f.write(f"{'-'*40} {'-'*8} {'-'*8} {'-'*6} {'-'*10} {'-'*6} {'-'*5}\n")
+            f.write(f"{'实验':<40} {'Acc%':>8} {'墙钟s':>8} {'等待':>6} {'CompGain':>10} {'Stale':>6} {'过期':>5} {'验证':>7} {'检率%':>7}\n")
+            f.write(f"{'-'*40} {'-'*8} {'-'*8} {'-'*6} {'-'*10} {'-'*6} {'-'*5} {'-'*7} {'-'*7}\n")
             for row in npz_rows:
+                vt = row['verify_total']
+                det = f"{row['attack_detected']*100:.0f}" if (vt > 0 and row['is_attack']) else "-"
                 f.write(
                     f"{row['file']:<40} {row['final_acc']:>8.2f} {row['wall_s']:>8.1f} "
                     f"{row['avg_wait']:>6.1f} {row['comp_gain']:>10.4f} "
-                    f"{row['total_stale']:>6} {row['expired']:>5}\n"
+                    f"{row['total_stale']:>6} {row['expired']:>5} "
+                    f"{row['verify_pass']:>3}/{vt:>3} {det:>7}\n"
                 )
         f.write(f"\n{'='*60}\n")
         f.write(f"运行汇总: {ok_count}/{len(all_results)} 成功\n")
