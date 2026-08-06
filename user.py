@@ -192,7 +192,7 @@ class User:
         try:
             # 1. 设置全局模型并训练
             unflatten_parameters(self.model, global_flat, model_meta)
-            local_train(self.model, train_loader, local_epochs, lr)
+            train_local(self.model, train_loader, local_epochs, lr)
 
             # 2. 获取训练后新模型 w_i^{new,k}
             new_flat, _ = flatten_parameters(self.model)

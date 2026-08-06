@@ -227,10 +227,11 @@ def run_point2_simulation(args: argparse.Namespace):
                         pending_stale_reuse_count += 1
                     u.p2_confirm_consumed()
 
-                # 封组
+                # 封组 (n_min 隐私前提不足则不封组)
                 if e._p2_online_users:
                     pkg = e.p2_seal_group_package(tick=current_tick)
-                    cloud.p2_receive_group_package(pkg, arrival_tick=current_tick)
+                    if pkg is not None:
+                        cloud.p2_receive_group_package(pkg, arrival_tick=current_tick)
 
                 edge_state[e.id] = 'idle'
 
@@ -256,14 +257,24 @@ def run_point2_simulation(args: argparse.Namespace):
                 selected, raw_sum_int, gamma_vcm=gamma)
 
             # 攻击注入 (独立于性能基线, 仅攻击实验时启用)
+            # ES 验证的对象是 "Cloud 广播值": 攻击时广播值 = 被篡改的值,
+            # 否则 ES 永远在验证诚实值, 攻击检测率恒为 0
+            broadcast_selected = selected
+            broadcast_raw = raw_sum_int
+            broadcast_final = final_model
+
             if args.attack == 'tamper_global':
                 # Cloud 篡改 W_sum^raw: 归约到 Theorem 4.1 (i), 应被 Step 2 LHH 等式检测
                 tampered_raw = raw_sum_int.copy()
                 tampered_raw[0] += 1
+                tampered_corrected, tampered_final, _ = cloud.p2_apply_vcm_and_average(
+                    selected, tampered_raw, gamma_vcm=gamma)
+                broadcast_raw = tampered_raw
+                broadcast_final = tampered_final
                 logger.warning(f"Tick {current_tick}: [ATTACK] tamper_global (W_sum^raw[0]+=1)")
                 result = cloud.p2_commit_checkpoint(
-                    selected, final_model, tampered_raw, M_Q, H_mask_raw,
-                    corrected_sum, comp_map)
+                    selected, tampered_final, tampered_raw, M_Q, H_mask_raw,
+                    tampered_corrected, comp_map)
             elif args.attack == 'tamper_manifest':
                 # 篡改选中的组包集合 (注入一个不存在的组包)
                 from point2_types import GroupPackage
@@ -276,6 +287,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     signature=b'\x00', created_tick=current_tick,
                 )
                 selected_attacked = selected + [fake_pkg]
+                broadcast_selected = selected_attacked
                 logger.warning(f"Tick {current_tick}: [ATTACK] tamper_manifest")
                 result = cloud.p2_commit_checkpoint(
                     selected_attacked, final_model, raw_sum_int, M_Q, H_mask_raw,
@@ -284,6 +296,7 @@ def run_point2_simulation(args: argparse.Namespace):
                 # 漏聚合某个组包
                 if len(selected) > 1:
                     selected_attacked = selected[:-1]
+                    broadcast_selected = selected_attacked
                     logger.warning(f"Tick {current_tick}: [ATTACK] drop_replace_pkg "
                                     f"(removed {selected[-1].package_token})")
                     result = cloud.p2_commit_checkpoint(
@@ -298,14 +311,14 @@ def run_point2_simulation(args: argparse.Namespace):
                     selected, final_model, raw_sum_int, M_Q, H_mask_raw,
                     corrected_sum, comp_map)
 
-            # ES 验证
+            # ES 验证 (验证 Cloud 广播值)
             bundle = {
                 'checkpoint_version': result.version,
-                'selected_packages': selected,
-                'raw_sum_int': raw_sum_int,
+                'selected_packages': broadcast_selected,
+                'raw_sum_int': broadcast_raw,
                 'M_Q': M_Q,
                 'H_mask_raw': H_mask_raw,
-                'final_model': final_model,
+                'final_model': broadcast_final,
                 'gamma_vcm': gamma,
                 'global_model_history': cloud.p2_global_model_history,
             }

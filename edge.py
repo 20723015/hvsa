@@ -39,11 +39,13 @@ class EdgeServer:
     def __init__(self, id: str, cloud_server: 'CloudServer',
                  ta: 'TrustedAuthority',
                  enable_verification: bool = True,
+                 n_min: int = 2,
                  llm_reasoner=None, rule_engine=None):
         self.id = id
         self.cloud_server = cloud_server
         self.ta = ta
         self.enable_verification = enable_verification
+        self.n_min = n_min
         self.llm_reasoner = llm_reasoner
         self.rule_engine = rule_engine
         self._full_verify_rounds: list[int] = []
@@ -312,17 +314,22 @@ class EdgeServer:
         except Exception as e:
             logger.error(f"EdgeServer {self.id}: p2接收梯度出错: {e}")
 
-    def p2_seal_group_package(self, tick: int = 0) -> 'GroupPackage':
+    def p2_seal_group_package(self, tick: int = 0) -> Optional['GroupPackage']:
         """point2: 封组，生成 GroupPackage (Π_k).
 
         对应文档 Sec.4.2: 聚合掩码和 → LHH → 签名 → 上报 TA.
+        n_min 隐私前提: 组内在线 < n_min 时不封组 (Sec.3.4.1 Lemma 3.2).
         """
         from point2_types import GroupPackage
+
+        n_k = len(self._p2_online_users)
+        if n_k < self.n_min:
+            logger.warning(f"EdgeServer {self.id}: p2 组内在线 {n_k} < n_min={self.n_min}, 不封组")
+            return None
 
         pre_aggregated = np.sum(np.array(self._p2_masked_gradients), axis=0)
         H_k = LHH.Hash(self.lhh_pp, pre_aggregated)
 
-        n_k = len(self._p2_online_users)
         S_k = sum(self._p2_user_samples.values())
 
         # 签名: (edge_id, package_token, base_hash, digest(users), n_k, S_k, H_k)
