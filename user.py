@@ -17,7 +17,7 @@ except ImportError:
     print("错误: 无法从 models.py 导入。请确保 models.py 存在。")
     sys.exit(1)
 
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from edge import EdgeServer
@@ -121,9 +121,9 @@ class User:
 
     def point2_init_cache(self):
         """初始化 point2 缓存状态."""
-        self._p2_stale_flat: np.ndarray | None = None      # w_i^{stale,k}: 因上传失败而缓存的本地模型
+        self._p2_stale_flat: Optional[np.ndarray] = None      # w_i^{stale,k}: 因上传失败而缓存的本地模型
         self._p2_stale_version: int = -1                    # t_i: stale 结果的产生版本
-        self._p2_pending_plain_flat: np.ndarray | None = None  # 本轮新训练的模型 (上传前)
+        self._p2_pending_plain_flat: Optional[np.ndarray] = None  # 本轮新训练的模型 (上传前)
         self._p2_last_training_base_version: int = -1        # 本轮训练基版本
         self._p2_sample_size: int = 0                         # |D_i^k|
 
@@ -166,7 +166,7 @@ class User:
         staleness_beta: float = 0.3,
         reuse_rule: str = 'ours',
         rho_max: float = 0.5,
-    ) -> np.ndarray | None:
+    ) -> Optional[np.ndarray]:
         """point2: 训练 → stale reuse 混合 → 掩码 → 上传.
 
         对应文档 Sec.4.2 + Sec 8.1 消融表:
@@ -225,9 +225,11 @@ class User:
             # 保存本轮新训练的模型 (用于上传失败时缓存 stale)
             self._p2_pending_plain_flat = new_flat.astype(np.float64).copy()
 
-            # 4. 量化 + 掩码 + 上传
+            # 4. 样本量加权 + 量化 + 掩码 + 上传
+            #    w̄_i^k = s_i^k·w_i^k + m_i^k: 权重只乘明文不乘掩码,
+            #    否则 TA 求掩码和时需按样本量加权, 破坏单 TA 掩码链路
             dim = mixed_flat.shape[0]
-            model_int = (mixed_flat * QUANTIZE_SCALE).astype(np.int64)
+            model_int = (mixed_flat * self._p2_sample_size * QUANTIZE_SCALE).astype(np.int64)
             mask_int = PRG.mask_int(self._ta_seed, self.id, package_token, dim)
             masked_int = model_int + mask_int
 

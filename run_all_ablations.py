@@ -26,6 +26,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from typing import List, Optional
 
 # ============================================================
 # 实验定义
@@ -192,7 +193,7 @@ ATTACKS = [
 # ============================================================
 
 def run_one(label: str, extra_args: str, dataset: str, out_dir: str,
-            quick: bool, dry_run: bool) -> dict | None:
+            quick: bool, dry_run: bool) -> Optional[dict]:
     """运行一次 main_point2.py, 返回结果摘要."""
     max_ckpt = "5" if quick else "20"
     max_ticks = "80" if quick else "300"
@@ -232,7 +233,7 @@ def run_one(label: str, extra_args: str, dataset: str, out_dir: str,
     }
 
 
-def collect_npz_results(out_dir: str) -> list[dict]:
+def collect_npz_results(out_dir: str) -> List[dict]:
     """扫描 out_dir 下的 NPZ 文件, 提取关键指标."""
     import glob
     rows = []
