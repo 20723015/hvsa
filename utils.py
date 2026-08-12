@@ -60,15 +60,34 @@ class LHH:
     @staticmethod
     @lru_cache(maxsize=4096)
     def _generator_for(seed: bytes, index: int) -> Point:
-        order = LHH.CURVE.order
-        material = (
-            LHH.GENERATOR_DOMAIN
-            + len(seed).to_bytes(4, "big")
-            + seed
-            + int(index).to_bytes(16, "big", signed=False)
-        )
-        scalar = int.from_bytes(hashlib.sha256(material).digest(), "big") % (order - 1) + 1
-        return LHH.CURVE.generator * scalar
+        """hash-to-curve (try-and-increment) 派生第 index 个生成元.
+
+        直接把 seed 哈希成曲线上一点, 该点的离散对数 (w.r.t. 基点 G) 在
+        随机预言机模型下不可从公开种子派生。这与论文 Lemma 3.3 的 DLP 抗碰撞
+        假设一致: 即使 `a_i` 不再被当作 TA 秘密, 敌手仍无法求 `g_i` 的离散对数。
+        (旧实现把 seed 哈希成标量再乘 G, 等于公开了 `a_i`, 碰撞可平凡构造。)
+        """
+        curve = LHH.CURVE.curve
+        p = curve.p()
+        a = curve.a()
+        b = curve.b()
+        counter = 0
+        while True:
+            material = (
+                LHH.GENERATOR_DOMAIN
+                + len(seed).to_bytes(4, "big")
+                + seed
+                + int(index).to_bytes(16, "big", signed=False)
+                + counter.to_bytes(8, "big")
+            )
+            x = int.from_bytes(hashlib.sha256(material).digest(), "big") % p
+            # y² = x³ + a·x + b (mod p); P-256 满足 p ≡ 3 (mod 4)
+            y2 = (pow(x, 3, p) + a * x + b) % p
+            y = pow(y2, (p + 1) // 4, p)
+            if y == 0 or (y * y) % p != y2:
+                counter += 1
+                continue
+            return Point(curve, x, y, LHH.CURVE.order)
 
     @staticmethod
     def Hash(pp: Union[LHHPublicParams, list], vector: np.ndarray) -> Point:

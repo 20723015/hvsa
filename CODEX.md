@@ -1,109 +1,97 @@
-# Dual-TA HVSA Notes
+# Single-TA HVSA Notes
 
 ## Goal
 
 This repository implements a hierarchical federated learning scheme with:
 
-- one `CloudServer`
-- multiple `EdgeServer`s
+- one `CloudServer` (untrusted, may be malicious)
+- multiple `EdgeServer`s (verify Cloud results, sign group evidence)
 - many `User`s
-- two logical trusted authorities: `TA1` and `TA2`
+- one trusted authority (`TA`)
 
 The design target is:
 
 - keep user-side cost near `O(d)`
-- avoid a single fully trusted TA
+- single-TA lightweight verifiable secure aggregation (research points 1 and 2)
 - preserve dropout tolerance through online-user lists
 - keep verification at the edge layer instead of burdening users
 
 ## Current Code Anchors
 
-- `user.py`: user registration, local training, dual-TA masking, upload
-- `ta.py`: `TrustedAuthority`, per-user seed agreement, partial mask computation, mask hash generation
-- `edge.py`: edge aggregation, online-user reporting, signature generation, global-result verification
-- `cloud.py`: masked-sum collection, partial-mask collection, final unmasking and averaging
-- `utils.py`: key agreement, PRG, LHH, signatures, quantization helpers
+- `user.py`: user registration, local training, single-TA masking, upload
+- `ta.py`: `TrustedAuthority`, per-user seed agreement, global-mask computation, mask-hash generation
+- `edge.py`: edge aggregation, online-user reporting, metadata signature generation, global-result verification, point-2 buffer/checkpoint
+- `cloud.py`: masked-sum collection, unmasking to `W_sum^raw` (does NOT produce the canonical model)
+- `utils.py`: key agreement, PRG, LHH (hash-to-curve generators), signatures, quantization helpers
 
 ## Core Architecture
 
 ### 1. Registration
 
-Each user establishes one secret seed with `TA1` and one secret seed with `TA2`.
+Each user establishes one secret seed with the TA (X25519 + HKDF).
 
 For user `u_i` at round `t`:
 
-- `m_i^(1)(t) = PRG(s_i^(1), u_i, t)`
-- `m_i^(2)(t) = PRG(s_i^(2), u_i, t)`
-- `m_i(t) = m_i^(1)(t) + m_i^(2)(t)`
+- `m_i(t) = PRG(s_i, u_i, t)`
 
 The user uploads only one masked vector:
 
-- `wbar_i(t) = w_i(t) + m_i(t)`
-
-Do not split the user upload into two shares unless the whole protocol is intentionally redesigned.
+- `wbar_i(t) = Quantize(w_i(t)) + m_i(t)`
 
 ### 2. Edge Aggregation
 
 Each edge server:
 
 - collects masked uploads from online users
-- computes the local masked sum
-- optionally computes `LHH` and signs the local evidence
-- sends the online user list to both `TA1` and `TA2`
-- forwards the masked aggregate to the cloud
+- computes the local masked sum `Wbar_k(t)`
+- computes `H_k(t) = LHH.Hash(pp_LHH, Wbar_k(t))`
+- signs the full metadata `meta_k = (edge_id, round, base_hash, digest(U_online), n_k, S_k, H_k)`
+- sends the online user list to the TA
+- forwards the masked aggregate and signed evidence to the cloud
 
-### 3. Dual-TA Partial Unmasking
+### 3. TA Global Mask and Cloud Unmask
 
-`TA1` and `TA2` independently compute partial global masks from the same online-user set:
+The TA derives the global mask from the union of online-user lists:
 
-- `M_global^(1)(t) = sum m_i^(1)(t)`
-- `M_global^(2)(t) = sum m_i^(2)(t)`
+- `M_global(t) = sum_{u in U_online(t)} m_u(t)`
+- `H_mask(t) = LHH.Hash(M_global(t))`
 
-The cloud must collect both partial masks before unmasking:
+The TA sends `M_global(t)` to the cloud (the aggregate mask is not a secret; it must be known to unmask). The cloud computes the verified plaintext sum only:
 
-- `W_sum(t) = sum_k Wbar_k(t) - M_global^(1)(t) - M_global^(2)(t)`
+- `W_sum^raw(t) = sum_k Wbar_k(t) - M_global(t)`
 
-This is a `2-of-2` logical protocol, not a threshold TA design.
+The cloud does NOT generate a canonical global model. The consensus model is reconstructed deterministically by the edge servers after verification:
+
+- `W(t+1) = W_sum^raw(t) / |U_online(t)|`
 
 ### 4. Verification
 
-Verification should remain edge-centric.
+Verification is edge-centric. Each edge checks:
 
-Recommended relation:
+- Ed25519 signatures over the full `meta_k`
+- the LHH relation `H_sum^raw(t) * H_mask(t) = product_k H_k(t)`
 
-- `H_sum(t) * H_mask^(1)(t) * H_mask^(2)(t) = product_k H_k(t)`
-
-Where:
-
-- `H_k(t)` is the LHH hash of edge `k`'s masked aggregate
-- `H_sum(t)` is the LHH hash of the recovered global plaintext sum
-- `H_mask^(1)(t)` and `H_mask^(2)(t)` are the hashes of the two partial global masks
-
-Important:
-
-- the two TAs provide mask evidence
-- the edge servers remain the main verification executors
-- do not move full verification logic into both TAs unless there is a strong research reason
+On success, the edge reconstructs `W(t+1) = W_sum^raw / n_online` as the next consensus model.
 
 ## Threat Model
 
 The intended trust assumptions are:
 
-- `TA1` and `TA2` are independent logical authorities
-- each TA is semi-honest
-- `TA1` and `TA2` do not collude
-- the cloud may be malicious
-- edge servers are honest-but-curious unless a specific experiment changes that assumption
+- the TA is fully trusted and never colludes; it holds all user mask seeds
+- the cloud is malicious (may tamper, drop, or replay)
+- edge servers may collude with the cloud (share the protocol view); privacy is judged per client
+- privacy goal: protect each individual client's parameters; group/global aggregates and the aggregate mask may be disclosed
+
+For a released aggregate containing `N` clients with `c <= N - 2` colluding clients, at least two non-colluding clients remain (`N - c >= 2`). In research point 1, `N = N_online(t)`; in research point 2, `N = N_Q(t) = sum_{Pi_k in Q} n_k(t_k)`. `n_min >= 2` is an admission guard, not the collusion threshold.
 
 Security intuition:
 
-- `CS + TA1` is insufficient to recover honest user updates
-- `CS + TA2` is insufficient to recover honest user updates
-- privacy fails only if both TAs collude or both sides leak the necessary secrets
+- the cloud cannot recover any individual client's parameters from `M_global` and `W_sum^raw` while `N - c >= 2`
+- the cloud cannot tamper `W_sum^raw` without being caught (LHH collision resistance) and cannot forge edge evidence (Ed25519)
 
 ## Review Boundary: Collusion and Secure Channels
 
-The following assumptions are fixed review premises for the single-TA research-point and thesis documents. They do not replace the separate dual-logical-TA implementation invariants below:
+The following assumptions are fixed review premises for the single-TA research-point and thesis documents:
 
 1. Do not assess anti-collusion security by replacing the intended multi-party aggregation with an artificial two-participant scenario. For an actually released aggregate containing `N` clients, the supported maximum-collusion model allows the Cloud to collude with all ESs and with at most `c <= N - 2` clients, so at least two non-colluding clients remain: `N - c >= 2`. In Research Point 1, `N = N_online(t)`; in Research Point 2, `N = N_Q(t) = sum_{Pi_k in Q} n_k(t_k)`. `n_min >= 2` is only a package/round admission guard and is not itself the collusion threshold. A timeout checkpoint containing one group is valid when that group still satisfies the client-level threshold; do not replace the client threshold with `|Q| >= 2`.
 2. Protocol communication uses ideal secure channels. Messages are not distorted, substituted, forged, or misattributed in transit. A message that an ES receives from a fully trusted TA is assumed authentic and correct by definition.
@@ -114,37 +102,28 @@ The following assumptions are fixed review premises for the single-TA research-p
 
 ## Availability Assumption
 
-This repository should treat the protocol as:
-
-- dual logical TAs at the protocol layer
-- primary/standby deployment at the system layer
-
-That means:
-
-- protocol security comes from dual authorities
-- availability comes from engineering redundancy, not threshold cryptography
-
-Do not silently upgrade the design to threshold TA unless the paper chapter, threat model, and experiments are updated together.
+Availability is an engineering concern, not a cryptographic one in this design. The single TA is assumed available; availability engineering (e.g., primary/standby deployment of the TA) is a system-layer concern and is out of scope for the protocol security model. Do not silently upgrade the design to threshold TA unless the paper chapter, threat model, and experiments are updated together.
 
 ## Implementation Rules
 
-When modifying the dual-TA pipeline, preserve these invariants:
+When modifying the single-TA pipeline, preserve these invariants:
 
-1. Users must negotiate independent seeds with both TAs.
-2. Users should upload one masked vector, not two separate protocol branches.
-3. Both TAs must derive masks only from registered seeds plus round metadata.
+1. Users negotiate one independent seed with the TA.
+2. Users upload one masked vector, not multiple protocol branches.
+3. The TA derives masks only from registered seeds plus round/package metadata.
 4. Online-user lists must be the source of dropout recovery.
-5. The cloud must not unmask until all required partial masks arrive.
-6. Verification should use edge-produced evidence plus TA mask hashes.
+5. The cloud must not unmask until the TA mask arrives; the cloud must not become the source of truth for the consensus model.
+6. Verification should use edge-produced evidence plus the TA mask hash; the edge (not the cloud) derives the consensus model after verification.
 7. The encoding path and aggregate-domain arithmetic must stay consistent across `user.py` and `cloud.py`.
+8. Point-2 exactly-once: each `package_token` is signed/bound by its edge; the append-only `Aggregated_IDs` rejects replay.
 
 ## Anti-Patterns
 
 Avoid these changes unless the whole protocol is intentionally reworked:
 
-- turning one TA into a full PKI authority and the other into a dummy helper
-- letting only one TA determine the final online-user set
-- allowing the cloud to continue after receiving only one partial mask
+- making the cloud the source of truth for the global model
+- skipping edge verification of the plaintext sum
+- moving full verification logic into the TA
 - mixing single-TA and dual-TA formulas in the same round path
 - coupling verification correctness to user-side heavy crypto
 - claiming threshold fault tolerance without implementing real threshold recovery
@@ -153,39 +132,39 @@ Avoid these changes unless the whole protocol is intentionally reworked:
 
 If this design is written into a thesis chapter, frame it as:
 
-"A lightweight verifiable secure aggregation scheme with dual assisted authorities."
+"A lightweight verifiable secure aggregation scheme under a single trusted authority."
 
 Recommended emphasis:
 
-- reduced single-point trust compared with a single-TA design
+- single-TA lightweight architecture (research point 1) and its checkpointed semi-async extension (research point 2)
 - preserved user-side `O(d)` cost
 - dropout tolerance via online-user reporting
-- edge-offloaded verification
-- system-layer high availability through primary/standby deployment
+- edge-offloaded verification with `O(1)` verification communication (independent of `d`)
+- cloud is untrusted: it provides evidence to be verified, never the canonical model
 
 ## If You Extend This Design
 
 Safe extensions:
 
-- add clearer TA1/TA2 naming throughout logs and experiment scripts
-- add explicit verification of `H_mask^(1)` and `H_mask^(2)`
-- add experiments comparing single-TA and dual-TA overhead
-- add primary/standby failover simulation for each logical TA
+- hash-to-curve generator derivation is already in place; do not revert to deriving generators by publishing a scalar (that leaks the discrete log and breaks LHH collision resistance)
+- add experiments comparing verification on/off overhead
+- add primary/standby availability simulation for the TA
 
 Heavy extensions that require a full redesign:
 
 - threshold TA
 - user-to-user secret sharing recovery
-- asynchronous mask release
 - moving verification authority from edges to TAs
+- going back to a dual-TA mask split
 
 ## Short Summary
 
-This codebase should be treated as a dual-TA, edge-verified, hierarchical secure aggregation system.
+This codebase should be treated as a single-TA, edge-verified, hierarchical secure aggregation system.
 
 Keep the split clean:
 
-- users mask once
-- edges aggregate and verify
-- both TAs provide partial unmasking material
-- the cloud combines, unmasks, and averages only after both TA contributions arrive
+- users mask once with the TA seed
+- edges aggregate, sign metadata, and verify
+- the TA provides the aggregate unmasking material
+- the cloud combines and recovers the plaintext sum only
+- edges derive and hold the consensus model

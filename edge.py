@@ -164,12 +164,13 @@ class EdgeServer:
             h_local = LHH.Hash(self.lhh_pp, pre_aggregated_gradient)
             try:
                 n_k = len(self._online_users)
+                S_k = n_k  # RP1 等权: 每客户端权重 1 (对齐论文 Phase 3 meta_k)
                 user_digest = hashlib.sha256(
                     ",".join(sorted(self._online_users)).encode()).digest()
                 # 签名绑定全量元数据 meta_k = (edge_id, round, base_hash,
-                # digest(U_online), n_k, H_k)，对齐 Sec.3.3.3。
+                # digest(U_online), n_k, S_k, H_k)，对齐 Sec.3.3.3。
                 meta_k = (self.id, self._current_round, self._p1_base_hash,
-                          user_digest, n_k, h_local)
+                          user_digest, n_k, S_k, h_local)
                 signature = SIG.sign(pickle.dumps(meta_k), self.my_sign_priv_key)
             except Exception as e:
                 logger.error(f"EdgeServer {self.id}: 签名失败: {e}")
@@ -245,15 +246,24 @@ class EdgeServer:
                     return False
 
                 pub_key = self.all_es_pub_keys[eid]
-                # 重建被签名的 meta_k = (edge_id, round, base_hash,
-                # digest(U_online), n_k, H_k)，对齐 Sec.3.3.3 / Sec.3.3.6 Phase 5a。
+                # 显式交叉核对 round / base_hash (对齐点2验证器; 签名兜底)
                 online_users = item.get('online_users', [])
                 rnd = item.get('round', self._current_round)
                 base_hash = item.get('base_hash', b'')
+                if rnd != self._current_round:
+                    logger.error(f"EdgeServer {self.id}: {eid} round 不匹配 "
+                                 f"(got {rnd}, expect {self._current_round})")
+                    return False
+                if base_hash != self._p1_base_hash:
+                    logger.error(f"EdgeServer {self.id}: {eid} base_hash 不匹配")
+                    return False
+                # 重建被签名的 meta_k = (edge_id, round, base_hash,
+                # digest(U_online), n_k, S_k, H_k)，对齐 Sec.3.3.3 / Sec.3.3.6 Phase 5a。
                 n_k = len(online_users)
+                S_k = n_k  # RP1 等权
                 user_digest = hashlib.sha256(
                     ",".join(sorted(online_users)).encode()).digest()
-                meta_k = (eid, rnd, base_hash, user_digest, n_k, h_val)
+                meta_k = (eid, rnd, base_hash, user_digest, n_k, S_k, h_val)
                 h_bytes = pickle.dumps(meta_k)
 
                 if not SIG.verify(h_bytes, sig, pub_key):
