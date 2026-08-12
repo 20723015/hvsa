@@ -101,6 +101,17 @@ Security intuition:
 - `CS + TA2` is insufficient to recover honest user updates
 - privacy fails only if both TAs collude or both sides leak the necessary secrets
 
+## Review Boundary: Collusion and Secure Channels
+
+The following assumptions are fixed review premises for the single-TA research-point and thesis documents. They do not replace the separate dual-logical-TA implementation invariants below:
+
+1. Do not assess anti-collusion security by replacing the intended multi-party aggregation with an artificial two-participant scenario. For an actually released aggregate containing `N` clients, the supported maximum-collusion model allows the Cloud to collude with all ESs and with at most `c <= N - 2` clients, so at least two non-colluding clients remain: `N - c >= 2`. In Research Point 1, `N = N_online(t)`; in Research Point 2, `N = N_Q(t) = sum_{Pi_k in Q} n_k(t_k)`. `n_min >= 2` is only a package/round admission guard and is not itself the collusion threshold. A timeout checkpoint containing one group is valid when that group still satisfies the client-level threshold; do not replace the client threshold with `|Q| >= 2`.
+2. Protocol communication uses ideal secure channels. Messages are not distorted, substituted, forged, or misattributed in transit. A message that an ES receives from a fully trusted TA is assumed authentic and correct by definition.
+3. The Cloud/CS is untrusted. Values claimed or produced by the Cloud must still be verified wherever the protocol specifies verification. The secure-channel assumption authenticates the sender and preserves the message; it does not make Cloud-generated content trustworthy.
+4. Consequently, do not report missing transport authentication, TA-message signatures, or TA-to-ES provenance plumbing in the experimental code as cryptographic design flaws when the code is abstracting the ideal secure channel. Review whether Cloud-produced results are checked against authentic TA/ES evidence instead.
+5. TA is fully trusted and never colludes. The Cloud may know the aggregate mask because it must unmask the selected aggregate; secrecy of the aggregate mask is not a security goal. The privacy goal protects each individual client's parameters, while ES/group aggregates and Cloud/global aggregates may be disclosed.
+6. Global models, historical model versions, and protocol-declared public hyperparameters are consensus values. Do not turn cache loss, stale local copies, or transmission failures for these values into paper-level security flaws under the ideal-channel model.
+
 ## Availability Assumption
 
 This repository should treat the protocol as:
@@ -125,7 +136,7 @@ When modifying the dual-TA pipeline, preserve these invariants:
 4. Online-user lists must be the source of dropout recovery.
 5. The cloud must not unmask until all required partial masks arrive.
 6. Verification should use edge-produced evidence plus TA mask hashes.
-7. Quantization and dequantization paths must stay consistent across `user.py` and `cloud.py`.
+7. The encoding path and aggregate-domain arithmetic must stay consistent across `user.py` and `cloud.py`.
 
 ## Anti-Patterns
 

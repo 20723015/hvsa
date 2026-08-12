@@ -10,8 +10,11 @@
 
 - **论文理论方法层**：关注协议输入输出、参与实体、信任与威胁模型、公式之间的逻辑关系、密码学原语所需性质、定理假设与结论，以及研究点一和研究点二能否形成递进的论文主线。
 - **数值实现层**：模型参数由浮点数映射到 LHH 或掩码运算所需整数/有限域、量化尺度、浮点误差、数据类型、模运算、溢出边界、序列化方式及精确计算流程等，属于代码与实验实现需要解决的问题，可在实现、测试和实验复现材料中具体设计。
-- **理论抽象约定**：论文协议公式默认存在正确的 `Encode/Quantize` 与 `Decode/Dequantize` 映射，使模型向量进入密码学原语要求的代数域，并默认公式中的加法、标量乘法、掩码抵消与 LHH 同态运算在该抽象域中正确成立。具体采用 `float32/float64`、`int64`、大整数或某一有限域，不作为当前论文 workflow 是否成立的首要判断标准。
+- **理论抽象约定**：论文协议公式默认存在正确的 `Encode/Quantize` 映射，使模型向量进入密码学原语要求的代数域，并默认公式中的加法、标量乘法、掩码抵消、聚合后归一化与 LHH 同态运算在该抽象域中正确成立。具体采用 `float32/float64`、`int64`、大整数或某一有限域，不作为当前论文 workflow 是否成立的首要判断标准。
 - **边界例外**：若某个实现选择会改变论文所依赖的理论性质，例如使同态等式本身不成立、改变安全假设或导致协议输入超出原语定义域，则需在最终实现说明中补充必要条件与验证；但在当前设计阶段，不以具体数据类型或量化误差替代理论方法本身的正确性评估。
+- **多参与方与抗合谋评审边界**：本文面向每轮或每个 checkpoint 有多个（`N` 个）客户端进入同一已发布聚合结果的场景，不用人为缩减成二参与方场景来替代协议的实际参与集合。允许 Cloud 与全部 ES 合谋，并允许 Cloud 与至多 `c≤N−2` 个客户端合谋；隐私成立的客户端级阈值为 `N−c≥2`。研究点一取 `N=N_online(t)`，研究点二取 `N=N_Q(t)=Σ_{Π_k∈Q(t)}n_k(t_k)`。`n_min≥2` 只是封组/发布的准入下界，不等同于合谋阈值；单组超时 checkpoint 只要满足客户端级阈值即为合法，不要求 `|Q|≥2`。
+- **理想安全信道约定**：协议实体之间的信息交互抽象为百分百可靠的安全信道，不考虑消息在传输中的窃听、失真、替换、伪造或发送方冒充。TA 为完全可信实体，因此 ES 收到的 TA 输出按模型定义即为真实、完整且来源可信；实验代码可以用进程内对象或统一 `bundle` 模拟该交付，不因缺少传输层签名或认证信道代码而构成协议缺陷。CS/Cloud 仍是不可信实体，安全信道只能保证“收到的确为 Cloud 所发送”，不能保证 Cloud 生成内容正确，因此 Cloud 提供的 `raw sum`、聚合声明及其他协议指定对象仍须依据可信 TA/ES 证据验证。
+- **共识值与隐私边界**：每轮全局模型、历史全局模型及协议公开超参数默认为共识值，不讨论缓存丢失或传输失真。隐私目标只保护单个客户端参数；ES/组级聚合结果与 CS/全局聚合结果允许公开。Cloud 为完成解掩码必须知道所选集合的聚合掩码 `M_global` 或 `M_Q`，该聚合掩码本身不是秘密。
 
 ---
 
@@ -33,9 +36,9 @@
 
 分层联邦学习（Hierarchical Federated Learning）在"云—边—端"架构下兼顾了隐私与通信效率，但仍面临两大痛点：一是客户端本地模型在上传与聚合过程中可能泄露隐私（梯度/参数泄露攻击），二是云端聚合结果可能被不可信云服务器篡改而难以被参与方检测。本文围绕**单可信权威机构（TA）约束下的轻量可验证安全聚合**展开，提出两个递进的研究点。
 
-研究点一提出 **HVSA**（Hierarchical Verifiable Secure Aggregation），在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私，利用线性同态哈希（LHH）与 Ed25519 签名让边缘服务器（ES）能够对云端聚合结果进行高效验证，验证通信开销与模型维度无关。理论分析表明，在 PRG 伪随机性、n_min≥2 与 TA 不合谋假设下，HVSA 保证客户端参数隐私不可恢复；在 LHH 抗碰撞与 Ed25519 EUF-CMA 假设下，云端任何篡改均可被边缘确定性检测；同时协议对客户端掉线具有自然鲁棒性，掉线用户的掩码与更新自动成对剔除，不破坏验证等式。
+研究点一提出 **HVSA**（Hierarchical Verifiable Secure Aggregation），在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私，利用线性同态哈希（LHH）与 Ed25519 签名让边缘服务器（ES）能够对云端聚合结果进行高效验证，验证通信开销与模型维度无关。理论分析表明，在 PRG 伪随机性、TA 永不合谋且实际在线参与数满足 `N_online(t)−c≥2` 的假设下，即使 Cloud 与全部 ES 及至多 `c≤N_online(t)−2` 个客户端合谋，也不能从允许公开的聚合结果中恢复任一剩余客户端参数；在 LHH 抗碰撞与 Ed25519 EUF-CMA 假设下，云端任何篡改均可被边缘检测；同时协议对客户端掉线具有自然鲁棒性，掉线用户的掩码与更新自动成对剔除，不破坏验证等式。
 
-研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组内 stale reuse 复用客户端掉线未上传的训练结果、以 masked group package 进入缓冲区、按 checkpoint 批量解掩码聚合，并引入 Direct-VCM 组级后置补偿，在不破坏单 TA 掩码与 LHH 验证链路的前提下，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析将四类 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA，并证明 stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界；在 IID 默认条件下，进一步给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`。该上界是本文独立的偏差刻画，不直接继承参考论文的完整收敛定理。
+研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组内 stale reuse、masked group package、checkpoint 批量聚合与 Direct-VCM 后置补偿，将跨组训练扩展为组级半异步机制。安全分析将 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA；客户端隐私按实际 checkpoint 客户端数满足 `N_Q−c≥2` 判定，组/全局聚合允许公开。在 IID、一步更新与耦合相同随机性的条件下，本文给出单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 刻画条件性多步传播，不直接继承参考论文的完整收敛定理。
 
 **关键词**：联邦学习；分层聚合；安全聚合；可验证聚合；半异步；陈旧性复用
 
@@ -45,9 +48,9 @@
 
 Hierarchical Federated Learning balances privacy and communication efficiency under a "cloud-edge-end" architecture, yet it still faces two major pain points: (i) client-side local models may leak privacy during upload and aggregation (gradient/parameter inversion attacks); (ii) aggregation results may be tampered with by an untrusted cloud server and such tampering is hard for participants to detect. This thesis focuses on **lightweight verifiable secure aggregation under a single Trusted Authority (TA)** and proposes two progressive research points.
 
-Research Point 1 proposes **HVSA** (Hierarchical Verifiable Secure Aggregation). Under a "cloud-edge-end-single TA" architecture, HVSA protects client parameter privacy via PRG masking, and enables Edge Servers (ES) to efficiently verify cloud aggregation results via Linear Homomorphic Hashing (LHH) and Ed25519 signatures, with verification communication overhead independent of model dimension. Theoretical analysis shows that under PRG pseudorandomness, n_min≥2, and TA non-collusion assumptions, HVSA guarantees client parameter privacy; under LHH collision resistance and Ed25519 EUF-CMA assumptions, any cloud tampering is deterministically detectable by the edge; meanwhile, the protocol is naturally robust to client dropout — masks and updates of dropped clients are removed in pairs without breaking the verification equation.
+Research Point 1 proposes **HVSA** (Hierarchical Verifiable Secure Aggregation). Under a "cloud-edge-end-single TA" architecture, HVSA protects client parameter privacy via PRG masking, and enables Edge Servers (ES) to efficiently verify cloud aggregation results via Linear Homomorphic Hashing (LHH) and Ed25519 signatures, with verification communication overhead independent of model dimension. Under PRG pseudorandomness, a fully trusted non-colluding TA, and `N_online(t)-c≥2`, the privacy result allows the Cloud to collude with all ESs and up to `c≤N_online(t)-2` clients while protecting each remaining client's parameters; aggregate results may be public. Under LHH collision resistance and Ed25519 EUF-CMA, cloud tampering with an accepted result is detectable; meanwhile, masks and updates of dropped clients are removed in pairs without breaking the verification equation.
 
-Research Point 2, building on the cryptographic closure of Research Point 1, addresses the "global wait" and "dropout training waste" problems of synchronous aggregation by proposing **Checkpoint-based Group-level Semi-Asynchronous Secure Aggregation**. It reuses client dropout-unuploaded training results via intra-group stale reuse, buffers masked group packages, performs batch unmasking aggregation per checkpoint, and introduces Direct-VCM group-level post-compensation — extending cross-group training from a "global synchronous barrier" to a "package buffer + checkpoint trigger" group-level semi-asynchronous mechanism without breaking the single-TA masking and LHH verification chain. Security analysis reduces four classes of cloud tampering attacks to LHH collision resistance and Ed25519 EUF-CMA, and proves that stale reuse and Direct-VCM compensation do not weaken the privacy bound of Research Point 1. Under the default IID condition, the thesis gives a conditional single-checkpoint bias bound, `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`, for the present protocol; this is an original bias characterization and does not directly inherit the complete convergence theorem of either reference paper.
+Research Point 2 extends this cryptographic closure with intra-group stale reuse, masked group packages, checkpoint aggregation, and Direct-VCM post-compensation. Client privacy is evaluated on the actual checkpoint population under `N_Q-c≥2`, while group and global aggregates may be public. Under IID one-step updates with coupled identical randomness, the thesis gives a conditional single-checkpoint bias bound and models multi-checkpoint propagation as `e_{t+1}≤L_Te_t+ε_t`; it does not directly inherit a complete convergence theorem from either reference paper.
 
 **Keywords**: Federated Learning; Hierarchical Aggregation; Secure Aggregation; Verifiable Aggregation; Semi-Asynchronous; Staleness Reuse
 
@@ -192,9 +195,11 @@ VerifyNet、VeriFL、VLMRS、GPVO-FL 等通过同态哈希/签名/承诺实现�
 
 - **半诚实用户与 ES**：按协议执行，但可能好奇。
 - **Malicious Cloud**：可篡改聚合结果、丢弃或重放组包。点 1 防 Cloud 篡改当轮同步聚合结果。
-- **ES 非攻击者**：不将 ES 列为攻击者。
+- **ES 合谋边界**：允许全部 ES 与 Cloud 共享其协议视图；该合谋不改变只保护客户端个人参数、允许聚合结果公开的隐私定义。
 - **样本量自报**：`s_i^k` 为客户端自报，防虚报属客户端数据可信问题，出界。
-- **单 TA 信任边界与不合谋假设**：TA 持有掩码种子、`{a_i}`（LHH 生成元秘密值，见 3.3.1）与在线集合，不接收 masked model（`w̄_i^k` 或 `W̄_k`）；Cloud/ES 持有 masked model 但无掩码。TA 不外泄 `{a_i}` 或掩码种子；隐私依赖 TA 与 Cloud/ES 职责分离，故假设 **TA 不与 Cloud 或 ES 合谋**（trusted-dealer 式安全聚合标准前提）。此假设为单 TA 轻量架构的固有代价；门限化 TA 以消除单点信任列为第 5 章展望，不在本文威胁模型内。
+- **最大客户端合谋边界**：对包含实际参与数 `N` 的同一已发布聚合，Cloud 可与至多 `c≤N−2` 个客户端合谋，即始终保留 `N−c≥2` 个非合谋客户端。研究点一的 `N=N_online(t)`，研究点二的 `N=N_Q(t)`。`n_min≥2` 只用于准入检查，不替代按实际参与数定义的合谋阈值。
+- **安全信道**：所有实体间通信均通过理想安全信道，消息不会在传输中失真、替换、伪造或被错误归因。TA 完全可信，故 ES 接收的 `M_global/M_Q/H_mask` 等 TA 材料按定义可信；Cloud 提供的聚合结果和声明仍因 Cloud 不可信而必须执行协议规定的验证。
+- **单 TA 信任边界**：TA 完全可信且永不参与任何合谋。TA 持有掩码种子、`{a_i}`（LHH 生成元秘密值，见 3.3.1）与在线集合，不接收 masked model（`w̄_i^k` 或 `W̄_k`），也不外泄单客户端种子/掩码。TA 向 Cloud 释放完成聚合所必需的聚合掩码 `M_global/M_Q`；释放聚合掩码符合协议设计，不等于释放单客户端掩码。
 
 ## 3.3 协议设计
 
@@ -211,7 +216,7 @@ w̄_i^k(t) = Quantize(w_i^k) + m_i^k(t)
 m_i^k(t) = PRG.mask_int(seed_i, u_i^k, t, d)
 ```
 
-> 隐私前提：当组内（或全局）在线客户端数 `n_online ≥ 2` 时成立。若仅单个客户端在线，解掩码后的组/全局和即退化为该客户端明文模型；故协议要求 `n_min ≥ 2`（见 3.4.1 与 4.3.4）。
+> 隐私前提：对某一实际发布的聚合结果，若其包含 `N` 个客户端且有 `c` 个客户端与 Cloud 合谋，则须满足 `N−c≥2`。若只剩一个非合谋客户端，其参数可由公开聚合和合谋客户端贡献相减得到。`n_min≥2` 是无合谋时排除单客户端退化的准入下界，并非一般合谋阈值（见 3.4.1 与 4.3.4）。
 
 ### 3.3.3 边缘聚合
 
@@ -231,7 +236,6 @@ H_k(t)  = LHH.Hash(pp, W̄_k(t))
 W̄(t)      = Σ_k W̄_k(t)
 M_global  = Σ_{u∈online} PRG.mask_int(...)   (TA 计算)
 W_sum^raw = W̄(t) − M_global
-W(t+1)    = W_sum^raw / n_online             (简单平均，n_online 为在线客户端数)
 ```
 
 > 注：点 1 采用等权平均作为可验证聚合的简化基线，点 2 升级样本量加权以匹配 FedAvg-form；两点口径差异在 4.5 实验中通过分阶段对比处理。
@@ -245,6 +249,14 @@ H(W_sum^raw) · H(M_global) = ∏_k H_k(t)
 ```
 
 成立则聚合结果可信。验证通信为定长哈希，与 `d` 无关。
+
+验证通过后，ES 直接计算并提交共识模型：
+
+```text
+W(t+1) = W_sum^raw / n_online
+```
+
+这里是对已验证明文和的等权平均，不引入额外的数值恢复步骤。
 
 ### 3.3.6 协议执行伪代码
 
@@ -314,10 +326,9 @@ TAGlobalMaskAndUnmask(t, TA, CS):
     H_mask(t)   ← LHH.Hash(pp_LHH, M_global(t))
     send (t, M_global(t), |U_online(t)|) → CS
 
-    # 4c: Cloud 解掩码 + 平均
+    # 4c: Cloud 按协议使用聚合掩码恢复明文和（尚不生成规范全局模型）
     W̄(t)      ← Σ_{k=1..M} W̄_k(t)                  # int64
     W_sum^raw ← W̄(t) − M_global(t)                  # 整数明文和
-    W(t+1)    ← W_sum^raw / |U_online(t)|           # 等权平均 (点1)
     broadcast (W_sum^raw, H_mask(t), { (k, H_k(t), σ_k) }) → ES
 ```
 
@@ -340,7 +351,9 @@ EdgeVerify(e_k, t, W_sum^raw, H_mask(t), { (j, H_j(t), σ_j) }):
     if LHS ≠ aggregated_rhs:
         return REJECT("LHH 一致性等式不成立; Cloud 篡改嫌疑")
 
-    # 5c: 通过 → 接受 W(t+1)
+    # 5c: 通过后由 ES 直接平均，并将确定性结果确认为下一轮共识模型
+    W(t+1) ← W_sum^raw / |U_online(t)|
+    commit_consensus(W(t+1))
     return ACCEPT(W(t+1))
 ```
 
@@ -383,9 +396,9 @@ Dropout 处理不需要单独的密码学步骤，只需 ES→TA 的在线列表
 
 ### 3.4.1 隐私性
 
-> **Theorem 3.1（simulation-based 客户端参数隐私）.** 设 `n_online(t) ≥ n_min ≥ 2`，PRG 在随机预言机模型下为 CSPRNG，KA（X25519+HKDF-SHA256）在 CDH 假设下安全，TA 不与 Cloud 或 ES 合谋（见 3.2.2），且至多 `n_min−1` 个客户端与 Cloud 合谋。则存在 PPT 模拟器 `S`，给定 `(W_sum^raw, U_online(t), 公开元数据)`，输出模拟视图 `View_S`，使得任意 PPT 敌手 `A` 区分真实视图 `View_A` 与 `View_S` 的优势 `≤ negl(λ)`。
+> **Theorem 3.1（聚合泄露下的客户端参数隐私）.** 令 `N=N_online(t)=|U_online(t)|` 为本轮实际进入已发布聚合的客户端数。设 PRG 为安全 CSPRNG，KA（X25519+HKDF-SHA256）在 CDH 假设下安全，TA 完全可信且永不合谋；允许 Cloud 与全部 ES 以及任意 `c≤N−2` 个客户端合谋，即非合谋集合 `H` 满足 `|H|=N−c≥2`。则敌手的联合视图除泄露公开元数据、聚合掩码 `M_global`、全局明文和 `W_sum^raw`、合谋客户端输入，以及由此可推出的非合谋客户端参数总和 `Σ_{i∈H}w_i` 外，不能以非可忽略优势恢复任一指定非合谋客户端的个人参数。
 
-证明思路：构造模拟器 `S`，其仅知聚合结果 `W_sum^raw` 与在线集合，生成与真实协议计算不可区分的模拟视图；合谋阈值保证至少一个诚实客户端的掩码不可区分。
+等价地，在固定上述允许泄露量的条件下，存在 PPT 模拟器生成 Cloud、全部 ES 与合谋客户端的联合视图，使之与真实视图计算不可区分。该结论不隐藏 ES/组级聚合结果或 CS/全局聚合结果；它只保护个人参数无法从至少两个非合谋客户端的聚合中被唯一分离。
 
 **Lemma 3.1（PRG 伪随机性）.** 对任意 PPT 区分器 `D`，以未协商种子 `s_i^k` 为视角，`{PRG.mask_int(s_i^k, u_i^k, t, d)}` 与均匀随机向量 `U ← Z_R^d` 的区分优势满足
 
@@ -397,17 +410,13 @@ Dropout 处理不需要单独的密码学步骤，只需 ES→TA 的在线列表
 
 **Lemma 3.2（单客户端在线时隐私退化）.** 若 `|U_online(t)| = 1`，则存在 PPT 算法以概率 1 恢复该在线客户端的明文 `w_i^k`。
 
-证明：由 3.3.4，`W_sum^raw = W̄(t) − M_global(t) = w̄_i^k − m_i^k = w_i^k`。Cloud 在 Phase 4c 直接获得 `W_sum^raw`，即该客户端明文。□
+证明：由 3.3.4，`W_sum^raw = W̄(t) − M_global(t) = w̄_i^k − m_i^k = w_i^k`。Cloud 在 Phase 4c 直接获得 `W_sum^raw`，即该客户端明文。更一般地，当 Cloud 与 `N−1` 个客户端合谋时，可从公开总和减去这些合谋客户端贡献，恢复唯一非合谋客户端参数。□
 
-**Theorem 3.1 证明.** 构造模拟器 `S`：
-- 输入：`W_sum^raw`, `U_online(t)`, `{n_k(t)}`, 公开参数 `pp`。
-- 对每个在线客户端 `u_i^k`，独立均匀随机选取 `r_i^k ← Z_R^d`，设模拟掩码上传 `w̃̄_i^k = r_i^k`。
-- 对每组 `k`，计算模拟组 LHH 哈希 `H̃_k = LHH.Hash(Σ_{i∈group_k} r_i^k)`。
-- 由验证等式反推模拟全局掩码哈希 `H̃_mask = Σ_k H̃_k − LHH.Hash(W_sum^raw)`，输出模拟视图 `View_S = {w̃̄_i^k, H̃_k, H̃_mask, U_online(t)}`。
+**Theorem 3.1 证明.** 敌手联合视图包括所有客户端 masked uploads、各 ES 聚合及签名、公开元数据、Cloud 从 TA 收到的 `M_global`、`H_mask=H(M_global)`、`W_sum^raw`，以及合谋客户端主动公开的参数、种子和掩码。移除合谋客户端贡献后，敌手可得到非合谋集合的明文参数和 `Σ_{i∈H}w_i`，这是隐私定义明确允许的聚合泄露。
 
-注意敌手 `(CS, ES)` 在真实协议中不直接接收 `M_global`（TA 仅释放 `H_mask = LHH.Hash(M_global)`），故 `S` 无需模拟 `M_global` 本身。由 Lemma 3.1，PRG 输出 `{m_i^k}` 与均匀随机 `{r_i^k}` 不可区分，故 `View_S` 与真实协议视图 `View_A` 计算不可区分。
+对 `|H|≥2`，模拟器以允许泄露量为输入：先完整复现合谋客户端视图；再为前 `|H|−1` 个非合谋客户端选择伪随机掩码/一致的 masked share，并用最后一个非合谋客户端的 share 吸收总和约束，使全部非合谋 share 的和同时与公开 `M_global` 和 `W_sum^raw` 一致；最后按这些 share 确定性计算组聚合、LHH 值与签名证据。由 PRG 伪随机性与 KA 安全性，模拟 share 与真实 share 计算不可区分；LHH 和签名只是既定 share 的确定性/可模拟派生量。因此，敌手至多知道非合谋客户端的聚合，无法唯一确定其中任一人的个人参数。
 
-**合谋阈值讨论**：`n_min ≥ 2` 保证至多 `n_min−1` 个客户端可与 Cloud 合谋而不破坏隐私——剩余至少一个诚实客户端的掩码在 `M_global` 中保持随机性。若 `n_min−1` 以上客户端与 Cloud 合谋，则诚客户端掩码不足，`M_global` 可被完全抵消，隐私退化为 Lemma 3.2 情形。□
+若 `N−c=1`，敌手可由 `W_sum^raw` 减去全部合谋客户端贡献，直接得到唯一剩余客户端参数，隐私以概率 1 失效。因此最大合谋数恰为 `c≤N−2`。这里阈值取决于实际参与数 `N_online(t)`，而不是配置常量 `n_min`。□
 
 ### 3.4.2 可验证性
 
@@ -579,8 +588,8 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 
 - **Malicious Cloud（点 2 适用）**：可篡改聚合结果、丢弃或重放组包。防 Cloud 篡改 checkpoint **选中**的聚合结果（`W_sum^raw`）。
 - **安全目标与显式出界（点 2）**：主协议只提供 checkpoint 选中聚合结果的完整性检测；检测到攻击或不一致即丢弃本次 checkpoint，不推进全局版本。它不保证恶意 Cloud 下的训练可用性，也不提供 anti-censorship 保证；manifest 漏选、候选组包静默丢弃和调度审查均不属于主协议安全目标。全局模型由 ES 基于已验证结果本地确定性重构并作为共识量维护，不把 Cloud 分发的模型作为规范结果。
-- **exactly-once 语义声明**：每个客户端更新与组包携带唯一标识，Cloud/TA 对已聚合组包拒绝重放；完整 ACK 握手/原子提交/缓存并发属实现完善项，不作主协议数学前提。本文进一步假设 `Aggregated_IDs` 由 TA 维护且仅追加，ES 对 `package_token` 的联合签名写入 TA 维护的 append-only log（TA 可信，见 3.2.2），以保证重放检测确定性。
-- **单 TA 不合谋假设**：同 3.2.2，TA 不与 Cloud 或 ES 合谋。
+- **exactly-once 语义声明**：每个组包携带唯一且被 ES 签名绑定的 `package_token`。TA 维护规范的、仅追加的 `Aggregated_IDs` 共识状态，Cloud 可持镜像但无权改写规范状态；已提交 token 再次入队或入选时拒绝。完整 ACK/缓存并发属于实现层，不作数学前提。
+- **单 TA 信任假设**：同 3.2.2，TA 完全可信且永不参与任何合谋。
 
 ## 4.3 协议设计
 
@@ -621,13 +630,13 @@ W̄_k(t_k)   = Σ_i w̄_i^k = Σ_i s_i^k·w_i^k + Σ_i m_i^k
 S_k(t_k)   = Σ_i s_i^k
 ```
 
-要求最小在线人数 `n_min≥2`（保护客户端级隐私）。组包：
+要求最小在线人数 `n_min≥2`，用于无合谋时排除单客户端组包；一般隐私阈值仍按整个 checkpoint 的实际客户端数 `N_Q−c≥2` 判定。组包：
 
 ```text
-Π_k(t_k) = (k, t_k, h_base(t_k), U_online, n_k, S_k, W̄_k, H_k, σ_k)
+Π_k(t_k) = (package_token, k, t_k, h_base(t_k), U_online, n_k, S_k, W̄_k, H_k, σ_k)
 ```
 
-其中 `σ_k` 为 ES 对最小元数据 `(k, t_k, h_base(t_k), digest(U_online), n_k, S_k, H_k)` 的 Ed25519 签名；该元数据即 4.3.8 Step 1 manifest 一致性检查的比对对象。
+其中 `σ_k` 为 ES 对最小元数据 `(package_token, k, t_k, h_base(t_k), digest(U_online), n_k, S_k, H_k)` 的 Ed25519 签名；该元数据即 4.3.8 Step 1 manifest 一致性检查的比对对象。绑定 token 可阻止 Cloud 为合法 payload 改名后绕过重放检查。
 
 ### 4.3.5 TA 的组包掩码支持
 
@@ -667,19 +676,19 @@ Cloud 发布 `checkpoint_manifest(t)` 后，TA 与每个 ES（其组包在 Q 中
 
 ```text
 VerifyManifest(checkpoint_manifest(t), Q, B):
-  // 输入：checkpoint_manifest(t) = (t, mode, |Q|, {(k, t_k, h_base, U_online, n_k, S_k, H_k, σ_k)}_{Π_k∈Q})
+  // 输入：checkpoint_manifest(t) = (t, mode, |Q|, {(package_token, k, t_k, h_base, U_online, n_k, S_k, H_k, σ_k)}_{Π_k∈Q})
   //       B = Cloud 维护的组包缓冲区
   accepted ← ∅
   for each Π_k ∈ Q:
     1a. // —— manifest 一致性 ——
-        从 B 中按 (k, t_k, h_base) 检索到唯一组包 Π_k^B
+        从 B 中按 package_token 检索到唯一组包 Π_k^B
         若检索失败（B 中无对应组包 / 多条匹配）→ reject Π_k
         逐字段比对 manifest 元数据与 Π_k^B 的元数据：
-          U_online、n_k、S_k、H_k 必须完全一致
+          package_token、k、t_k、h_base、U_online、n_k、S_k、H_k 必须完全一致
         若任一字段不一致 → reject Π_k            // tamper_manifest
     1b. // —— Ed25519 验签 ——
         pk_ES_k ← 从 PKI 获取 ES_k 的 Ed25519 公钥
-        meta_k ← (k, t_k, h_base(t_k), digest(U_online), n_k, S_k, H_k)
+        meta_k ← (package_token, k, t_k, h_base(t_k), digest(U_online), n_k, S_k, H_k)
         ok ← Verify(pk_ES_k, meta_k, σ_k)
         若 ok = false → reject Π_k                // 伪造组包
     1c. // —— 时效性检查 ——
@@ -752,9 +761,9 @@ package_token = f"{edge_id}:{base_version}:{nonce}"
 
 `package_token` 作为组包元数据的一部分写入 manifest 与 buffer 索引。`base_version` 嵌入 ID 保证"基于同一全局模型版本的同组重复封组"不会被误认为重放；`nonce` 保证同一 ES 在同一 `base_version` 下的多次封组可区分。
 
-#### Cloud 已聚合组包 ID 集合与去重逻辑
+#### TA 维护的已聚合组包 ID 共识集合与去重逻辑
 
-Cloud 维护一个持久化的已聚合组包 ID 集合 `Aggregated_IDs`，每次 checkpoint 完成后追加本轮选中组包的 `package_token`。组包入 buffer 与 checkpoint 选中时各做一次去重检查：
+TA 维护规范的、持久化且仅追加的已聚合组包 ID 集合 `Aggregated_IDs`；Cloud 可维护只读镜像以加速筛选。每次 checkpoint 验证并提交后，由 TA 将本轮选中组包的 `package_token` 追加到规范集合。组包入 buffer 与 checkpoint 选中时均依据该共识状态做去重检查：
 
 ```text
 CheckExactlyOnce(Π_k, buffer_phase, Aggregated_IDs):
@@ -788,7 +797,7 @@ FinalizeCheckpoint(accepted, B, Aggregated_IDs, group_state):
       keep Π_k in B                                 // 继续等待下一 checkpoint
 ```
 
-`exactly-once` 由三重保证：(a) `package_token` 唯一性防止同一组包被聚合两次；(b) `Aggregated_IDs` 持久化防止跨 checkpoint 重放；(c) ES 单组在途规则 + `nonce` 单调性防止 ES 在同一 `base_version` 下重复封组。上述机制保证 stale reuse 不破坏 `exactly-once` 的组级语义（见 Theorem 4.2）。
+`exactly-once` 由三重保证：(a) `package_token` 唯一性及其签名绑定防止合法组包被改名；(b) TA 维护的 `Aggregated_IDs` 仅追加共识状态防止跨 checkpoint 重放；(c) ES 单组在途规则 + `nonce` 单调性防止 ES 在同一 `base_version` 下重复封组。上述机制保证 stale reuse 不破坏组级 exactly-once 语义。
 
 ## 4.4 安全分析
 
@@ -920,72 +929,19 @@ if Π_k.package_token ∈ Aggregated_IDs:
 
 ### 4.4.2 隐私保持
 
-本节证明研究点 2 的检查点式组级半异步扩展在 3.2.2 假设下不破坏研究点 1 HVSA 的隐私性，即 stale reuse 与组级补偿机制不向任何单一实体泄露客户端明文参数。
-
-#### 隐私性扩展定义
-
-研究点 1 的隐私性（Theorem 3.1）已保证：在 n_min≥2 与 PRG 伪随机性下，TA 持掩码、ES/Cloud 持 masked model 均无法恢复任一客户端明文 `w_i`。研究点 2 引入两个新机制——组内 stale reuse（4.3.3）与 Direct-VCM 补偿（4.3.7）——需证明它们不削弱该保证。
-
-#### 主定理
-
-**定理 4.2（Privacy Preservation）.** *在以下假设下：*
-- *(B1) 研究点 1 Theorem 3.1 的全部假设成立（PRG 伪随机性、n_min≥2、3.2.2 不合谋假设）；*
-- *(B2) stale reuse 在客户端本地掩码前完成（4.3.3：`w_i^k = (1−ρ_i)w_i^{new} + ρ_i·w_i^{stale}` 在生成掩码 `m_i^k` 之前计算）；*
-- *(B3) Direct-VCM 补偿项 `C_k = S_k·γ_vcm·(W(t) − W(t_k))` 仅依赖公开共识量（历史全局模型、组包元数据、协议超参），不依赖任一客户端的明文 `w_i` 或掩码 `m_i^k`；*
-- *(B4) TA 仅按 checkpoint 选中集合 Q 释放 `M_Q = Σ_{Π_k∈Q} M_k`，不释放单组 `M_k`。*
-
-*研究点 2 协议在 3.2.2 不合谋假设下保持客户端明文参数隐私性：TA、ES、Cloud 任一单一实体无法以非可忽略优势恢复任一客户端的 `w_i^{new}` 或 `w_i^{stale}`。*
-
-**证明.** 分两步：先证 stale reuse 不泄露，再证 Direct-VCM 补偿不泄露。
-
-##### 步骤 1：stale reuse 不泄露明文
-
-由 (B2)，stale reuse 是客户端本地操作：
+研究点二仍只保护客户端个人参数；ES/组级聚合与 CS/checkpoint 聚合允许公开。令
 
 ```text
-w_i^k = (1−ρ_i)·w_i^{new} + ρ_i·w_i^{stale}        (客户端本地)
-m_i^k = PRG(seed_i^k)                              (客户端本地)
-w̄_i^k = s_i^k·w_i^k + m_i^k                        (上传到 ES)
+N_Q(t) = Σ_{Π_k(t_k)∈Q(t)} n_k(t_k)
 ```
 
-外部实体（ES、Cloud、TA）仅观察到 `w̄_i^k`，不观察 `w_i^{new}`、`w_i^{stale}`、`ρ_i` 或 `w_i^k` 本身。stale reuse 改变的是"被掩码的明文内容"（从 `w_i^{new}` 变为 `w_i^k`），但**掩码 `m_i^k` 仍由 PRG 生成且不依赖 `w_i^k`**（掩码种子 `seed_i^k` 与明文独立）。
+为本次已发布 checkpoint 实际包含的客户端总数。TA 完全可信且永不合谋；Cloud 可与全部 ES 及至多 `c≤N_Q(t)−2` 个客户端合谋，因此非合谋客户端数满足 `N_Q(t)−c≥2`。
 
-形式化地，研究点 1 Theorem 3.1 的归约证明中，敌手的视角为 `{w̄_i^k, seed_i^k 的承诺}` 等。在研究点 2 中，`w̄_i^k = s_i^k·w_i^k + m_i^k` 的形式与 Theorem 3.1 完全一致（仅 `w_i^{new}` 被 `w_i^k` 替换），掩码 `m_i^k` 仍是 PRG 输出。由 (B1) PRG 伪随机性，敌手无法区分 `m_i^k` 与均匀随机；由 (B1) n_min≥2，组内掩码和 `Σ m_i^k` 不可被任一客户端减去自身掩码恢复他客户端明文。
+**定理 4.2（客户端参数隐私保持）.** 若研究点一 Theorem 3.1 的原语假设成立，stale reuse 在客户端本地且掩码前完成，Direct-VCM 仅依赖历史全局模型、`S_k` 和公开超参数等共识值，则研究点二相对研究点一不增加客户端个人参数泄露：敌手即使联合 Cloud、全部 ES 和至多 `N_Q(t)−2` 个客户端，也只能得到允许公开的组/全局聚合及合谋客户端输入，不能以非可忽略优势恢复任一指定非合谋客户端的 `w_i^{new}`、`w_i^{stale}` 或其本地混合结果。
 
-故 stale reuse 的引入**不改变 Theorem 3.1 的归约链条**，敌手恢复 `w_i^k` 的优势仍受 `Adv_{PRG}(λ)` 界。又 `w_i^k` 是 `w_i^{new}` 与 `w_i^{stale}` 的凸组合（`(1−ρ_i)· + ρ_i·`，`ρ_i ∈ [0, 0.5]`），恢复 `w_i^k` 不等价于恢复 `w_i^{new}` 或 `w_i^{stale}` 单独——stale reuse 实际上**降低了**单次上传泄露的明文新鲜度，但**不增加**明文可恢复性。
+**证明.** stale reuse 只把被掩码明文从 `w_i^{new}` 改为 `(1−ρ_i)w_i^{new}+ρ_iw_i^{stale}`，不改变独立 PRG 掩码的分布；Direct-VCM 和最终归一化只对已允许公开的 checkpoint 聚合与共识值作确定性变换，不产生新的客户端级观测。把合谋客户端贡献从 checkpoint 聚合中扣除后，敌手至多获得 `N_Q(t)−c≥2` 个非合谋客户端的加权和，Theorem 3.1 的模拟论证直接适用于该客户端集合。
 
-##### 步骤 2：Direct-VCM 补偿不泄露明文
-
-由 (B3)，补偿项 `C_k = S_k·γ_vcm·(W(t) − W(t_k))` 的输入全部为公开共识量：
-- `S_k(t_k)`：组包元数据（已通过 4.3.8 Step 1a manifest 一致性公开）；
-- `γ_vcm`：协议超参（公开）；
-- `W(t)`、`W(t_k)`：历史全局模型（所有 ES、Cloud、TA 均持有）。
-
-`C_k` 的计算在 4.3.8 Step 3 `ReconstructW` 中由 ES 本地完成，**不引入任何新的客户端级密文或明文泄露通道**。补偿操作发生在 raw sum 验证之后（4.3.8 Step 2 PASS 之后才进入 Step 3），即**在掩码已被验证、raw sum 已公开的时刻**——此时 raw sum `W_sum^raw` 的隐私性已由 Theorem 3.1 在"聚合层"保证（n_min≥2 ⇒ 单客户端明文不可从 raw sum 中分离）。
-
-形式化地，敌手在研究点 2 中的额外视角（相对研究点 1）仅为 `{C_k}_{Π_k∈Q}` 与 `W(t+1)`。但：
-- `C_k` 由公开量确定性派生，不引入新随机性也不暴露客户端密文；
-- `W(t+1) = (W_sum^raw + Σ C_k) / S_Q`，其中 `W_sum^raw` 的隐私性已被 Theorem 3.1 保证，`Σ C_k` 与 `S_Q` 为公开量。
-
-故 Direct-VCM 补偿**不增加**敌手恢复任一客户端明文的优势。
-
-##### 步骤 3：组级聚合不削弱客户端级隐私
-
-研究点 2 的组级聚合 `W_sum^raw = Σ_{Π_k∈Q} (W̄_k − M_k)` 是研究点 1 单组聚合 `W_sum = Σ_i (w̄_i − m_i)` 的多层推广。由 (B4)，TA 仅释放 `M_Q = Σ_{Π_k∈Q} M_k`，不释放单组 `M_k`——这保证跨组掩码和仍以"组级最小单元"释放，与 Theorem 3.1 中 TA 释放 `M_global` 而不释放单客户端 `m_i` 的语义对偶。
-
-形式化地，将 Theorem 3.1 中的"客户端"替换为"组"，"n_min≥2 客户端"替换为"|Q|≥2 组"，"m_i"替换为"M_k"，归约链条完全平移：在 |Q|≥2 下，TA 持 `M_Q` 无法分离单组 `M_k`，ES/Cloud 持 `W_sum^raw` 无法分离单组 `W̄_k − M_k`。结合步骤 1（组内 stale reuse 不泄露）与 Theorem 3.1（组内 n_min≥2 保护），客户端级明文 `w_i` 在组内与组间双重保护下不被恢复。
-
-##### 综合
-
-由步骤 1、2、3，研究点 2 的全部新增机制（stale reuse、Direct-VCM 补偿、组级聚合）均不引入新的明文泄露通道，且不削弱 Theorem 3.1 的归约界。故在 (B1)-(B4) 假设下，敌手恢复任一客户端 `w_i^{new}` 或 `w_i^{stale}` 的优势仍受 Theorem 3.1 的界：
-
-```text
-ε_priv^Point2(λ) ≤ Adv_{PRG}(λ) + Adv_coll^{LHH}(λ)
-```
-
-可忽略。定理 4.2 成立。□
-
-**附注 4.2（不合谋假设的必要性）.** 定理 4.2 在 3.2.2 不合谋假设下成立。若 TA 与 Cloud 合谋，TA 持 `M_Q` 与 Cloud 持 `W_sum^raw` 仍无法恢复单客户端明文（因 |Q|≥2 与 n_min≥2 双重保护）；但若 TA 与单个 ES 合谋，TA 持 `M_Q`、ES 持本组 `W̄_k` 与组内全部掩码种子（ES 在 PKI 中签发组包但不持种子），仍不足恢复——因种子在客户端。真正的合谋威胁是 TA 与全部 n_min 客户端中的 n_min−1 个合谋（研究点 1 同假设），此情形已被 Theorem 3.1 排除。
+该证明不需要将“客户端”替换成“组”，也不要求 `|Q(t)|≥2`。超时 checkpoint 即使只含一个组，只要该组所含实际客户端仍满足 `N_Q(t)−c≥2`，个人参数隐私仍成立；反之，即使有多个组，只要最终只剩一个非合谋客户端，其参数仍可由聚合差分恢复。阈值的基本单位始终是进入同一已发布聚合的客户端，而不是组。□
 
 ### 4.4.3 收敛性分析
 
@@ -1003,12 +959,13 @@ w̄_i^k = s_i^k·w_i^k + m_i^k                        (上传到 ES)
 | **(C4) 混合系数有界** | `ρ_i ≤ ρ_max ≤ 0.5`（4.3.3 stale reuse） |
 | **(C5) 补偿系数有界** | `γ_vcm` 为协议超参，固定常数 |
 | **(C6) 组样本量有界** | `S_k(t_k)>0`，且 checkpoint 使用真实样本量加权；不需要把 `S_max/S_min` 人为引入偏差界 |
+| **(C7) 随机性耦合** | 比较 stale 与 fresh 本地更新时，采用确定性本地更新，或对两条比较轨迹耦合使用完全相同的随机样本/随机种子；否则需在界中另加 SGD 方差项 |
 
 记理想 FedAvg-form 聚合（无陈旧、无补偿）结果为 `W^*(t+1)`，本协议实际结果为 `W(t+1)`。单 checkpoint 偏差定义为 `Δ_bias = W(t+1) − W^*(t+1)`。
 
 #### 条件性界与推导说明
 
-**条件性界 4.1（单 checkpoint 偏差上界，非完整收敛定理）.** *在 (C1)-(C6) 假设下，并把理想结果定义为“同一 checkpoint 选中客户端、同一真实样本量权重、所有组均从 `W(t)` 出发且不使用 stale/VCM”的 FedAvg-form 结果，则一次 checkpoint 的偏差满足：*
+**条件性界 4.1（单 checkpoint 偏差上界，非完整收敛定理）.** *在 (C1)-(C7) 假设下，并把理想结果定义为“同一 checkpoint 选中客户端、同一真实样本量权重、所有组均从 `W(t)` 出发且不使用 stale/VCM”的 FedAvg-form 结果，则一次 checkpoint 的偏差满足：*
 
 ```text
 ‖Δ_bias‖ ≤ ρ_max · (1 + ηL) · E_max · ηB
@@ -1120,16 +1077,16 @@ res_k = (γ_vcm−1)G_k − η(∇F_k(W(t_k))−∇F_k(W(t)))
 
 该界是本文在 IID/一步更新条件下的条件性单 checkpoint 偏差上界，不是直接来自 `MAFSA` 或 `DVAFL` 的定理。对 Dirichlet Non-IID，需额外引入局部梯度异质性或 bounded gradient dissimilarity 项；本文将其作为实验验证，不把 IID 上界无条件外推到 Non-IID。
 
-#### 推论：多 checkpoint 累积偏差界
+#### 条件性多 checkpoint 误差传播
 
-**推论 4.1（T 个 checkpoint 的保守累积界，非收敛率定理）.** *在条件性界 4.1 的假设下，若进一步把每个 checkpoint 的偏差按幅度逐步累加，则：*
+单 checkpoint 偏差不能在没有更新映射稳定性假设时直接线性相加。令 `e_t=‖W(t)−W^*(t)‖`，若理想 checkpoint 更新映射对输入模型是 `L_T`-Lipschitz，且第 `t` 次由 stale reuse/VCM 引入的局部扰动为 `ε_t`，则
 
 ```text
-‖W(T) − W^*(T)‖ ≤ T·[ρ_max·(1+ηL)·E_max·ηB
-                    + (|1−γ_vcm|+ηL)·s_max·ηB]
+e_{t+1} ≤ L_T·e_t + ε_t,
+e_T ≤ L_T^T·e_0 + Σ_{j=0}^{T−1} L_T^{T−1−j}·ε_j.
 ```
 
-条件性界 4.1 与推论 4.1 是**确定性的单步/保守多步幅度界**，未覆盖：
+只有在额外满足非扩张条件 `L_T≤1`、初始误差 `e_0=0` 且各步 `ε_j≤ε` 时，才能进一步得到 `e_T≤Tε`；若 `L_T>1`，误差可能被放大，不能宣称无条件线性累积。条件性界 4.1 与上述递推均未覆盖：
 - non-IID 下的客户端漂移（需更强假设如 bounded gradient dissimilarity）；
 - SGD 噪声的方差（需有界方差假设 `E[‖∇F − ∇f_i‖²] ≤ σ²`）；
 - `ρ_i` 与数据分布的耦合（stale reuse 偏向数据稳定的客户端）。
@@ -1235,7 +1192,7 @@ I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证�
 
 ## 4.6 本章小结
 
-本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 权重方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1）。stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界（Theorem 4.2）；在 IID 默认条件下，给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`（条件性界 4.1），多 checkpoint 仅给出保守的线性累积幅度界（推论 4.1），不把 MAFSA 或 DVAFL 的完整收敛率直接继承为本文定理。实验框架覆盖五组主线对比、攻击实验与十项消融，为协议性能与安全性提供系统评估。
+本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 权重方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1）。在 `N_Q−c≥2` 下，stale reuse 与 Direct-VCM 补偿不削弱客户端个人参数隐私（Theorem 4.2）；在 IID 与耦合相同随机性的条件下，给出条件性单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 描述多 checkpoint 传播；只有 `L_T≤1` 等额外条件下才得到线性界，不把参考论文的完整收敛率直接继承为本文定理。
 
 ---
 
@@ -1245,9 +1202,9 @@ I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证�
 
 本文在单 TA 约束下，先提出 HVSA 实现分层可验证安全聚合，再以检查点式组级半异步扩展解决同步等待与掉线浪费，同时保持掩码与 LHH 验证闭环。具体地：
 
-**研究点一（HVSA）**：在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私（Theorem 3.1，归约 PRG + n_min≥2），利用 LHH 与 Ed25519 让 ES 以定长通信开销验证云端聚合结果（Theorem 3.2，归约 LHH 抗碰撞 + Ed25519 EUF-CMA），并通过"在线集合驱动的掩码求和"实现对客户端掉线的自然鲁棒性（Theorem 3.3）。验证通信与模型维度无关，客户端零验证负担。
+**研究点一（HVSA）**：在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端个人参数（Theorem 3.1：TA 永不合谋，Cloud 可与全部 ES 及 `c≤N_online−2` 个客户端合谋），利用 LHH 与 Ed25519 让 ES 以定长通信开销验证云端聚合结果，并通过"在线集合驱动的掩码求和"实现掉线鲁棒性。Cloud 知道聚合掩码和全局聚合结果符合协议隐私边界；ES 验证通过后直接用 `W_sum^raw/N_online` 得到共识模型。
 
-**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1，`ε_checkpoint ≤ Adv_coll^LHH + 2·Adv_euf^Ed25519`）。stale reuse 与 Direct-VCM 补偿不削弱研究点一隐私界（Theorem 4.2）；在 IID 默认条件下，给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`（条件性界 4.1）与保守的线性累积幅度界（推论 4.1），不把 MAFSA 或 DVAFL 的完整收敛率直接继承为本文定理。
+**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组内 stale reuse、组包缓冲/checkpoint 与 Direct-VCM 组级后置补偿实现半异步扩展。`package_token` 被 ES 签名绑定，`Aggregated_IDs` 是 TA 维护的仅追加共识状态。客户端隐私按 `N_Q−c≥2` 判定，不要求 `|Q|≥2`；组/全局聚合允许公开。在 IID、一步更新和耦合相同随机性下给出单 checkpoint 偏差上界；多步只给出 `e_{t+1}≤L_Te_t+ε_t` 的条件性传播式。
 
 ## 5.2 未来工作展望
 
@@ -1323,7 +1280,7 @@ MAFSA 原始定义 `α_i=exp(−β_c·E_i)` 作用于 fresh model，导致版本
 - [x] 记号表全文唯一
 - [x] 实验数值全部留空，仅框架+预期趋势
 - [x] 创新点 1.3 统一编号，第 3、4 章不重复计数
-- [x] 定理按章重编号：Theorem 3.1-3.3（点 1）/ Theorem 4.1-4.2 + 条件性界 4.1 + 推论 4.1（点 2）
+- [x] 定理按章重编号：Theorem 3.1-3.3（点 1）/ Theorem 4.1-4.2 + 条件性界 4.1 + 条件性多步传播式（点 2）
 - [x] 6 章结构：绪论 / 相关技术 / HVSA / 检查点半异步 / 总结展望 / 参考文献 + 附录 A
 - [x] 4.1 采用"3.4.4 三局限 → 约束 → checkpoint 洞见 → 三机制映射"因果链；4.3.3 显式锚定局限 (ii) 与安全聚合兼容
 - [x] 附录 A 重排为 A.1 约束层 / A.2 架构层 / A.3 组件层 / A.4 出界，与 4.1 的组织逻辑呼应

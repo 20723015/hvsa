@@ -13,6 +13,8 @@
 - `masked group package + buffer + checkpoint`
 - `每个 checkpoint 仍可由 ES 验证云端本次聚合结果`
 
+本章固定以下评审边界：TA 完全可信且永不合谋；协议通信使用理想安全信道；全局模型及历史版本是共识值。Cloud 必须知道 checkpoint 聚合掩码 `M_Q` 才能恢复聚合结果。隐私只保护单个客户端参数，ES/组级聚合与 CS/checkpoint 聚合允许公开。令 `N_Q(t)=Σ_{Π_k∈Q(t)}n_k(t_k)`，允许 Cloud 与全部 ES 及至多 `c≤N_Q(t)−2` 个客户端合谋，即要求 `N_Q(t)−c≥2`；阈值按实际客户端数而非组数判断，单组超时 checkpoint 只要满足该客户端阈值即合法。
+
 本章不再主张：
 
 - 组间“来一个更新一个”的完全异步
@@ -30,9 +32,9 @@
 - 上传和聚合对象仍然是模型参数，而不是单步梯度
 - 组内仍然走现有 `HVSA` 的掩码、签名、`LHH` 验证链路
 - 验证主体仍然是 `ES`，即 edge-centric verification
-- 威胁模型只防范不可信 `CS/Cloud` 对 checkpoint 选中聚合结果的篡改，不把 `ES` 作为攻击者
+- 完整性威胁模型防范不可信 `CS/Cloud` 对 checkpoint 选中聚合结果的篡改；隐私模型允许全部 ES 与 Cloud 共享协议视图
 - 因此密码学验证只需覆盖 `CS \to ES` 交付的解掩码后 `raw sum`；`ES` 验证通过后，再执行公开确定性的组级补偿与 `FedAvg` 归一化
-- 本章自洽性主要由密码学验证等式和模型训练/补偿公式保证。为避免重复贡献，协议声明 exactly-once 语义：每个客户端更新与每个组包携带唯一标识，Cloud/TA 对已成功聚合的组包拒绝重放；完整的 ACK 握手、原子提交与缓存并发控制属实现完善项，不作为主协议数学成立的额外前提。
+- 本章自洽性主要由密码学验证等式和模型训练/补偿公式保证。为避免重复贡献，每个组包携带被 ES 签名绑定的唯一 `package_token`；TA 维护规范的、仅追加的 `Aggregated_IDs` 共识状态，Cloud 可持镜像但不能改写规范状态。完整 ACK、原子提交与缓存并发控制属实现完善项。
 
 ### 2.2 异步口径
 
@@ -101,8 +103,8 @@ C_k(t) = S_k(t_k) · γ_vcm · (W(t) - W(t_k))
 
 因此，本文可以准确表述为“MAFSA-inspired stale reuse + DVAFL-inspired group-level Direct-VCM extension”。不能表述为“直接采用 MAFSA/DVAFL 公式并继承其收敛定理”。本章理论只保留三层结论：
 
-1. **安全层**：在 TA 不与 Cloud/ES 合谋、历史全局模型和版本由共识维护、LHH 与 Ed25519 假设成立时，对 checkpoint 选中聚合结果做完整性检测；检测失败即丢弃本次 checkpoint，不推进全局版本。该结论不保证 Cloud 下的训练可用性，也不覆盖候选组包漏选、调度审查或 anti-censorship。
-2. **偏差层**：在 IID 默认条件、Lipschitz 梯度、单步更新有界、`E_i` 与 `s_k` 有界等条件下，给出本文协议的一步偏差上界。该上界是对参考论文分析思路的组级改写，不是 MAFSA 或 DVAFL 的现成定理。
+1. **安全层**：在 TA 完全可信且永不合谋、历史全局模型和版本由共识维护、LHH 与 Ed25519 假设成立时，对 checkpoint 选中聚合结果做完整性检测；检测失败即丢弃本次 checkpoint，不推进全局版本。该结论不保证 Cloud 下的训练可用性，也不覆盖候选组包漏选、调度审查或 anti-censorship。客户端隐私另按 `N_Q−c≥2` 判定。
+2. **偏差层**：在 IID 默认条件、Lipschitz 梯度、单步更新有界、`E_i` 与 `s_k` 有界，并采用确定性更新或为 stale/fresh 比较轨迹耦合相同随机性的条件下，给出本文协议的一步偏差上界；否则需另加 SGD 方差项。该上界是对参考论文分析思路的组级改写，不是 MAFSA 或 DVAFL 的现成定理。
 3. **收敛层**：完整的多步收敛率需要在当前“本地 stale 混合 + 组级 Direct-VCM + checkpoint 选择”协议上独立证明；本文不把参考论文的收敛率直接宣称为本方案定理。Dirichlet Non-IID 结果主要作为实验验证，并需额外引入局部梯度异质性假设才能升级为理论结论。
 
 ### 2.6 最小公平约束
@@ -278,7 +280,7 @@ w_i^{\mathit{MAFSA}}
 |U_{\mathit{online}}^k(t_k)| < n_{\min}
 ```
 
-时，`e_k` 放弃本次封装——既不生成 `\Pi_k(t_k)`，也不将任何数据送入 buffer。该组需在后续时刻重新发起训练组织。本文默认取 `n_{\min} \ge 2`，其作用是保护**客户端级参数隐私**，而不是隐藏组级聚合结果。
+时，`e_k` 放弃本次封装——既不生成 `\Pi_k(t_k)`，也不将任何数据送入 buffer。该组需在后续时刻重新发起训练组织。本文默认取 `n_{\min} \ge 2`，它只是无合谋时排除单客户端组包的准入下界；一般合谋隐私按整个 checkpoint 的实际客户端数 `N_Q−c≥2` 判断，而不是隐藏组级聚合结果。
 
 同时定义本轮组包对应的总样本量：
 
@@ -292,10 +294,10 @@ S_k(t_k) = \sum_{u_i^k \in U_{\mathit{online}}^k(t_k)} s_i^k
 H_k(t_k) = \mathsf{LHH.Hash}(pp_{\mathit{LHH}}, \overline{W}_k(t_k))
 ```
 
-然后对如下最小元数据签名：
+然后生成全局唯一 `package_token=(edge_id, base_version, nonce)`，并对如下最小元数据签名：
 
 ```text
-(k, t_k, h_{\mathit{base}}(t_k), digest(U_{\mathit{online}}^k(t_k)), n_k(t_k), S_k(t_k), H_k(t_k))
+(package_token, k, t_k, h_{\mathit{base}}(t_k), digest(U_{\mathit{online}}^k(t_k)), n_k(t_k), S_k(t_k), H_k(t_k))
 ```
 
 其中：
@@ -304,11 +306,12 @@ H_k(t_k) = \mathsf{LHH.Hash}(pp_{\mathit{LHH}}, \overline{W}_k(t_k))
 - `n_k(t_k) = |U_{\mathit{online}}^k(t_k)|`
 - `S_k(t_k) = \sum s_i^k`
 - `digest(U_{\mathit{online}}^k(t_k))` 表示对在线参与集合的摘要
+- `package_token` 绑定组包身份，防止 Cloud 对合法组包改名后绕过重放检查
 
 这一步完成后，形成一个组级掩码包：
 
 ```text
-\Pi_k(t_k) = (k, t_k, h_{\mathit{base}}(t_k), U_{\mathit{online}}^k(t_k), n_k(t_k), S_k(t_k), \overline{W}_k(t_k), H_k(t_k), \sigma_k(t_k))
+\Pi_k(t_k) = (package_token, k, t_k, h_{\mathit{base}}(t_k), U_{\mathit{online}}^k(t_k), n_k(t_k), S_k(t_k), \overline{W}_k(t_k), H_k(t_k), \sigma_k(t_k))
 ```
 
 这里最关键的一点是：
@@ -427,7 +430,7 @@ Q(t) = {\Pi_{k_1}(t_{k_1}), \Pi_{k_2}(t_{k_2}), ..., \Pi_{k_K}(t_{k_K})}
 ```text
 \mathit{checkpoint\_manifest}(t)
     = (t, \mathit{mode}(t), |Q(t)|,
-       {(k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k),
+       {(package_token, k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k),
          digest(U_{\mathit{online}}^k(t_k)), H_k(t_k))}
           _{\Pi_k(t_k) \in Q(t)})
 ```
@@ -588,7 +591,7 @@ W(t+1) = W_{\mathit{sum}}^{\mathit{corr}}(t) / S_Q(t)
 checkpoint，不推进全局版本，不删除候选组包，也不把它计入有效吞吐。验证通过后才
 删除 buffer 组包、写入版本历史并授予相关组开始下一轮训练的权限。
 
-**Step 1: manifest 一致性检查与签名验证。** 参与本次 checkpoint 的 `ES` 先检查自己收到的 `\mathit{checkpoint\_manifest}(t)` 是否与本地可见的组包证据一致：即 manifest 中声明的每个组包元数据 `(k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k), digest(U_{\mathit{online}}^k(t_k)), H_k(t_k))` 是否与对应 `\Pi_k(t_k)` 完全匹配。若不一致，直接判定本次 checkpoint 声明无效。然后，`ES` 对每个被选中组包的签名 `\sigma_k(t_k)` 执行 Ed25519 验签，并检查 `h_{\mathit{base}}(t_k)=Hash(W(t_k))`。这里的普通哈希只绑定“该组包基于哪个历史全局模型”，不负责验证聚合数值。
+**Step 1: manifest 一致性检查与签名验证。** 参与本次 checkpoint 的 `ES` 先检查自己收到的 `\mathit{checkpoint\_manifest}(t)` 是否与本地可见的组包证据一致：即 manifest 中声明的每个组包元数据 `(package_token, k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k), digest(U_{\mathit{online}}^k(t_k)), H_k(t_k))` 是否与对应 `\Pi_k(t_k)` 完全匹配。若不一致，直接判定本次 checkpoint 声明无效。然后，`ES` 对包含 `package_token` 的完整元数据执行 Ed25519 验签，并检查 `h_{\mathit{base}}(t_k)=Hash(W(t_k))`。这里的普通哈希只绑定“该组包基于哪个历史全局模型”，不负责验证聚合数值。
 
 **Step 2: LHH 验证 `raw sum`。** Cloud 与 TA 基于 `\mathit{checkpoint\_manifest}(t)` 中声明的选中集合 `Q(t)` 分别提供 `W_{\mathit{sum}}^{\mathit{raw}}(t)` 和 `M_Q(t)`。`ES` 对两者做 LHH 哈希：
 
@@ -652,10 +655,7 @@ S_Q(t) = \sum_{\Pi_k(t_k) \in Q(t)} S_k(t_k)
 - 对应组暂不生成新的待处理组包
 - 它们等待后续 checkpoint 被消费，或因超过 `s_max` 而过期
 
-若 checkpoint 验证失败，选中组包也按“未消费”处理：保留在 buffer 中等待重试；
-只有验证通过的 checkpoint 才会进入上述完成状态。每个 `package_token` 在成功提交后
-加入 `Aggregated_IDs`，再次到达或再次提交时拒绝，从而形成 exactly-once/replay
-防护的最小实现语义。
+若 checkpoint 验证失败，选中组包也按“未消费”处理：保留在 buffer 中等待重试；只有验证通过的 checkpoint 才会进入上述完成状态。`Aggregated_IDs` 是由可信 TA 维护的仅追加共识状态，Cloud 仅可持有镜像。每个已签名绑定的 `package_token` 在成功提交后由 TA 追加；再次到达或再次提交时依据规范状态拒绝，从而形成 exactly-once/replay 防护的最小协议语义。
 
 这一规则的意义在于：
 
