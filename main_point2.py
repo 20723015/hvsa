@@ -52,6 +52,10 @@ def run_point2_simulation(args: argparse.Namespace):
     cfg = DATASET_CONFIGS[args.dataset]
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
+    # 可复现性: 播种全局 RNG (数据划分) 与 torch (本地训练/DataLoader)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+
     # --- 日志 ---
     for h in logging.root.handlers[:]:
         logging.root.removeHandler(h)
@@ -71,8 +75,14 @@ def run_point2_simulation(args: argparse.Namespace):
     # --- 1. 数据准备 ---
     train_ds, test_ds = load_data(args.dataset)
     total_users = args.num_edge_servers * args.users_per_edge
-    train_loaders = distribute_data(train_ds, total_users, cfg['batch_size'],
-                                     iid=True, max_samples_per_user=cfg['samples_per_user'])
+    train_loaders = distribute_data(
+        train_ds,
+        total_users,
+        cfg['batch_size'],
+        iid=not args.noniid,
+        max_samples_per_user=cfg['samples_per_user'],
+        dirichlet_alpha=args.alpha,
+    )
     test_loader = DataLoader(test_ds, batch_size=256, shuffle=False)
 
     init_model = models.get_model(args.dataset, cfg['model'])
@@ -124,7 +134,7 @@ def run_point2_simulation(args: argparse.Namespace):
     # 每个 edge 当前的 base_version
     edge_base_v: dict[str, int] = {e.id: 0 for e in edges}
 
-    rng = np.random.default_rng(42)
+    rng = np.random.default_rng(args.seed)
 
     # 指标追踪
     p2_metrics = {
@@ -135,11 +145,15 @@ def run_point2_simulation(args: argparse.Namespace):
         'expired_buffer_count': 0,    # 从 buffer 因过期移除的组包总数
         'duplicate_contributions': 0, # 重复贡献数 (exactly-once 违反计数)
         'throughput': [],             # 每个 checkpoint 的样本量吞吐
+        'verification_attempts': 0,   # 已进入 ES 验证的 checkpoint 候选数
+        'verification_rejections': 0,# 验证失败而被丢弃的 checkpoint 数
+        'replay_attempts': 0,         # 重放攻击注入次数
+        'replay_rejections': 0,       # 重放被 Aggregated_IDs 拒绝次数
     }
 
-    # 为每个用户设置样本量 (每一轮均匀)
-    for u in users:
-        u.p2_set_sample_size(cfg['samples_per_user'])
+    # 使用每个用户数据集的真实样本量；IID 下通常相同，Non-IID 下可能不同。
+    for i, u in enumerate(users):
+        u.p2_set_sample_size(len(train_loaders[i].dataset))
 
     # 提前分组: 给每个 edge 分配固定的 delay profile
     edge_delay: dict[str, int] = {}
@@ -158,6 +172,10 @@ def run_point2_simulation(args: argparse.Namespace):
         # 4a. 对 idle edge 启动新 package
         for e in edges:
             if edge_state[e.id] == 'idle':
+                # 组包只有在成功提交或过期后才能被下一包替代。
+                # 验证失败时保留原包，避免新包覆盖待重试候选。
+                if cloud.p2_has_pending_package(e.id):
+                    continue
                 base_v = cloud.p2_current_version
                 base_hash = cloud.p2_hash_current_model()
                 pkg_seq = edge_pkg_seq[e.id]
@@ -219,7 +237,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     msg = {"user_id": u.id, "masked_gradient": masked_int}
                     e.p2_receive_masked_gradient(
                         _pkl.dumps(msg), pkg_token, base_v,
-                        sample_size=cfg['samples_per_user'])
+                        sample_size=len(user_loaders_map[u.id].dataset))
                     online_count += 1
                     # ES 封组前确认接收 → 立即清除 stale 候选 (文档 L305-307)
                     has_stale, _ = u.p2_get_stale_info()
@@ -256,25 +274,28 @@ def run_point2_simulation(args: argparse.Namespace):
             corrected_sum, final_model, comp_map = cloud.p2_apply_vcm_and_average(
                 selected, raw_sum_int, gamma_vcm=gamma)
 
-            # 攻击注入 (独立于性能基线, 仅攻击实验时启用)
-            # ES 验证的对象是 "Cloud 广播值": 攻击时广播值 = 被篡改的值,
-            # 否则 ES 永远在验证诚实值, 攻击检测率恒为 0
+            # 形成待验证的 checkpoint 候选。
+            # 重要语义：此处只能构造候选，不能推进 Cloud 状态；必须在 ES
+            # 验证通过后才允许 p2_commit_checkpoint()。
             broadcast_selected = selected
             broadcast_raw = raw_sum_int
             broadcast_final = final_model
+            broadcast_corrected = corrected_sum
+            broadcast_comp_map = comp_map
 
+            # 攻击注入 (独立于性能基线, 仅攻击实验时启用)。ES 验证的对象
+            # 是 Cloud 广播值，因此攻击实验必须把篡改后的候选送入验证。
             if args.attack == 'tamper_global':
                 # Cloud 篡改 W_sum^raw: 归约到 Theorem 4.1 (i), 应被 Step 2 LHH 等式检测
                 tampered_raw = raw_sum_int.copy()
                 tampered_raw[0] += 1
-                tampered_corrected, tampered_final, _ = cloud.p2_apply_vcm_and_average(
+                tampered_corrected, tampered_final, tampered_comp_map = cloud.p2_apply_vcm_and_average(
                     selected, tampered_raw, gamma_vcm=gamma)
                 broadcast_raw = tampered_raw
                 broadcast_final = tampered_final
+                broadcast_corrected = tampered_corrected
+                broadcast_comp_map = tampered_comp_map
                 logger.warning(f"Tick {current_tick}: [ATTACK] tamper_global (W_sum^raw[0]+=1)")
-                result = cloud.p2_commit_checkpoint(
-                    selected, tampered_final, tampered_raw, M_Q, H_mask_raw,
-                    tampered_corrected, comp_map)
             elif args.attack == 'tamper_manifest':
                 # 篡改选中的组包集合 (注入一个不存在的组包)
                 from point2_types import GroupPackage
@@ -289,9 +310,6 @@ def run_point2_simulation(args: argparse.Namespace):
                 selected_attacked = selected + [fake_pkg]
                 broadcast_selected = selected_attacked
                 logger.warning(f"Tick {current_tick}: [ATTACK] tamper_manifest")
-                result = cloud.p2_commit_checkpoint(
-                    selected_attacked, final_model, raw_sum_int, M_Q, H_mask_raw,
-                    corrected_sum, comp_map)
             elif args.attack == 'drop_replace_pkg':
                 # 漏聚合某个组包
                 if len(selected) > 1:
@@ -299,21 +317,11 @@ def run_point2_simulation(args: argparse.Namespace):
                     broadcast_selected = selected_attacked
                     logger.warning(f"Tick {current_tick}: [ATTACK] drop_replace_pkg "
                                     f"(removed {selected[-1].package_token})")
-                    result = cloud.p2_commit_checkpoint(
-                        selected_attacked, final_model, raw_sum_int, M_Q, H_mask_raw,
-                        corrected_sum, comp_map)
-                else:
-                    result = cloud.p2_commit_checkpoint(
-                        selected, final_model, raw_sum_int, M_Q, H_mask_raw,
-                        corrected_sum, comp_map)
-            else:
-                result = cloud.p2_commit_checkpoint(
-                    selected, final_model, raw_sum_int, M_Q, H_mask_raw,
-                    corrected_sum, comp_map)
 
             # ES 验证 (验证 Cloud 广播值)
             bundle = {
-                'checkpoint_version': result.version,
+                # commit 前的当前版本就是本次 checkpoint 的 base/current version。
+                'checkpoint_version': cloud.p2_current_version,
                 'selected_packages': broadcast_selected,
                 'raw_sum_int': broadcast_raw,
                 'M_Q': M_Q,
@@ -325,16 +333,55 @@ def run_point2_simulation(args: argparse.Namespace):
 
             all_passed = True
             selected_edge_ids = {p.edge_id for p in selected}
-            for e in edges:
-                if e.id in selected_edge_ids:
-                    if not e.p2_verify_checkpoint(bundle):
-                        all_passed = False
-                        logger.error(f"Tick {current_tick}: {e.id} 验证失败!")
+            if args.verify:
+                p2_metrics['verification_attempts'] += 1
+                for e in edges:
+                    if e.id in selected_edge_ids:
+                        if not e.p2_verify_checkpoint(bundle):
+                            all_passed = False
+                            logger.error(f"Tick {current_tick}: {e.id} 验证失败!")
 
+            if not all_passed:
+                # 安全协议语义：检测到攻击/验证失败即丢弃本次 checkpoint
+                # 更新，不推进全局版本、不删除 buffer 中的组包、不计入有效吞吐。
+                p2_metrics['verification_rejections'] += 1
+                logger.error(
+                    f"Tick {current_tick}: checkpoint rejected; "
+                    f"global version remains v{cloud.p2_current_version}"
+                )
+                continue
+
+            # 只有验证通过后才进行原子式状态提交。提交对象必须与 ES 验证的
+            # 候选 (broadcast_*) 一致。commit 内部还会再校验 buffer 完整性:
+            # 若 manifest 与 buffer 不一致 (如注入不存在的组包) 则拒绝提交。
+            try:
+                result = cloud.p2_commit_checkpoint(
+                    broadcast_selected, broadcast_final, broadcast_raw, M_Q,
+                    H_mask_raw, broadcast_corrected, broadcast_comp_map)
+            except ValueError as e:
+                # commit 守卫拒绝: 视为检测到不一致, 丢弃本次 checkpoint
+                p2_metrics['verification_rejections'] += 1
+                logger.error(f"Tick {current_tick}: checkpoint rejected by "
+                             f"commit guard: {e}")
+                continue
             result.verification_passed = all_passed
 
             if all_passed:
                 checkpoint_count += 1
+
+                # 重放攻击: 提交后重发一个已消费组包, 验证 Aggregated_IDs
+                # exactly-once 拒绝 (发生在 buffer 接收路径, 与 ES 验证无关)。
+                if args.attack == 'replay':
+                    replay_pkg = selected[0]
+                    rejected = not cloud.p2_receive_group_package(
+                        replay_pkg, arrival_tick=current_tick)
+                    p2_metrics['replay_attempts'] += 1
+                    p2_metrics['replay_rejections'] += int(rejected)
+                    logger.warning(
+                        f"Tick {current_tick}: [ATTACK] replay "
+                        f"{replay_pkg.package_token} -> "
+                        f"{'rejected (exactly-once)' if rejected else 'ACCEPTED (BUG)'}"
+                    )
 
                 # 指标记录
                 p2_metrics['checkpoint_ticks'].append(current_tick)
@@ -344,7 +391,7 @@ def run_point2_simulation(args: argparse.Namespace):
                     wait_time = (current_tick -
                                  cloud.p2_arrival_ticks.get(pkg.package_token, 0))
                     p2_metrics['wait_times'].append(wait_time)
-                p2_metrics['comp_gain'] += sum(comp_map.values())
+                p2_metrics['comp_gain'] += sum(broadcast_comp_map.values())
                 # throughput: 每 tick 处理的有效样本数
                 prev_tick = (p2_metrics['checkpoint_ticks'][-2]
                             if len(p2_metrics['checkpoint_ticks']) > 1 else 0)
@@ -377,6 +424,7 @@ def run_point2_simulation(args: argparse.Namespace):
     max_wait = np.max(p2_metrics['wait_times']) if p2_metrics['wait_times'] else 0
     # 组包过期率: 从 buffer 因 s_k > s_max 移除的组包数
     expired_from_buffer = cloud.p2_expired_total
+    p2_metrics['duplicate_contributions'] = cloud.p2_duplicate_contributions
     # stale 组包: checkpoint 中被选中且 base_version < version 的包数
     stale_in_checkpoint = sum(
         1 for r in cloud.p2_checkpoint_log
@@ -395,11 +443,16 @@ def run_point2_simulation(args: argparse.Namespace):
     # 最终准确率
     final_acc = acc_history[-1][1] if acc_history else 0.0
 
-    # 验证统计 (攻击实验的 tampering detection rate)
-    verify_total = len(cloud.p2_checkpoint_log)
-    verify_pass = sum(1 for r in cloud.p2_checkpoint_log if r.verification_passed)
+    # 验证统计。验证失败的 checkpoint 不进入 checkpoint_log，因此不能
+    # 通过已提交日志反推攻击检测率。
+    verify_total = p2_metrics['verification_attempts']
+    verify_pass = verify_total - p2_metrics['verification_rejections']
     attack_detected = 0.0
-    if args.attack != 'none' and verify_total > 0:
+    if args.attack == 'replay':
+        # 重放检测发生在 buffer 接收路径 (Aggregated_IDs 拒绝), 与 ES 验证无关。
+        ra = p2_metrics['replay_attempts']
+        attack_detected = (p2_metrics['replay_rejections'] / ra) if ra > 0 else 0.0
+    elif args.attack != 'none' and verify_total > 0:
         attack_detected = (verify_total - verify_pass) / verify_total
 
     logger.info(f"\n=== 模拟完成: {checkpoint_count} checkpoints, "
@@ -419,6 +472,9 @@ def run_point2_simulation(args: argparse.Namespace):
     logger.info(f"  验证通过: {verify_pass}/{verify_total}")
     if args.attack != 'none':
         logger.info(f"  Attack detection rate: {attack_detected:.2%}")
+    if args.attack == 'replay':
+        logger.info(f"  Replay attempts: {p2_metrics['replay_attempts']}, "
+                    f"rejected: {p2_metrics['replay_rejections']}")
 
     # --- 6. 画图 ---
     if acc_history:
@@ -480,6 +536,10 @@ def run_point2_simulation(args: argparse.Namespace):
         total_stale_reuses=total_stale_reuses,
         verify_pass_count=verify_pass,
         verify_total_count=verify_total,
+        verification_rejection_count=p2_metrics['verification_rejections'],
+        duplicate_contributions=p2_metrics['duplicate_contributions'],
+        replay_attempts=p2_metrics['replay_attempts'],
+        replay_rejections=p2_metrics['replay_rejections'],
         attack_detected=attack_detected,
         config=str(args),
     )
@@ -493,6 +553,12 @@ def run_point2_simulation(args: argparse.Namespace):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="HVSA Point2: Semi-Async Secure Aggregation")
     parser.add_argument('--dataset', default='MNIST', choices=['MNIST', 'CIFAR10'])
+    parser.add_argument('--seed', type=int, default=42,
+                        help='random seed for data partition and local training')
+    parser.add_argument('--noniid', action='store_true',
+                        help='use Dirichlet Non-IID partition; default is IID')
+    parser.add_argument('--alpha', type=float, default=0.5,
+                        help='Dirichlet concentration for --noniid')
     parser.add_argument('--num-edge-servers', type=int, default=5)
     parser.add_argument('--users-per-edge', type=int, default=4)
     parser.add_argument('-K', type=int, default=3, help='checkpoint trigger threshold')
@@ -522,7 +588,8 @@ if __name__ == "__main__":
     # verification & attack
     parser.add_argument('--verify', action='store_true', help='enable LHH/Ed25519 verification')
     parser.add_argument('--attack', default='none',
-                        choices=['none', 'tamper_global', 'tamper_manifest', 'drop_replace_pkg'],
+                        choices=['none', 'tamper_global', 'tamper_manifest',
+                                 'drop_replace_pkg', 'replay'],
                         help='attack type (separate from performance baseline)')
 
     args = parser.parse_args()

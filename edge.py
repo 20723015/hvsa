@@ -414,6 +414,21 @@ class EdgeServer:
                 logger.error(f"EdgeServer {self.id}: 未知 {pkg.edge_id}")
                 return False
 
+            # base_hash 负责把组包绑定到其训练基版本；签名只能证明
+            # “该 Edge 签过这个值”，还需要检查它确实对应历史模型。
+            base_model = history.get(pkg.base_version)
+            if base_model is None:
+                logger.error(f"EdgeServer {self.id}: 缺少 base version v{pkg.base_version}")
+                return False
+            expected_base_hash = hashlib.sha256(
+                np.asarray(base_model, dtype=np.float64).tobytes()
+            ).digest()
+            if pkg.base_hash != expected_base_hash:
+                logger.error(
+                    f"EdgeServer {self.id}: {pkg.package_token} base_hash 不匹配"
+                )
+                return False
+
             user_digest = hashlib.sha256(
                 ",".join(sorted(pkg.online_users)).encode()
             ).digest()

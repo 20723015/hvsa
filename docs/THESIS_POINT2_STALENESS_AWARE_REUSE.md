@@ -90,7 +90,22 @@ C_k(t) = S_k(t_k) · γ_vcm · (W(t) - W(t_k))
 - 组间补偿只发生在 `raw sum` 已被 `LHH` 验证之后
 - 最终执行顺序固定为“恢复 `raw sum` → `LHH` 验证 → ES 计算 Direct-VCM 风格补偿 → 除以 `S_Q(t)` 得到新全局模型”，不要求对补偿后的模型再增加一套密码学验证
 
-### 2.5 最小公平约束
+### 2.5 参考论文继承关系与理论边界
+
+本研究点的机制设计按 `reference` 中的两篇论文展开，但这里的“按论文实现”是指继承研究问题、机制思想和分析框架，不表示当前协议可以直接套用原论文的系统模型或收敛定理。原因是本方案额外受到“单 TA 掩码 + LHH 验证 + checkpoint 提交”的约束，且把客户端级 stale reuse 改造成了组级 masked package 上的协议。
+
+| 参考论文 | 本文继承的内容 | 本文的适配 | 理论上不直接继承的内容 |
+|---|---|---|---|
+| `MAFSA`（reference/009-2026-MAFSA.pdf） | 分层异步训练、掉线结果复用、staleness-aware 融合，以及用有界陈旧度控制异步偏差的分析思路 | stale 结果只在客户端本地、掩码前与 fresh 结果融合；stale 来源限定为已完成但未被 ES 接收的单次结果；权重方向改为 `\rho_i=\rho_{max}e^{-\beta_cE_i}`，并要求 `\rho_{max}\le 0.5` | MAFSA 的原始权重公式、客户端持续本地训练的假设、原始系统模型和完整收敛定理 |
+| `DVAFL`（reference/016-2026-DVAFL.pdf） | DWP/版本控制所刻画的版本失配问题，以及 Direct-VCM 用当前模型与旧版本模型之差进行补偿的思想 | 将客户端级补偿改造成 mixed-version masked group package 的组级、样本量加权、LHH 验证后的公开后置补偿；删除解掩码前的独立连续降权路径 | DVAFL 的客户端级证明、DWP/VCM 的完整收敛率，以及“补偿 + 降权”双机制的直接适用性 |
+
+因此，本文可以准确表述为“MAFSA-inspired stale reuse + DVAFL-inspired group-level Direct-VCM extension”。不能表述为“直接采用 MAFSA/DVAFL 公式并继承其收敛定理”。本章理论只保留三层结论：
+
+1. **安全层**：在 TA 不与 Cloud/ES 合谋、历史全局模型和版本由共识维护、LHH 与 Ed25519 假设成立时，对 checkpoint 选中聚合结果做完整性检测；检测失败即丢弃本次 checkpoint，不推进全局版本。该结论不保证 Cloud 下的训练可用性，也不覆盖候选组包漏选、调度审查或 anti-censorship。
+2. **偏差层**：在 IID 默认条件、Lipschitz 梯度、单步更新有界、`E_i` 与 `s_k` 有界等条件下，给出本文协议的一步偏差上界。该上界是对参考论文分析思路的组级改写，不是 MAFSA 或 DVAFL 的现成定理。
+3. **收敛层**：完整的多步收敛率需要在当前“本地 stale 混合 + 组级 Direct-VCM + checkpoint 选择”协议上独立证明；本文不把参考论文的收敛率直接宣称为本方案定理。Dirichlet Non-IID 结果主要作为实验验证，并需额外引入局部梯度异质性假设才能升级为理论结论。
+
+### 2.6 最小公平约束
 
 为避免快组持续挤占慢组机会，本章固定两条最小公平规则：
 
@@ -162,6 +177,8 @@ U_1, U_2, ..., U_M
 ```text
 W(t)
 ```
+
+这一节可以按“客户端什么时候保存结果、什么时候混合结果”来理解：组 `U_k` 开始训练时先固定一个基版本 `t_k`，组内在线客户端都从同一个 `W(t_k)` 出发完成本地训练。若某客户端训练完成但在封组前上传失败，它只在本地保存这一次尚未被 ES 接收的明文结果，并记录产生版本 `t_i`；该结果不会单独上传给 Cloud，也不会被当作已经聚合过的更新。客户端下一次恢复参与时，从当前版本 `W(t_k)` 训练出新结果，再按陈旧度 `E_i=t_k-t_i` 将新结果与本地 stale 候选混合，最后只对混合后的一个模型做样本量加权、量化和掩码上传。因此，`stale reuse` 是客户端级的“未成功上传结果复用”，不是 Cloud 对旧组包的重复聚合，也不是组间 checkpoint 补偿。
 
 当边缘服务器 `e_k` 被允许开始下一轮本地训练时，它将当前全局模型 `W(t)` 广播给组内客户端集合 `U_k`，本轮训练基版本定格为 `t_k = t`。实际在线并参与训练的客户端集合记为：
 
@@ -345,6 +362,12 @@ M_Q(t) = \sum_{\Pi_k(t_k) \in Q(t)} M_k(t_k)
 
 因此，Cloud 在 checkpoint 阶段只能恢复本次选中集合的 `raw sum`，而不能提前恢复任意单个组包的明文组模型。
 
+这里的“按样本量加权”只作用于明文模型项，不作用于掩码项：客户端上传的是
+`s_i^k w_i^k + m_i^k`，TA 计算的是参与客户端掩码的普通和 `M_k=Σm_i^k`，而不是
+`Σs_i^k m_i^k`。这样解掩码后才得到 `Σs_i^k w_i^k`，并且仍然保持研究点 1 的
+LHH 线性关系。TA 不在单个组包到达时释放 `M_k`，只在 checkpoint 的选中集合 `Q(t)`
+确定后返回 `M_Q`，目的是避免 Cloud 在 buffer 阶段单独恢复某个组的明文和。
+
 ---
 
 ### 4.4 Buffer 与 Checkpoint 触发
@@ -356,6 +379,12 @@ B = {\Pi_k(t_k)}
 ```
 
 每个组最多只能在 buffer 中保留一个尚未消费的组包。
+
+本文实验默认使用 IID 划分：训练集随机均匀分配给客户端，用于先隔离 checkpoint、
+stale reuse 和 Direct-VCM 本身的作用。Non-IID 作为第二组实验条件，采用 Dirichlet
+标签划分（默认 `alpha=0.5`）；此时每个客户端和每个组的 `S_k` 必须使用实际数据量，
+不能继续假定每个客户端样本数相同。两种条件应保持客户端数、分组、时延、掉线率、
+`K`、`s_max` 和随机种子一致。
 
 设当前最新已提交并广播的全局模型版本为 `W(t)`，checkpoint 触发阈值为 `K`。这里的 `K` 仅用于控制组间半异步调度粒度，而**不作为隐私阈值**；本文的隐私目标是保护单个客户端参数不泄露，而不额外隐藏组级聚合结果。对任意组包 `\Pi_k(t_k)`，其中 `t_k` 表示该组包的 `base version`。由于 buffer 中可能同时存在基于旧版本模型训练得到的组包，因此先定义其陈旧度为：
 
@@ -554,7 +583,12 @@ W(t+1) = W_{\mathit{sum}}^{\mathit{corr}}(t) / S_Q(t)
 
 验证与重构链路分为三步。
 
-**Step 1: manifest 一致性检查与签名验证。** 参与本次 checkpoint 的 `ES` 先检查自己收到的 `\mathit{checkpoint\_manifest}(t)` 是否与本地可见的组包证据一致：即 manifest 中声明的每个组包元数据 `(k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k), digest(U_{\mathit{online}}^k(t_k)), H_k(t_k))` 是否与对应 `\Pi_k(t_k)` 完全匹配。若不一致，直接判定本次 checkpoint 声明无效。然后，`ES` 对每个被选中组包的签名 `\sigma_k(t_k)` 执行 Ed25519 验签。
+协议执行顺序必须是“候选 checkpoint → ES 验证 → 成功提交”。任一 manifest/签名、
+`base_hash`、LHH 等式或最终模型重构检查失败，都视为检测到攻击或不一致：丢弃本次
+checkpoint，不推进全局版本，不删除候选组包，也不把它计入有效吞吐。验证通过后才
+删除 buffer 组包、写入版本历史并授予相关组开始下一轮训练的权限。
+
+**Step 1: manifest 一致性检查与签名验证。** 参与本次 checkpoint 的 `ES` 先检查自己收到的 `\mathit{checkpoint\_manifest}(t)` 是否与本地可见的组包证据一致：即 manifest 中声明的每个组包元数据 `(k, t_k, h_{\mathit{base}}(t_k), n_k(t_k), S_k(t_k), digest(U_{\mathit{online}}^k(t_k)), H_k(t_k))` 是否与对应 `\Pi_k(t_k)` 完全匹配。若不一致，直接判定本次 checkpoint 声明无效。然后，`ES` 对每个被选中组包的签名 `\sigma_k(t_k)` 执行 Ed25519 验签，并检查 `h_{\mathit{base}}(t_k)=Hash(W(t_k))`。这里的普通哈希只绑定“该组包基于哪个历史全局模型”，不负责验证聚合数值。
 
 **Step 2: LHH 验证 `raw sum`。** Cloud 与 TA 基于 `\mathit{checkpoint\_manifest}(t)` 中声明的选中集合 `Q(t)` 分别提供 `W_{\mathit{sum}}^{\mathit{raw}}(t)` 和 `M_Q(t)`。`ES` 对两者做 LHH 哈希：
 
@@ -617,6 +651,11 @@ S_Q(t) = \sum_{\Pi_k(t_k) \in Q(t)} S_k(t_k)
 - 它们继续保留在 buffer 中
 - 对应组暂不生成新的待处理组包
 - 它们等待后续 checkpoint 被消费，或因超过 `s_max` 而过期
+
+若 checkpoint 验证失败，选中组包也按“未消费”处理：保留在 buffer 中等待重试；
+只有验证通过的 checkpoint 才会进入上述完成状态。每个 `package_token` 在成功提交后
+加入 `Aggregated_IDs`，再次到达或再次提交时拒绝，从而形成 exactly-once/replay
+防护的最小实现语义。
 
 这一规则的意义在于：
 
@@ -833,11 +872,12 @@ W(2) = W_{\mathit{sum}}^{\mathit{corr}}(1) / (S_4(0) + S_5(0) + S_1(1))
 4. `Grouped-HVSA + Buffer/Checkpoint Semi-Async + Intra-Group Stale Reuse`
 5. `Grouped-HVSA + Buffer/Checkpoint Semi-Async + Intra-Group Stale Reuse + Direct-VCM Group Compensation`
 
-攻击实验以第 5 组（完整方案）为基座，叠加三类篡改攻击，与性能基线分开报告。攻击实验只做三类即可：
+攻击实验以第 5 组（完整方案）为基座，叠加四类篡改/重放测试，与性能基线分开报告。四类测试对应定理 4.1：
 
-- 篡改本次 checkpoint 输出的全局模型
+- 篡改本次 checkpoint 的 `W_sum^raw` 或组包 masked payload，预期 LHH 等式失败
 - 篡改 `checkpoint_manifest(t)`，即篡改已公布的 checkpoint 选中集合或其中组包元数据
 - 在 `checkpoint_manifest(t)` 已声明的选中集合内部漏聚合某个组包，或错误替换其中某个组包
+- 重放已成功消费的组包，验证 `Aggregated_IDs` 的 exactly-once 拒绝
 
 建议指标：
 
@@ -848,9 +888,23 @@ W(2) = W_{\mathit{sum}}^{\mathit{corr}}(1) / (S_4(0) + S_5(0) + S_1(1))
 - stale reuse gain / 客户端掉线未上传结果的复用收益
 - stale-weight stability / 不同 stale 权重方向下的精度、收敛速度与训练波动
 - tampering detection rate
-- verification overhead
+- replay exactly-once 拒绝率（重放已消费组包被 `Aggregated_IDs` 拒绝的比例，对应 `replay_rejections/replay_attempts`）
 
-### 8.1 参数空间与消融顺序
+### 8.1 数据划分条件
+
+Point 2 的实验至少报告两种数据划分条件：
+
+1. **IID**：作为默认基线。训练集随机均匀划分到各客户端，主要用于观察
+   checkpoint、stale reuse 与 Direct-VCM 机制本身的影响，减少 Non-IID 对优化结果的干扰。
+2. **Non-IID**：采用 Dirichlet 标签分布划分，默认 `alpha=0.5`，用于评估标签异质性对
+   stale reuse、mixed-version 补偿、最终精度和收敛稳定性的影响；必要时补充
+   `alpha∈{0.1, 0.5, 1.0}` 的敏感性实验。
+
+两种条件下均使用相同的客户端数、边缘组划分、延迟分布、掉线率、`K`、`s_max` 和随机种子集合（实现中统一由 `--seed` 固定，默认 42，数据划分与本地训练均可复现）。
+Non-IID 条件下，`S_k` 必须由客户端真实数据量统计得到，不能继续使用固定的每客户端样本数。
+ - verification overhead
+
+### 8.2 参数空间与消融顺序
 
 协议中涉及的超参数分属三个独立模块：
 

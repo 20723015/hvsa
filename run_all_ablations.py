@@ -185,6 +185,9 @@ ATTACKS = [
     {"id": "ATK3", "label": "attack-drop-replace-pkg",
      "desc": "漏聚合/替换组包",
      "args": "-K 3 --s-max 3 --reuse-rule ours --rho-max 0.5 --staleness-beta 0.3 --upload-dropout-rate 0.2 --vcm --gamma-vcm 1.0 --verify --attack drop_replace_pkg"},
+    {"id": "ATK4", "label": "attack-replay",
+     "desc": "重放已消费组包 (Aggregated_IDs exactly-once)",
+     "args": "-K 3 --s-max 3 --reuse-rule ours --rho-max 0.5 --staleness-beta 0.3 --upload-dropout-rate 0.2 --vcm --gamma-vcm 1.0 --verify --attack replay"},
 ]
 
 
@@ -193,15 +196,19 @@ ATTACKS = [
 # ============================================================
 
 def run_one(label: str, extra_args: str, dataset: str, out_dir: str,
-            quick: bool, dry_run: bool) -> Optional[dict]:
+            quick: bool, dry_run: bool, noniid: bool = False,
+            alpha: float = 0.5, seed: int = 42) -> Optional[dict]:
     """运行一次 main_point2.py, 返回结果摘要."""
     max_ckpt = "5" if quick else "20"
     max_ticks = "80" if quick else "300"
+    partition_args = "--noniid --alpha " + str(alpha) if noniid else ""
     cmd = (
         f"python main_point2.py "
         f"--dataset {dataset} "
+        f"--seed {seed} "
         f"--max-checkpoints {max_ckpt} "
         f"--max-ticks {max_ticks} "
+        f"{partition_args} "
         f"{extra_args}"
     )
     print(f"\n{'='*70}")
@@ -282,6 +289,12 @@ def collect_npz_results(out_dir: str) -> List[dict]:
 def main():
     parser = argparse.ArgumentParser(description="研究点2 批量消融实验")
     parser.add_argument("--dataset", default="MNIST", choices=["MNIST", "CIFAR10"])
+    parser.add_argument("--seed", type=int, default=42,
+                        help="random seed shared by all runs (IID/Non-IID comparable)")
+    parser.add_argument("--noniid", action="store_true",
+                        help="run the ablation matrix with Dirichlet Non-IID data")
+    parser.add_argument("--alpha", type=float, default=0.5,
+                        help="Dirichlet concentration used with --noniid")
     parser.add_argument("--dry-run", action="store_true", help="仅打印命令")
     parser.add_argument("--quick", action="store_true", help="快速模式 (少量 rounds)")
     parser.add_argument("--out-dir", default=None, help="输出目录 (默认 results_YYYYMMDD-HHMMSS)")
@@ -319,7 +332,8 @@ def main():
                     label = f"{item['id']}_{vname}"
                     extra = f"{item['base_args']} {vargs}".strip()
                     r = run_one(label, extra, args.dataset, out_dir,
-                                args.quick, args.dry_run)
+                                args.quick, args.dry_run, args.noniid, args.alpha,
+                                args.seed)
                     if r:
                         r["group"] = item["id"]
                         r["desc"] = item["desc"]
@@ -329,7 +343,8 @@ def main():
                         print(f"  variant: {vname} | {vargs}")
             else:
                 r = run_one(item["id"], item["args"], args.dataset, out_dir,
-                            args.quick, args.dry_run)
+                            args.quick, args.dry_run, args.noniid, args.alpha,
+                            args.seed)
                 if r:
                     r["group"] = item["id"]
                     r["desc"] = item.get("desc", "")

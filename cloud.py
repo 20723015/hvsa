@@ -171,14 +171,15 @@ class CloudServer:
         }
         self.p2_checkpoint_log: list['CheckpointResult'] = []
         self.p2_package_buffer: dict[str, 'GroupPackage'] = {}
-        # 每个 edge 上一次 selected 的 package_token (用于公平约束)
-        self.p2_edge_last_selected: dict[str, str] = {}
         # 公平计数器: edge_id → 连续未被选中次数
         self.p2_defer_counters: dict[str, int] = {}
         # 组包到达时间记录: package_token → arrival_tick
         self.p2_arrival_ticks: dict[str, int] = {}
         # 累计过期组包数
         self.p2_expired_total: int = 0
+        # 已成功提交 checkpoint 的 package_token；用于 exactly-once / replay 防护
+        self.p2_aggregated_ids: set[str] = set()
+        self.p2_duplicate_contributions: int = 0
 
     def p2_hash_current_model(self) -> bytes:
         """返回当前最新全局模型的哈希."""
@@ -190,13 +191,24 @@ class CloudServer:
     def p2_receive_group_package(self, pkg: 'GroupPackage', arrival_tick: int = 0):
         """point2: 接收组包入 buffer.
 
-        对应文档 Sec.4.4: 每组最多一个待处理包，新包替换旧包.
+         对应文档 Sec.4.4: 每组最多一个待处理包；未消费旧包时拒绝新包.
         """
         edge_id = pkg.edge_id
+        if pkg.package_token in self.p2_aggregated_ids:
+            self.p2_duplicate_contributions += 1
+            logger.warning(f"CloudServer: reject replayed package {pkg.package_token}")
+            return False
+
         old = self.p2_package_buffer.get(edge_id)
-        if old is not None and old.package_token != (
-                self.p2_edge_last_selected.get(edge_id)):
-            pass  # 旧包还没被消费 → 替换
+        if old is not None:
+            # 每个 edge 在前一个组包被消费或过期前不能产生新待处理包。
+            # 这也保证验证失败时，原候选不会被新包覆盖。
+            self.p2_duplicate_contributions += 1
+            logger.warning(
+                f"CloudServer: reject new package {pkg.package_token}; "
+                f"pending package {old.package_token} still exists"
+            )
+            return False
 
         self.p2_package_buffer[edge_id] = pkg
         self.p2_arrival_ticks[pkg.package_token] = arrival_tick
@@ -206,6 +218,11 @@ class CloudServer:
         logger.info(f"CloudServer: p2 buffer ← {pkg.package_token} "
                      f"edge={edge_id} n={pkg.n_k} S={pkg.S_k} base_v={pkg.base_version} "
                      f"buffer_size={len(self.p2_package_buffer)}")
+        return True
+
+    def p2_has_pending_package(self, edge_id: str) -> bool:
+        """返回某 edge 是否仍有未消费的组包。"""
+        return edge_id in self.p2_package_buffer
 
     def p2_prune_expired_packages(self, s_max: int) -> list[str]:
         """移除超过 s_max 陈旧度的组包.
@@ -381,10 +398,18 @@ class CloudServer:
 
         S_Q = sum(pkg.S_k for pkg in selected_packages)
 
+        # 提交前再次检查候选仍是 buffer 中的原包，避免重复提交或状态错位。
+        for pkg in selected_packages:
+            if pkg.package_token in self.p2_aggregated_ids:
+                raise ValueError(f"replayed package already aggregated: {pkg.package_token}")
+            buffered = self.p2_package_buffer.get(pkg.edge_id)
+            if buffered is None or buffered.package_token != pkg.package_token:
+                raise ValueError(f"package is no longer pending: {pkg.package_token}")
+
         # 从 buffer 移除
         for pkg in selected_packages:
             self.p2_package_buffer.pop(pkg.edge_id, None)
-            self.p2_edge_last_selected[pkg.edge_id] = pkg.package_token
+            self.p2_aggregated_ids.add(pkg.package_token)
 
         v = self.p2_current_version
         new_v = v + 1

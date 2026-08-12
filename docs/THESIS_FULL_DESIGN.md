@@ -35,7 +35,7 @@
 
 研究点一提出 **HVSA**（Hierarchical Verifiable Secure Aggregation），在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私，利用线性同态哈希（LHH）与 Ed25519 签名让边缘服务器（ES）能够对云端聚合结果进行高效验证，验证通信开销与模型维度无关。理论分析表明，在 PRG 伪随机性、n_min≥2 与 TA 不合谋假设下，HVSA 保证客户端参数隐私不可恢复；在 LHH 抗碰撞与 Ed25519 EUF-CMA 假设下，云端任何篡改均可被边缘确定性检测；同时协议对客户端掉线具有自然鲁棒性，掉线用户的掩码与更新自动成对剔除，不破坏验证等式。
 
-研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组内 stale reuse 复用客户端掉线未上传的训练结果、以 masked group package 进入缓冲区、按 checkpoint 批量解掩码聚合，并引入 Direct-VCM 组级后置补偿，在不破坏单 TA 掩码与 LHH 验证链路的前提下，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析将四类 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA，并证明 stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界；收敛性分析在 Lipschitz 假设下给出单 checkpoint 偏差显式上界 `ρ_max·C₁ + γ_vcm·s_max·ηB`，为超参选择提供理论指导。
+研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组内 stale reuse 复用客户端掉线未上传的训练结果、以 masked group package 进入缓冲区、按 checkpoint 批量解掩码聚合，并引入 Direct-VCM 组级后置补偿，在不破坏单 TA 掩码与 LHH 验证链路的前提下，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析将四类 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA，并证明 stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界；在 IID 默认条件下，进一步给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`。该上界是本文独立的偏差刻画，不直接继承参考论文的完整收敛定理。
 
 **关键词**：联邦学习；分层聚合；安全聚合；可验证聚合；半异步；陈旧性复用
 
@@ -47,7 +47,7 @@ Hierarchical Federated Learning balances privacy and communication efficiency un
 
 Research Point 1 proposes **HVSA** (Hierarchical Verifiable Secure Aggregation). Under a "cloud-edge-end-single TA" architecture, HVSA protects client parameter privacy via PRG masking, and enables Edge Servers (ES) to efficiently verify cloud aggregation results via Linear Homomorphic Hashing (LHH) and Ed25519 signatures, with verification communication overhead independent of model dimension. Theoretical analysis shows that under PRG pseudorandomness, n_min≥2, and TA non-collusion assumptions, HVSA guarantees client parameter privacy; under LHH collision resistance and Ed25519 EUF-CMA assumptions, any cloud tampering is deterministically detectable by the edge; meanwhile, the protocol is naturally robust to client dropout — masks and updates of dropped clients are removed in pairs without breaking the verification equation.
 
-Research Point 2, building on the cryptographic closure of Research Point 1, addresses the "global wait" and "dropout training waste" problems of synchronous aggregation by proposing **Checkpoint-based Group-level Semi-Asynchronous Secure Aggregation**. It reuses client dropout-unuploaded training results via intra-group stale reuse, buffers masked group packages, performs batch unmasking aggregation per checkpoint, and introduces Direct-VCM group-level post-compensation — extending cross-group training from a "global synchronous barrier" to a "package buffer + checkpoint trigger" group-level semi-asynchronous mechanism without breaking the single-TA masking and LHH verification chain. Security analysis reduces four classes of cloud tampering attacks to LHH collision resistance and Ed25519 EUF-CMA, and proves that stale reuse and Direct-VCM compensation do not weaken the privacy bound of Research Point 1; convergence analysis gives an explicit single-checkpoint bias upper bound `ρ_max·C₁ + γ_vcm·s_max·ηB` under Lipschitz assumptions, providing theoretical guidance for hyperparameter selection.
+Research Point 2, building on the cryptographic closure of Research Point 1, addresses the "global wait" and "dropout training waste" problems of synchronous aggregation by proposing **Checkpoint-based Group-level Semi-Asynchronous Secure Aggregation**. It reuses client dropout-unuploaded training results via intra-group stale reuse, buffers masked group packages, performs batch unmasking aggregation per checkpoint, and introduces Direct-VCM group-level post-compensation — extending cross-group training from a "global synchronous barrier" to a "package buffer + checkpoint trigger" group-level semi-asynchronous mechanism without breaking the single-TA masking and LHH verification chain. Security analysis reduces four classes of cloud tampering attacks to LHH collision resistance and Ed25519 EUF-CMA, and proves that stale reuse and Direct-VCM compensation do not weaken the privacy bound of Research Point 1. Under the default IID condition, the thesis gives a conditional single-checkpoint bias bound, `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`, for the present protocol; this is an original bias characterization and does not directly inherit the complete convergence theorem of either reference paper.
 
 **Keywords**: Federated Learning; Hierarchical Aggregation; Secure Aggregation; Verifiable Aggregation; Semi-Asynchronous; Staleness Reuse
 
@@ -142,6 +142,8 @@ VerifyNet、VeriFL、VLMRS、GPVO-FL 等通过同态哈希/签名/承诺实现�
 - **FedFleet**：性能感知分组，加速异构 IoT 收敛（本文仅借鉴其一次性分组作初始化优化）。
 - **MAFSA**：多层异步 + 掉线客户端新旧结果融合（本文借鉴其复用动机但修正权重方向并限定 stale 来源）。
 - **DVAFL**：版本控制机制（VCM）补偿陈旧更新（本文借鉴其 Direct-VCM 思想提升至组包粒度并去除降权路径）。
+
+本章对两篇论文的理论继承边界与研究点 2 文档一致：MAFSA 支撑分层异步、stale-result reuse 和有界陈旧度分析思路；DVAFL 支撑版本失配与 Direct-VCM 补偿思路。当前方案改变了 stale 权重方向、补偿粒度、补偿位置以及 checkpoint 参与集合，因此不直接继承两篇论文的原始公式、系统模型或完整收敛定理。本文只在 IID 默认条件下对当前协议给出独立的条件性单 checkpoint 偏差界；Dirichlet Non-IID 作为实验条件，需额外的梯度异质性假设才能进行理论外推。
 
 ## 2.6 本章小结
 
@@ -576,7 +578,7 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 继承 3.2.2 全部假设，并扩展：
 
 - **Malicious Cloud（点 2 适用）**：可篡改聚合结果、丢弃或重放组包。防 Cloud 篡改 checkpoint **选中**的聚合结果（`W_sum^raw`）。
-- **显式出界（点 2）**：manifest 漏选/调度审查属 anti-censorship，不作主协议安全保证；全局模型为共识量，不作攻击面。
+- **安全目标与显式出界（点 2）**：主协议只提供 checkpoint 选中聚合结果的完整性检测；检测到攻击或不一致即丢弃本次 checkpoint，不推进全局版本。它不保证恶意 Cloud 下的训练可用性，也不提供 anti-censorship 保证；manifest 漏选、候选组包静默丢弃和调度审查均不属于主协议安全目标。全局模型由 ES 基于已验证结果本地确定性重构并作为共识量维护，不把 Cloud 分发的模型作为规范结果。
 - **exactly-once 语义声明**：每个客户端更新与组包携带唯一标识，Cloud/TA 对已聚合组包拒绝重放；完整 ACK 握手/原子提交/缓存并发属实现完善项，不作主协议数学前提。本文进一步假设 `Aggregated_IDs` 由 TA 维护且仅追加，ES 对 `package_token` 的联合签名写入 TA 维护的 append-only log（TA 可信，见 3.2.2），以保证重放检测确定性。
 - **单 TA 不合谋假设**：同 3.2.2，TA 不与 Cloud 或 ES 合谋。
 
@@ -705,7 +707,7 @@ VerifyLHH(accepted, W_sum^raw, H_mask):
   if H_sum^raw · H_mask == H_prod:
     return PASS
   else:
-    return FAIL                                    // tamper_global
+    return FAIL                                    // tamper_raw_sum
 ```
 
 LHH 等式失败 ⇒ Cloud 篡改了 `W_sum^raw` 或某组包的 `W̄_k`（见 Theorem 4.1 归约 (i)）。
@@ -731,7 +733,7 @@ ReconstructW(t+1, accepted, W_sum^raw, public_state):
   return W(t+1)
 ```
 
-`public_state` 中所有量均为公开共识量：`W(t)`、`W(t_k)` 为历史全局模型（ES 持有），`S_k(t_k)` 在组包元数据中（已通过 manifest 一致性），`γ_vcm` 为协议超参。因此**补偿项 `C_k` 完全由公开量确定**，Cloud 无法注入恶意补偿值；ES 本地重算与 Cloud 广播的 `W(t+1)` 比对即可发现任何补偿篡改（见 Theorem 4.1 归约 (iv)）。Cloud 广播的 `W(t+1)` 仅作参考，规范结果以 ES 本地派生为准。
+`public_state` 中所有量均为公开共识量：`W(t)`、`W(t_k)` 为历史全局模型（ES 持有），`S_k(t_k)` 在组包元数据中（已通过 manifest 一致性），`γ_vcm` 为协议超参。因此**补偿项 `C_k` 完全由公开量确定**，Cloud 无法注入一个独立的恶意补偿值；ES 本地派生的 `W(t+1)` 是规范结果，Cloud 广播的模型仅作参考。若系统同时接收 Cloud 广播结果，可将其与 ES 本地派生结果做确定性一致性检查，但该检查不构成新的 LHH 验证对象。
 
 ### 4.3.9 状态转移与 exactly-once
 
@@ -792,7 +794,7 @@ FinalizeCheckpoint(accepted, B, Aggregated_IDs, group_state):
 
 ### 4.4.1 篡改检测归约
 
-本节将第 4.3 节协议对 Cloud 四类篡改攻击的检测能力归约到第 3 章的密码原语安全性（LHH 抗碰撞、Ed25519 EUF-CMA）与本协议新引入的机制（manifest 一致性、唯一 ID 拒绝重放）。
+本节将第 4.3 节协议对 Cloud 四类篡改/重放攻击的“未检测却被接受”概率归约到第 3 章的密码原语安全性（LHH 抗碰撞、Ed25519 EUF-CMA）与本协议新引入的机制（manifest 一致性、唯一 ID 拒绝重放）。检测失败的协议语义是丢弃本次 checkpoint，不推进全局版本；本节不把 Cloud 的拒绝服务或候选组包漏选纳入安全保证。
 
 #### 威胁模型与攻击面
 
@@ -800,29 +802,30 @@ Cloud 是 malicious（可篡改）实体，被允许执行以下四类篡改攻�
 
 | 攻击 | 操作 | 协议检测点 |
 |------|------|------------|
-| **tamper_global** | 篡改 `W_sum^raw` 或 `W_sum^corr` | 4.3.8 Step 2 LHH 等式 |
+| **tamper_raw_sum** | 篡改 `W_sum^raw` | 4.3.8 Step 2 LHH 等式 |
 | **tamper_manifest** | 篡改组包元数据 `U_online/n_k/S_k/H_k` | 4.3.8 Step 1a manifest 一致性 + 1b Ed25519 |
 | **drop_replace_pkg** | 丢弃合法组包并用伪造/重放组包替换 | 4.3.8 Step 1a + 1b |
 | **replay** | 重放已聚合组包 | 4.3.9 `Aggregated_IDs` 去重 |
 
-补偿项 `C_k` 由公开量唯一确定（4.3.8 Step 3），ES 本地重算可发现补偿篡改，故补偿篡改归入 **tamper_global**（攻击 W_sum^corr）的子类，不单列。
+补偿项 `C_k` 由公开量唯一确定（4.3.8 Step 3），不是 Cloud 可自由提交的密码学输入。ES 在通过 `raw sum` 验证后本地重算 `W_sum^corr` 和 `W(t+1)`；若实验中同时接收 Cloud 广播的结果，可将不一致记录为确定性的重构不一致，但这不意味着 `W_sum^corr` 获得了独立的 LHH 证明。因此主定理的密码学对象是 `W_sum^raw`，补偿篡改属于公开确定性重构检查。
 
 #### 主定理
 
-**定理 4.1（Checkpoint Soundness）.** *在以下假设下：*
+**定理 4.1（Checkpoint Integrity Detection）.** *在以下假设下：*
 - *(A1) LHH 是抗碰撞的哈希函数族（Lemma 3.3）；*
 - *(A2) Ed25519 满足 EUF-CMA 安全性（Lemma 3.4）；*
 - *(A3) PKI 中 ES 公钥绑定正确，且 ES 私钥未被攻破；*
 - *(A4) `Aggregated_IDs` 由 TA 维护且仅追加（ES 联合签名，见 4.2.2），TA 可信（3.2.2）；*
-- *(A5) TA 诚实执行掩码释放，不与 Cloud 合谋（3.2.2 假设）。*
+- *(A5) TA 诚实执行掩码释放，不与 Cloud 合谋（3.2.2 假设）；*
+- *(A6) `W(t)`、`W(t_k)` 及其版本/hash 由共识或已提交版本历史维护，参与验证的 ES 使用同一规范历史。*
 
-*对上述四类 Cloud 篡改攻击，协议 4.3.8 + 4.3.9 检测并拒绝该 checkpoint 的概率关于安全参数 `λ` 是可忽略的；具体地，每类攻击的成功概率被归约到对应原语的攻击优势。*
+*对上述四类 Cloud 篡改攻击，协议 4.3.8 + 4.3.9 使攻击者构造一个“未被检测却被接受”的 checkpoint 的成功概率关于安全参数 `λ` 是可忽略的；具体地，每类攻击的未检测成功概率被归约到对应原语的攻击优势。若检查失败，协议丢弃本次 checkpoint，不推进全局版本。该定理只讨论选中聚合结果的完整性，不讨论 Cloud 的拒绝服务、候选组包漏选或 anti-censorship。*
 
 **证明.** 对四类攻击分别归约。
 
-##### 归约 (i)：tamper_global → LHH 抗碰撞
+##### 归约 (i)：tamper_raw_sum → LHH 抗碰撞
 
-设敌手 `A_global` 以非可忽略优势 `ε_global(λ)` 通过篡改 `W_sum^raw` 使 4.3.8 Step 2 LHH 等式仍成立。构造归约 `B_coll` 利用 `A_global` 攻破 LHH 抗碰撞。
+设敌手 `A_raw` 以非可忽略优势 `ε_raw(λ)` 通过篡改 `W_sum^raw` 使 4.3.8 Step 2 LHH 等式仍成立。构造归约 `B_coll` 利用 `A_raw` 攻破 LHH 抗碰撞。
 
 `B_coll` 挑战者给出 LHH 公钥 `pk_LHH`，`B_coll` 充当 `A_global` 的协议环境：正常生成所有组包 `{Π_k}`，按 4.3.7 计算 `W_sum^raw`（诚实的 raw sum，记 `W_sum^raw*`），并令 `H_sum^raw* = LHH_Commit(W_sum^raw*, U_global)`、`H_mask` 由 TA 诚实释放。`A_global` 输出篡改值 `W_sum^raw' ≠ W_sum^raw*`，要求其满足：
 
@@ -842,7 +845,7 @@ H_sum^raw' · H_mask == H_sum^raw* · H_mask
 由 LHH 抗碰撞假设，存在该碰撞的概率 `≤ Adv_coll^{LHH}(λ)`，故：
 
 ```text
-ε_global(λ) ≤ Adv_coll^{LHH}(λ)
+ε_raw(λ) ≤ Adv_coll^{LHH}(λ)
 ```
 
 可忽略。**检测成功**：Step 2 LHH 等式失败 ⇒ checkpoint 被拒绝。
@@ -904,16 +907,16 @@ if Π_k.package_token ∈ Aggregated_IDs:
 
 #### 综合与界
 
-四类攻击相互独立（攻击面不重叠），敌手可选任一。由 union bound：
+敌手可选择上述攻击中的任意一种或组合。无需假设攻击相互独立，由 union bound：
 
 ```text
 ε_checkpoint(λ) ≤ Adv_coll^{LHH}(λ) + Adv_euf^{Ed25519}(λ) + Adv_euf^{Ed25519}(λ) + 0
                  = Adv_coll^{LHH}(λ) + 2·Adv_euf^{Ed25519}(λ)
 ```
 
-在 A1-A5 假设下，右侧各项关于 `λ` 可忽略，故 `ε_checkpoint(λ)` 可忽略，定理 4.1 成立。□
+在 A1-A6 假设下，右侧各项关于 `λ` 可忽略，故 `ε_checkpoint(λ)` 可忽略，定理 4.1 成立。□
 
-**附注 4.1（compensation tampering）.** Cloud 篡改补偿项 `C_k` 等价于篡改 `W_sum^corr = W_sum^raw + Σ C_k`。由 4.3.8 Step 3 `C_k = S_k · γ_vcm · (W(t) − W(t_k))` 完全由公开量确定，ES 本地 `ReconstructW` 重算 `W_sum^corr` 与 Cloud 广播值比对即可发现差异。该检测不依赖密码原语，仅依赖 ES 本地派生与广播值比对（确定性检测），归入 tamper_global 的可检测子类。
+**附注 4.1（compensation tampering）.** `C_k` 由 `Q(t)`、共识维护的历史模型、`S_k` 和公开超参数唯一确定，不是 Cloud 可以自由提交的独立密码学输入。ES 在 `raw sum` 验证通过后本地重算 `W_sum^corr` 与 `W(t+1)`；若同时收到 Cloud 广播结果，可将不一致记录为确定性的重构检查失败。该检查不依赖新的密码原语，也不意味着 `W_sum^corr` 获得独立的 LHH 证明。
 
 ### 4.4.2 隐私保持
 
@@ -986,34 +989,37 @@ w̄_i^k = s_i^k·w_i^k + m_i^k                        (上传到 ES)
 
 ### 4.4.3 收敛性分析
 
-本节给出一个"有界陈旧 ⇒ 有界单步偏差"的启发式刻画（非完整收敛证明，作为答辩支撑草纲，完整证明留作后续）。
+本节只给出与 `MAFSA`/`DVAFL` 分析思路对齐的、针对当前协议的一步偏差刻画，不直接继承两篇参考论文的收敛定理。原因是当前协议同时改变了 stale 权重方向、补偿粒度（客户端级变为组级）、补偿位置（LHH 验证后）和参与集合（checkpoint 选中集合）。因此，本节结论应写成“条件性偏差上界”，而不是完整收敛定理。
 
 #### 假设与记号
 
-以下假设贯穿本节：
+以下假设贯穿本节；其中 IID 是 Point 2 的默认理论条件，Dirichlet Non-IID 作为实验条件单独报告：
 
 | 假设 | 内容 |
 |------|------|
-| **(C1) 梯度 Lipschitz** | 目标函数 `F` 的梯度 `∇F` 是 `L`-Lipschitz：`‖∇F(w) − ∇F(w')‖ ≤ L·‖w − w'‖` |
+| **(C1) 局部更新映射 Lipschitz** | IID 默认条件下，一步本地更新映射 `T_i(w)` 满足 `‖T_i(w)−T_i(w')‖≤(1+ηL)‖w−w'‖`；例如 `T_i(w)=w−η∇F_i(w)` 且 `∇F_i` 为 `L`-Lipschitz |
 | **(C2) 单步位移有界** | 全局模型经 SGD 型更新，单步位移满足 `‖W(v+1) − W(v)‖ ≤ ηB`，`η` 为学习率，`B` 为有效梯度范数上界 |
 | **(C3) 陈旧上界** | 客户端陈旧度 `E_i = t_k − t_i ≤ E_max`，组级陈旧度 `s_k = t − t_k ≤ s_max` |
 | **(C4) 混合系数有界** | `ρ_i ≤ ρ_max ≤ 0.5`（4.3.3 stale reuse） |
 | **(C5) 补偿系数有界** | `γ_vcm` 为协议超参，固定常数 |
-| **(C6) 组样本量有界** | `S_k(t_k) ∈ [S_min, S_max]`，`S_Q = Σ S_k ≤ |Q|·S_max` |
+| **(C6) 组样本量有界** | `S_k(t_k)>0`，且 checkpoint 使用真实样本量加权；不需要把 `S_max/S_min` 人为引入偏差界 |
 
 记理想 FedAvg-form 聚合（无陈旧、无补偿）结果为 `W^*(t+1)`，本协议实际结果为 `W(t+1)`。单 checkpoint 偏差定义为 `Δ_bias = W(t+1) − W^*(t+1)`。
 
-#### 引理与证明
+#### 条件性界与推导说明
 
-**启发式界 4.1（单 checkpoint 偏差有界，非定理）.** *在 (C1)-(C6) 假设下，一次 checkpoint 的偏差 `‖Δ_bias‖` 可被显式上界控制：*
+**条件性界 4.1（单 checkpoint 偏差上界，非完整收敛定理）.** *在 (C1)-(C6) 假设下，并把理想结果定义为“同一 checkpoint 选中客户端、同一真实样本量权重、所有组均从 `W(t)` 出发且不使用 stale/VCM”的 FedAvg-form 结果，则一次 checkpoint 的偏差满足：*
 
 ```text
-‖Δ_bias‖ ≤ ρ_max · C₁ + γ_vcm · (S_max/S_min) · s_max · ηB
+‖Δ_bias‖ ≤ ρ_max · (1 + ηL) · E_max · ηB
+              + (|1 − γ_vcm| + ηL) · s_max · ηB
 ```
 
-*其中 `C₁ = (1 + ηL)·E_max·ηB / S_min` 为客户端级陈旧偏差常数，`ηB` 为单步位移上界。*
+*第一项对应客户端级 stale reuse；第二项对应组级 mixed-version 结果在 Direct-VCM 后的残差。由于实际 checkpoint 是按 `S_k` 做加权平均，分子中的组样本量和会被 `S_Q` 归一化，不应额外留下 `S_max/S_min` 因子。*
 
-**证明.** 偏差 `Δ_bias` 由两个独立来源叠加：客户端级 stale reuse 引入的偏差 `Δ_stale`，与组级 Direct-VCM 补偿引入的偏差 `Δ_vcm`。由三角不等式：
+在 IID 和一步梯度更新下，`γ_vcm≈1` 时，第二项可由版本位移的一阶项抵消到 `ηL·s_max·ηB` 量级；若要把这种“补偿确实降低偏差”升级为严格结论，还需要额外的线性化/梯度同向性假设。
+
+**说明.** 偏差 `Δ_bias` 由两个来源叠加：客户端级 stale reuse 引入的偏差 `Δ_stale`，与组级 mixed-version 结果在 Direct-VCM 后的残差 `Δ_vcm`。下面给出条件性上界；它用于说明 `ρ_max`、`E_max`、`γ_vcm` 与 `s_max` 如何进入误差控制，不声称已经得到参考论文的完整多步收敛率。
 
 ```text
 ‖Δ_bias‖ ≤ ‖Δ_stale‖ + ‖Δ_vcm‖
@@ -1059,77 +1065,47 @@ w_i^k = (1−ρ_i)·w_i^{new,k} + ρ_i·w_i^{stale,k}
 ‖δ_i‖ = ρ_i·‖w_i^{stale,k} − w_i^{new,k}‖ ≤ ρ_max·(1 + ηL)·E_max·ηB
 ```
 
-客户端级偏差在 raw sum 中累加：
+客户端级偏差在 raw sum 中按真实样本量累加，归一化后的结果为：
 
 ```text
-Δ_stale = Σ_{Π_k∈Q} Σ_{i∈U_online,k} s_i^k · δ_i
+Δ_stale^{norm} = (1/S_Q) · Σ_{Π_k∈Q} Σ_{i∈U_online,k} s_i^k · δ_i
 ```
 
-由 `s_i^k ≤ S_max` 且样本量归一化后除以 `S_Q`：
+因为 `Σ s_i^k = S_Q`，直接得到：
 
 ```text
-‖Δ_stale‖ ≤ Σ_{Π_k∈Q} Σ_{i∈U_online,k} ‖δ_i‖
-           ≤ N_online · ρ_max·(1 + ηL)·E_max·ηB
-```
-
-其中 `N_online = Σ n_k` 为总在线客户端数。归一化后（`÷ S_Q`，`S_Q ≥ N_online · S_min`，由 (C6)）：
-
-```text
-‖Δ_stale‖/S_Q ≤ ρ_max·(1 + ηL)·E_max·ηB / S_min
-```
-
-定义 `C₁ := (1 + ηL)·E_max·ηB / S_min`（合并常数项），则：
-
-```text
-‖Δ_stale‖_normalized ≤ ρ_max · C₁
+‖Δ_stale^{norm}‖ ≤ ρ_max·(1 + ηL)·E_max·ηB
 ```
 
 ##### 步骤 (ii)：组级版本失配偏差 `‖Δ_vcm‖` 的界
 
 理想聚合中所有组包基于同一全局模型 `W(t)`（即 `t_k = t`）。本协议中组包 `Π_k(t_k)` 基于 `W(t_k)`，`t_k < t`，需 Direct-VCM 补偿 `C_k = S_k·γ_vcm·(W(t) − W(t_k))`。
 
-补偿的"理想必要性"：若组包 `Π_k` 在 `t_k` 时刻本应基于 `W(t)` 训练但实际基于 `W(t_k)` 训练，其本地结果与"基于 `W(t)` 的虚拟结果"之差为 `(1 + ηL)·‖W(t) − W(t_k)‖`。Direct-VCM 通过补偿项 `C_k` 在聚合层近似修正此差异。
-
-补偿后的残差（即补偿未完全消除的偏差）来自 Direct-VCM 的"线性近似"特性：补偿项 `γ_vcm·(W(t) − W(t_k))` 是对真实非线性偏差 `(1 + ηL)·(W(t) − W(t_k))` 的线性近似，残差为：
+对一步更新映射 `T_k(w)=w−η∇F_k(w)`，令 `G_k=W(t)−W(t_k)`。组包结果与从 `W(t)` 出发的理想结果之差，在加入 Direct-VCM 后为：
 
 ```text
-res_k = (1 + ηL − γ_vcm)·(W(t) − W(t_k))
+res_k = T_k(W(t_k)) + γ_vcm G_k − T_k(W(t))
 ```
 
-由 (C2) 与 (C3) `s_k = t − t_k ≤ s_max`：
+由 `T_k(w)=w−η∇F_k(w)` 和 (C1)：
 
 ```text
-‖W(t) − W(t_k)‖ ≤ s_k·ηB ≤ s_max·ηB
+res_k = (γ_vcm−1)G_k − η(∇F_k(W(t_k))−∇F_k(W(t)))
+‖res_k‖ ≤ (|1−γ_vcm| + ηL)·‖G_k‖
 ```
 
-故：
+再由 (C2) 与 (C3) `s_k = t − t_k ≤ s_max`：
 
 ```text
-‖res_k‖ ≤ |1 + ηL − γ_vcm|·s_max·ηB
+‖G_k‖ = ‖W(t) − W(t_k)‖ ≤ s_k·ηB ≤ s_max·ηB
+‖res_k‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
 ```
 
-设 `γ_vcm` 选为使 `|1 + ηL − γ_vcm| ≤ 1` 的合理值（实际中 `γ_vcm ∈ [0.5, 1.5]` 满足此条件），则：
+组级残差在 raw sum 中按 `S_k` 累加，归一化后仍由最大组级残差控制：
 
 ```text
-‖res_k‖ ≤ s_max·ηB
-```
-
-组级残差在 raw sum 中累加：
-
-```text
-Δ_vcm = Σ_{Π_k∈Q} S_k · res_k
-```
-
-由三角不等式与 (C6) `S_k ≤ S_max`：
-
-```text
-‖Δ_vcm‖ ≤ Σ_{Π_k∈Q} S_k · ‖res_k‖ ≤ |Q|·S_max·γ_vcm·s_max·ηB
-```
-
-归一化后（`÷ S_Q`，`S_Q ≥ |Q|·S_min`，由 (C6)）直接得到 `S_max/S_min` 显式比：
-
-```text
-‖Δ_vcm‖/S_Q ≤ γ_vcm · (S_max/S_min) · s_max · ηB
+Δ_vcm^{norm} = (1/S_Q) · Σ_{Π_k∈Q} S_k · res_k
+‖Δ_vcm^{norm}‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
 ```
 
 ##### 综合
@@ -1137,26 +1113,28 @@ res_k = (1 + ηL − γ_vcm)·(W(t) − W(t_k))
 由步骤 (i) 与 (ii) 的归一化结果：
 
 ```text
-‖Δ_bias‖ = ‖Δ_stale‖_normalized + ‖Δ_vcm‖_normalized
-          ≤ ρ_max · C₁ + γ_vcm · (S_max/S_min) · s_max · ηB
+‖Δ_bias‖ ≤ ‖Δ_stale^{norm}‖ + ‖Δ_vcm^{norm}‖
+           ≤ ρ_max·(1+ηL)·E_max·ηB
+             + (|1−γ_vcm|+ηL)·s_max·ηB
 ```
 
-其中 `C₁ = (1 + ηL)·E_max·ηB / S_min`。启发式界 4.1 成立。□
+该界是本文在 IID/一步更新条件下的条件性单 checkpoint 偏差上界，不是直接来自 `MAFSA` 或 `DVAFL` 的定理。对 Dirichlet Non-IID，需额外引入局部梯度异质性或 bounded gradient dissimilarity 项；本文将其作为实验验证，不把 IID 上界无条件外推到 Non-IID。
 
 #### 推论：多 checkpoint 累积偏差界
 
-**推论 4.1（T 步累积偏差界）.** *在启发式界 4.1 假设下，设 `T` 个 checkpoint 依次执行，每个 checkpoint 的偏差独立有界。则 `T` 步后累积偏差满足：*
+**推论 4.1（T 个 checkpoint 的保守累积界，非收敛率定理）.** *在条件性界 4.1 的假设下，若进一步把每个 checkpoint 的偏差按幅度逐步累加，则：*
 
 ```text
-‖W(T) − W^*(T)‖ ≤ T·(ρ_max · C₁ + γ_vcm · (S_max/S_min) · s_max · ηB)
+‖W(T) − W^*(T)‖ ≤ T·[ρ_max·(1+ηL)·E_max·ηB
+                    + (|1−γ_vcm|+ηL)·s_max·ηB]
 ```
 
-启发式界 4.1 与推论 4.1 是**确定性的单步/多步幅度界**，未覆盖：
+条件性界 4.1 与推论 4.1 是**确定性的单步/保守多步幅度界**，未覆盖：
 - non-IID 下的客户端漂移（需更强假设如 bounded gradient dissimilarity）；
 - SGD 噪声的方差（需有界方差假设 `E[‖∇F − ∇f_i‖²] ≤ σ²`）；
 - `ρ_i` 与数据分布的耦合（stale reuse 偏向数据稳定的客户端）。
 
-完整收敛率（如 `O(1/√T)` 邻域收敛）需在 Lipschitz/有界方差/独立鞅差假设下另行证明，留作展望（见第 5 章）。本节目的是表明协议的超参（`ρ_max, γ_vcm, s_max`）为偏差提供了**可调的显式上界**，而非断言已达到某收敛率。该界与 4.5 实验对 `s_max`、`γ_vcm` 的敏感性消融设计相互印证：增大陈旧容忍（`s_max`↑）或补偿强度（`γ_vcm`↑）线性放大偏差上界，为超参选择提供理论指导。
+完整收敛率（如 `O(1/√T)` 邻域收敛）需在当前协议上重新建立，并补充有界方差、独立鞅差、局部梯度异质性与 checkpoint 选择过程的假设，不能直接引用 `MAFSA` 或 `DVAFL` 的收敛率。这里的结论只说明 `ρ_max`、`E_max`、`γ_vcm` 与 `s_max` 如何进入可调的偏差控制项；实际 `γ_vcm` 是否带来精度和收敛收益，交由 4.5 的对照和消融实验验证。
 
 ### 4.4.4 出界声明重申
 
@@ -1210,9 +1188,10 @@ manifest 漏选/审查（anti-censorship）、样本量虚报、完整 ACK 协�
 
 以第 5 组（完整方案）为基座，与性能基线分开，验证 Theorem 4.1 的篡改检测能力：
 
-- **tamper_global**：Cloud 篡改 `W_sum^raw`，预期 LHH 等式失败。
+- **tamper_raw_sum**：Cloud 篡改 `W_sum^raw`，预期 LHH 等式失败。
 - **tamper_manifest**：Cloud 篡改组包元数据，预期 manifest 一致性或 Ed25519 验签失败。
 - **drop_replace_pkg**：Cloud 丢弃合法组包并替换为伪造/重放组包，预期 manifest 一致性或签名验证失败。
+- **replay**：Cloud 重放已消费的组包，预期 `Aggregated_IDs` 确定性拒绝。
 
 - **指标**：tampering detection rate（应接近 100%）。
 - **数值**：___（留空待回填）
@@ -1256,7 +1235,7 @@ I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证�
 
 ## 4.6 本章小结
 
-本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 权重方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏。安全分析证明：四类 Cloud 篡改攻击均可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA 检测（Theorem 4.1）；stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界（Theorem 4.2）；在 Lipschitz 假设下，单 checkpoint 偏差被 `ρ_max·C₁ + γ_vcm·(S_max/S_min)·s_max·ηB` 显式控制（启发式界 4.1），单步偏差界为启发式界 4.1，多步累积偏差界为推论 4.1（确定性 `T` 倍界，`O(√T)` 高概率界留作展望）。实验框架覆盖五组主线对比、攻击实验与十项消融，为协议性能与安全性提供系统评估。
+本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 权重方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1）。stale reuse 与 Direct-VCM 补偿不削弱研究点一的隐私界（Theorem 4.2）；在 IID 默认条件下，给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`（条件性界 4.1），多 checkpoint 仅给出保守的线性累积幅度界（推论 4.1），不把 MAFSA 或 DVAFL 的完整收敛率直接继承为本文定理。实验框架覆盖五组主线对比、攻击实验与十项消融，为协议性能与安全性提供系统评估。
 
 ---
 
@@ -1268,7 +1247,7 @@ I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证�
 
 **研究点一（HVSA）**：在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私（Theorem 3.1，归约 PRG + n_min≥2），利用 LHH 与 Ed25519 让 ES 以定长通信开销验证云端聚合结果（Theorem 3.2，归约 LHH 抗碰撞 + Ed25519 EUF-CMA），并通过"在线集合驱动的掩码求和"实现对客户端掉线的自然鲁棒性（Theorem 3.3）。验证通信与模型维度无关，客户端零验证负担。
 
-**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析将四类 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA（Theorem 4.1，`ε_checkpoint ≤ Adv_coll^LHH + 2·Adv_euf^Ed25519`），证明 stale reuse 与 Direct-VCM 补偿不削弱研究点一隐私界（Theorem 4.2），并在 Lipschitz 假设下给出单 checkpoint 偏差显式上界 `ρ_max·C₁ + γ_vcm·(S_max/S_min)·s_max·ηB`（启发式界 4.1）与确定性 `T` 倍累积界（推论 4.1，`O(√T)` 留作展望）。
+**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1，`ε_checkpoint ≤ Adv_coll^LHH + 2·Adv_euf^Ed25519`）。stale reuse 与 Direct-VCM 补偿不削弱研究点一隐私界（Theorem 4.2）；在 IID 默认条件下，给出当前协议的条件性单 checkpoint 偏差上界 `ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`（条件性界 4.1）与保守的线性累积幅度界（推论 4.1），不把 MAFSA 或 DVAFL 的完整收敛率直接继承为本文定理。
 
 ## 5.2 未来工作展望
 
@@ -1276,13 +1255,16 @@ I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证�
 - **基版本对齐的更新量混合**：stale reuse 更严格变体，对 stale 与 fresh 的基版本对齐做更强约束。
 - **完整 ACK / 原子提交协议的协议化**：将 exactly-once 语义从"声明"升级为完整协议。
 - **anti-censorship 可审计调度**：将 manifest 漏选/调度审查纳入可审计安全保证。
-- **完整收敛率证明**：在 Lipschitz/有界方差/独立鞅差假设下将启发式界 4.1 的单步偏差界推进为 `O(1/√T)` 邻域收敛分析（见 4.4.3）。
+- **完整收敛率证明**：在 Lipschitz/有界方差/独立鞅差假设下，将条件性界 4.1 的单步偏差刻画推进为当前协议的 `O(1/√T)` 邻域收敛分析（见 4.4.3）。
 
 ---
 
 # 参考文献
 
-> 参考文献列表待整理填充。
+1. Shiwen Zhang et al. “MAFSA: A Multi-Layer Asynchronous Federated Learning with Staleness-Awareness in Edge Computing.” *Engineering Applications of Artificial Intelligence*, 2026. DOI: `10.1016/j.engappai.2026.114369`.
+2. Chuyi Chen, Yanchao Zhao, Zhe Zhang, Wenzhong Li, and Jie Wu. “Toward Efficient and Scalable Asynchronous Federated Learning via Stragglers Version Control.” *IEEE Transactions on Mobile Computing*, 2026. DOI: `10.1109/TMC.2025.3609568`.
+3. Lam M. Nguyen et al. “Federated Learning with Buffered Asynchronous Aggregation.” *AISTATS*, 2022.
+4. Jiaming Xu and Shen Wang. “FedFleet: A Hierarchical Federated Learning Framework for Faster Convergence in Heterogeneous IoT Systems.” *IEEE Internet of Things Journal*, 2025.
 
 ---
 
@@ -1341,7 +1323,7 @@ MAFSA 原始定义 `α_i=exp(−β_c·E_i)` 作用于 fresh model，导致版本
 - [x] 记号表全文唯一
 - [x] 实验数值全部留空，仅框架+预期趋势
 - [x] 创新点 1.3 统一编号，第 3、4 章不重复计数
-- [x] 定理按章重编号：Theorem 3.1-3.3（点 1）/ Theorem 4.1-4.2 + 启发式界 4.1 + 推论 4.1（点 2）
+- [x] 定理按章重编号：Theorem 3.1-3.3（点 1）/ Theorem 4.1-4.2 + 条件性界 4.1 + 推论 4.1（点 2）
 - [x] 6 章结构：绪论 / 相关技术 / HVSA / 检查点半异步 / 总结展望 / 参考文献 + 附录 A
 - [x] 4.1 采用"3.4.4 三局限 → 约束 → checkpoint 洞见 → 三机制映射"因果链；4.3.3 显式锚定局限 (ii) 与安全聚合兼容
 - [x] 附录 A 重排为 A.1 约束层 / A.2 架构层 / A.3 组件层 / A.4 出界，与 4.1 的组织逻辑呼应
