@@ -80,8 +80,12 @@ class CloudServer:
 
             entry = {
                 'edge_id': edge_id,
+                'round': round_t,
                 'lhh_hash': lhh_hash,
-                'signature': signature
+                'signature': signature,
+                # 签名元数据字段 (EdgeVerify 需据此重建被签名的 meta)
+                'online_users': data.get('online_users', []),
+                'base_hash': data.get('base_hash', b''),
             }
             self._collected_hash_data.append(entry)
             self._received_edge_servers.add(edge_id)
@@ -118,8 +122,9 @@ class CloudServer:
 
     def trigger_final_unmasking_and_averaging(self):
         """
-        等 ES 数据和 TA 掩码都到齐后:
-        G_sum = X_all - M_global，然后平均。
+        对齐安全模型 (Sec.3.3.4): Cloud 只恢复已验证的明文和 W_sum^raw，
+        不生成规范全局模型；共识模型由 ES 在验证通过后按 W_sum^raw / n_online
+        本地确定性重构。同步基线要求全部 ES 到齐 (全组同步 barrier)。
         """
         logger.info(f"CloudServer {self.id} (R{self._current_round}): 触发最终处理...")
 
@@ -140,14 +145,12 @@ class CloudServer:
             # G_sum = X_all - M_global
             sum_of_models_int = self._sum_masked_gradients - self._global_mask
 
-            # 反量化与平均
-            sum_of_models_float = sum_of_models_int.astype(np.float64) / QUANTIZE_SCALE
-            self.final_averaged_model = sum_of_models_float / self._num_online_users
-
             logger.info(f"CloudServer {self.id}: --- 聚合完成 ---")
             logger.info(f"  明文整数总和(前5): {sum_of_models_int[:5]}")
 
-            return self.final_averaged_model, sum_of_models_int, self._collected_hash_data
+            # 规范模型由 ES 重构，Cloud 不提供 (final_averaged_model = None)
+            self.final_averaged_model = None
+            return None, sum_of_models_int, self._collected_hash_data
 
         except Exception as e:
             logger.error(f"CloudServer {self.id}: 最终处理失败: {e}")

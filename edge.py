@@ -1,5 +1,6 @@
 import sys
 import pickle
+import hashlib
 import logging
 import numpy as np
 
@@ -78,10 +79,12 @@ class EdgeServer:
         mode_str = "验证模式" if self.enable_verification else "快速实验模式"
         logger.info(f"EdgeServer {self.id} 已初始化 [{mode_str}]。")
 
-    def start_new_round(self, round_t: int):
+    def start_new_round(self, round_t: int, base_model_hash: bytes = b''):
         self._current_round = round_t
         self._masked_gradients = []
         self._online_users = []
+        # 本轮训练基模型的哈希 (签名元数据字段, 对齐 Sec.3.3.3 meta_k)
+        self._p1_base_hash = base_model_hash
 
     def _decide_verification_level(self) -> Optional[VerificationLevel]:
         if self.rule_engine is None or not self.enable_verification:
@@ -160,8 +163,14 @@ class EdgeServer:
             verif_level is None and self.enable_verification):
             h_local = LHH.Hash(self.lhh_pp, pre_aggregated_gradient)
             try:
-                h_bytes = pickle.dumps(h_local)
-                signature = SIG.sign(h_bytes, self.my_sign_priv_key)
+                n_k = len(self._online_users)
+                user_digest = hashlib.sha256(
+                    ",".join(sorted(self._online_users)).encode()).digest()
+                # 签名绑定全量元数据 meta_k = (edge_id, round, base_hash,
+                # digest(U_online), n_k, H_k)，对齐 Sec.3.3.3。
+                meta_k = (self.id, self._current_round, self._p1_base_hash,
+                          user_digest, n_k, h_local)
+                signature = SIG.sign(pickle.dumps(meta_k), self.my_sign_priv_key)
             except Exception as e:
                 logger.error(f"EdgeServer {self.id}: 签名失败: {e}")
                 return
@@ -180,13 +189,15 @@ class EdgeServer:
         if verif_level == VerificationLevel.FULL:
             self._full_verify_rounds.append(self._current_round)
 
-        # 3. 发送给 CloudServer
+        # 3. 发送给 CloudServer (附带签名元数据字段, 供 ES 验证时重建 meta_k)
         cs_msg = {
             "edge_id": self.id,
             "round": self._current_round,
             "pre_aggregated_gradient": pre_aggregated_gradient,
             "lhh_hash": h_local,
-            "signature": signature
+            "signature": signature,
+            "online_users": list(self._online_users),
+            "base_hash": self._p1_base_hash,
         }
         try:
             self.cloud_server.receive_pre_aggregation(pickle.dumps(cs_msg))
@@ -234,7 +245,16 @@ class EdgeServer:
                     return False
 
                 pub_key = self.all_es_pub_keys[eid]
-                h_bytes = pickle.dumps(h_val)
+                # 重建被签名的 meta_k = (edge_id, round, base_hash,
+                # digest(U_online), n_k, H_k)，对齐 Sec.3.3.3 / Sec.3.3.6 Phase 5a。
+                online_users = item.get('online_users', [])
+                rnd = item.get('round', self._current_round)
+                base_hash = item.get('base_hash', b'')
+                n_k = len(online_users)
+                user_digest = hashlib.sha256(
+                    ",".join(sorted(online_users)).encode()).digest()
+                meta_k = (eid, rnd, base_hash, user_digest, n_k, h_val)
+                h_bytes = pickle.dumps(meta_k)
 
                 if not SIG.verify(h_bytes, sig, pub_key):
                     logger.error(f"EdgeServer {self.id}: EdgeServer {eid} 签名无效！")

@@ -1,5 +1,6 @@
 import logging
 import pickle
+import hashlib
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
@@ -19,6 +20,7 @@ try:
     import models
     import datasets
     from datasets import load_data, distribute_data
+    from utils import QUANTIZE_SCALE
 except ImportError as e:
     logging.error(f"导入失败: {e}")
     sys.exit(1)
@@ -94,8 +96,12 @@ def run_simulation():
 
         cs.start_new_round(r, GRADIENT_DIM, expected_edge_servers=NUM_EDGE_SERVERS)
         ta.start_new_round(r)
+        # 本轮训练基模型 W(t) 的哈希, 供 ES 签名绑定 (对齐 Sec.3.3.3 meta_k)
+        base_hash = hashlib.sha256(
+            np.asarray(global_weights_vector, dtype=np.float64).tobytes()
+        ).digest()
         for es in edge_servers:
-            es.start_new_round(r)
+            es.start_new_round(r, base_model_hash=base_hash)
 
         logging.info(f"--- (SA) 回合 {r + 1} (阶段 2) 客户端训练与上传 ---")
         active_online_users = []
@@ -122,11 +128,11 @@ def run_simulation():
         logging.info(f"--- (SA) 回合 {r + 1} (阶段 4a) TA 计算全局掩码 ---")
         ta.trigger_global_mask_computation(cs)
 
-        logging.info(f"--- (SA) 回合 {r + 1} (阶段 4b) 云服务器解掩码与平均 ---")
+        logging.info(f"--- (SA) 回合 {r + 1} (阶段 4b) 云服务器解掩码 ---")
         result_tuple = cs.trigger_final_unmasking_and_averaging()
-        final_avg_model, g_sum_plaintext, h_all_aggregated = result_tuple
+        _, g_sum_plaintext, h_all_aggregated = result_tuple
 
-        if final_avg_model is None:
+        if g_sum_plaintext is None:
             logging.warning(f"回合 {r + 1} 失败 (数据不足或其他错误)，跳过更新。")
             continue
 
@@ -141,7 +147,12 @@ def run_simulation():
             logging.error("本轮验证失败，拒绝更新全局模型。")
             continue
 
-        global_weights_vector = final_avg_model
+        # 对齐安全模型 (Sec.3.3.5): Cloud 不提供规范模型; ES 验证通过后,
+        # 共识模型由已验证明文和 W_sum^raw 按在线数 n_online 本地确定性重构。
+        n_online = sum(len(es._online_users) for es in edge_servers)
+        global_weights_vector = (
+            g_sum_plaintext.astype(np.float64) / QUANTIZE_SCALE / n_online
+        )
         models.unflatten_parameters(global_model, global_weights_vector, model_meta)
         logging.info(f"--- (FL) 全局模型已更新 ---")
 
