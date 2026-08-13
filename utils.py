@@ -43,9 +43,12 @@ class LHH:
     """
     Linear homomorphic hash over NIST P-256.
 
-    For dimension i, the generator is deterministically derived as
-    H("HVSA-LHH-generator-v1" || seed || i) * G. This gives each model
-    coordinate its own public generator without storing all points eagerly.
+    Each per-dimension generator is derived by hash-to-curve
+    (try-and-increment) from the public seed, i.e.
+    g_i = HashToCurve("HVSA-LHH-generator-v1" || seed || i). The discrete log
+    of g_i w.r.t. the base point G is therefore unknown to everyone (including
+    the TA) in the random-oracle model, so collision resistance reduces to DLP
+    while keeping O(1) parameter storage (no list of {g_i} is stored eagerly).
     """
 
     CURVE = NIST256p

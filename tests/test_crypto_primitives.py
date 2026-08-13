@@ -43,6 +43,8 @@ def test_ka_prg_and_signature():
 
 
 def test_lhh_homomorphism_and_no_generator_reuse_collision():
+    import hashlib
+
     pp = LHH.Gen(60)
     a = np.zeros(60, dtype=np.int64)
     b = np.zeros(60, dtype=np.int64)
@@ -57,6 +59,32 @@ def test_lhh_homomorphism_and_no_generator_reuse_collision():
     zero = np.zeros(60, dtype=np.int64)
 
     assert LHH.Hash(pp, old_collision) != LHH.Hash(pp, zero)
+
+    # F1 回归: 生成元的离散对数不可由公开种子派生 (hash-to-curve)。
+    # 旧实现把 seed 哈希成标量 a_i 再乘 G (泄露 a_i); 现在应不再是 a_i*G。
+    from utils import LHHPublicParams
+    seed = LHHPublicParams.seed
+    order = LHH.CURVE.order
+
+    def old_scalar(i):
+        material = (
+            LHH.GENERATOR_DOMAIN
+            + len(seed).to_bytes(4, "big")
+            + seed
+            + int(i).to_bytes(16, "big", signed=False)
+        )
+        return int.from_bytes(hashlib.sha256(material).digest(), "big") % (order - 1) + 1
+
+    for i in (0, 1, 2):
+        new_g = LHH._generator_for(seed, i)
+        old_g = LHH.CURVE.generator * old_scalar(i)
+        assert new_g != old_g, f"generator {i} leaks discrete log"
+
+    # 旧公开标量碰撞向量 (Δ_0=a_1, Δ_1=-a_0) 在新方案下不应是碰撞。
+    delta = np.zeros(60, dtype=object)
+    delta[0] = old_scalar(1)
+    delta[1] = -old_scalar(0)
+    assert LHH.Hash(pp, delta) != LHH.CURVE.generator * 0
 
 
 def test_end_to_end_hvsa_and_tamper_detection():
@@ -96,11 +124,14 @@ def test_end_to_end_hvsa_and_tamper_detection():
     for edge in edges:
         edge.trigger_aggregation_and_forward()
     ta.trigger_global_mask_computation(cloud)
-    avg_model, plaintext_sum, hash_list = cloud.trigger_final_unmasking_and_averaging()
+    cloud_model, plaintext_sum, hash_list = cloud.trigger_final_unmasking_and_averaging()
 
     expected_sum = np.sum(np.stack(plaintext_models, axis=0), axis=0)
     assert np.array_equal(plaintext_sum, expected_sum)
-    assert np.allclose(avg_model, expected_sum / len(users) / QUANTIZE_SCALE)
+    # 对齐安全模型: Cloud 不提供规范模型; 共识模型由已验证明文和重构
+    assert cloud_model is None
+    reconstructed = plaintext_sum.astype(np.float64) / QUANTIZE_SCALE / len(users)
+    assert np.allclose(reconstructed, expected_sum / len(users) / QUANTIZE_SCALE)
     assert all(edge.verify_global_result(plaintext_sum, hash_list) for edge in edges)
 
     tampered_sum = plaintext_sum.copy()
@@ -131,12 +162,14 @@ def test_fast_mode_skips_verification_only():
 
     edge.trigger_aggregation_and_forward()
     ta.trigger_global_mask_computation(cloud)
-    avg_model, plaintext_sum, hash_list = cloud.trigger_final_unmasking_and_averaging()
+    cloud_model, plaintext_sum, hash_list = cloud.trigger_final_unmasking_and_averaging()
 
     assert ta.h_mask_all is not None
     assert hash_list[0]["lhh_hash"] is None
     assert np.array_equal(plaintext_sum, model_int)
-    assert np.allclose(avg_model, model_int / QUANTIZE_SCALE)
+    assert cloud_model is None
+    reconstructed = plaintext_sum.astype(np.float64) / QUANTIZE_SCALE  # n_online = 1
+    assert np.allclose(reconstructed, model_int / QUANTIZE_SCALE)
     assert edge.verify_global_result(plaintext_sum, hash_list)
 
 
