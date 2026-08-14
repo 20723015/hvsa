@@ -51,7 +51,8 @@ def test_lhh_homomorphism_and_no_generator_reuse_collision():
     a[0] = 123
     b[50] = -77
 
-    assert LHH.Hash(pp, a + b) == LHH.Add(LHH.Hash(pp, a), LHH.Hash(pp, b))
+    # paper notation: LHH.Hash(a + b) == LHH.Mul(LHH.Hash(a), LHH.Hash(b))
+    assert LHH.Hash(pp, a + b) == LHH.Mul(LHH.Hash(pp, a), LHH.Hash(pp, b))
 
     old_collision = np.zeros(60, dtype=np.int64)
     old_collision[0] = 1

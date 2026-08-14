@@ -43,6 +43,11 @@ class LHH:
     """
     Linear homomorphic hash over NIST P-256.
 
+    Written in the multiplicative group-law notation used in the paper,
+    H(m) = prod_i g_i^{m_i}. On this elliptic curve, each g_i^{m_i} is
+    scalar multiplication and "prod" is point addition; LHH.Mul implements
+    that group law, so LHH.Hash(a + b) == LHH.Mul(Hash(a), Hash(b)).
+
     Each per-dimension generator is derived by hash-to-curve
     (try-and-increment) from the public seed, i.e.
     g_i = HashToCurve("HVSA-LHH-generator-v1" || seed || i). The discrete log
@@ -131,7 +136,12 @@ class LHH:
         return result_point
 
     @staticmethod
-    def Add(h1: Point, h2: Point) -> Point:
+    def Mul(h1: Point, h2: Point) -> Point:
+        """Group law of G (paper's multiplicative notation).
+
+        LHH.Hash(a + b) == LHH.Mul(LHH.Hash(a), LHH.Hash(b)); on P-256 this
+        is elliptic-curve point addition.
+        """
         return h1 + h2
 
 

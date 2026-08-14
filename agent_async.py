@@ -576,7 +576,7 @@ class AgentEdge:
             return False
 
         plain_hash = LHH.Hash(self.lhh_pp, batch.plaintext_sum)
-        return LHH.Add(plain_hash, batch.mask_hash) == batch.masked_hash
+        return LHH.Mul(plain_hash, batch.mask_hash) == batch.masked_hash
 
     def _flush_window(self, token: int, tick: int) -> Optional[BatchCommit]:
         state = self._windows.get(token)

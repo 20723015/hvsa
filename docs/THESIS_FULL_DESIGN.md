@@ -121,7 +121,7 @@ FedAvg 由 McMahan 等于 2017 年提出，客户端在本地数据上执行若�
 
 ### 2.2.1 线性同态哈希 LHH
 
-LHH 在 NIST P-256 上构造，逐维生成元由公开种子经 **hash-to-curve（try-and-increment）** 确定性派生：`g_i = HashToCurve(pp_seed, i)`，其中 `pp_seed` 为公开参数，`g_i` 的离散对数（相对基点 `G`）在随机预言机模型下对包括 TA 在内的所有实体不可知（见 3.3.1）；不需要 TA 秘密持有逐维标量，也不需要存储 `O(d)` 个点。满足加法同态性 `LHH.Add(H(a),H(b))=H(a+b)`；定长输出（~32B，与维度 `d` 无关）。在 P-256 离散对数困难（DLP）假设下抗碰撞。
+LHH 在 NIST P-256 上构造，逐维生成元由公开种子经 **hash-to-curve（try-and-increment）** 确定性派生：`g_i = HashToCurve(pp_seed, i)`，其中 `pp_seed` 为公开参数，`g_i` 的离散对数（相对基点 `G`）在随机预言机模型下对包括 TA 在内的所有实体不可知（见 3.3.1）；不需要 TA 秘密持有逐维标量，也不需要存储 `O(d)` 个点。定义 `H(m) = ∏_{i=1}^d g_i^{m_i}`，满足线性同态性（对**向量加法**同态）：`H(a)·H(b) = H(a+b)`。正文统一采用该乘法记号，与 VeriFL/VPFLI 文献口径一致；其 P-256 实现中该群运算为椭圆曲线点加法，即代码中的 `LHH.Mul`，`LHH.Hash` 按 `Σ m_i·G_i` 逐项点累加。定长输出（~32B，与维度 `d` 无关）。在 P-256 离散对数困难（DLP）假设下抗碰撞。
 
 ### 2.2.2 Ed25519 数字签名
 
@@ -343,11 +343,11 @@ EdgeVerify(e_k, t, W_sum^raw, H_mask(t), { (j, H_j(t), σ_j) }):
                    n_j(t), S_j(t), H_j)
         if not SIG.verify(pickle(meta_j), σ_j, TA.es_pub_keys[e_j.id]):
             return REJECT("ES 签名无效: " + e_j.id)
-        aggregated_rhs ← LHH.Add(aggregated_rhs, H_j)
+        aggregated_rhs ← LHH.Mul(aggregated_rhs, H_j)
 
     # 5b: LHH 同态验证
     H_sum_raw ← LHH.Hash(pp_LHH, W_sum^raw)
-    LHS ← LHH.Add(H_sum_raw, H_mask(t))
+    LHS ← LHH.Mul(H_sum_raw, H_mask(t))
     if LHS ≠ aggregated_rhs:
         return REJECT("LHH 一致性等式不成立; Cloud 篡改嫌疑")
 
@@ -437,16 +437,16 @@ Pr[ (x, x') ← A(pp_LHH): x ≠ x' ∧ LHH.Hash(pp_LHH, x) = LHH.Hash(pp_LHH, x
 **Theorem 3.2 证明.** 设 Cloud 输出 `W_sum^raw' ≠ W_sum^raw` 使 ES 验证通过。考虑验证等式：
 
 ```text
-LHH.Hash(W_sum^raw') + H_mask(t) = Π_k H_k(t).                    (*)
+H_sum^raw' · H_mask(t) = Π_k H_k(t).                    (*)
 ```
 
 真实等式（按协议执行）：
 
 ```text
-LHH.Hash(W_sum^raw) + H_mask(t) = Π_k H_k(t).                    (**)
+H_sum^raw · H_mask(t) = Π_k H_k(t).                    (**)
 ```
 
-由 (**) 减 (*) 得 `LHH.Hash(W_sum^raw) − LHH.Hash(W_sum^raw') = 0`，即 `LHH.Hash(W_sum^raw) = LHH.Hash(W_sum^raw')`。由 `W_sum^raw' ≠ W_sum^raw`，这给出 LHH 碰撞，与 Lemma 3.3 矛盾。故 Cloud 无法在 LHH 验证下篡改 `W_sum^raw` 而不被检测。
+在素数阶群上由 (**) 与 (*) 约去 `H_mask(t)`（群运算可逆）得 `H_sum^raw = H_sum^raw'`，即 `LHH.Hash(W_sum^raw) = LHH.Hash(W_sum^raw')`。由 `W_sum^raw' ≠ W_sum^raw`，这给出 LHH 碰撞，与 Lemma 3.3 矛盾。故 Cloud 无法在 LHH 验证下篡改 `W_sum^raw` 而不被检测。
 
 至于组包伪造：若 Cloud 替换某 `H_k(t)` 为 `H_k'(t)` 但仍声称来自 ES `e_k`，需对应签名 `σ_k'` 通过 `SIG.verify(meta_k', σ_k', pk_k)`。由 `meta_k' ≠ meta_k`（因 `H_k' ≠ H_k`），`σ_k'` 是对未签名消息 `meta_k'` 的有效签名，与 Lemma 3.4 矛盾。□
 
@@ -475,8 +475,8 @@ W_sum^raw = W̄(t) − M_global(t)
 
 (b) 由 LHH 同态性，
 ```text
-LHH.Hash(W̄(t)) = LHH.Hash(Σ_k W̄_k(t)) = LHH.Add_k(LHH.Hash(W̄_k(t))) = LHH.Add_k(H_k(t)) = Π_k H_k(t),
-LHH.Hash(W_sum^raw) + LHH.Hash(M_global) = LHH.Hash(W_sum^raw + M_global) = LHH.Hash(W̄(t)) = Π_k H_k(t),
+LHH.Hash(W̄(t)) = LHH.Hash(Σ_k W̄_k(t)) = ∏_k LHH.Hash(W̄_k(t)) = ∏_k H_k(t),
+LHH.Hash(W_sum^raw) · LHH.Hash(M_global) = LHH.Hash(W_sum^raw + M_global) = LHH.Hash(W̄(t)) = ∏_k H_k(t),
 ```
 即 `H_sum^raw · H_mask = Π_k H_k` 成立，与 `D(t)` 的具体选择无关。□
 

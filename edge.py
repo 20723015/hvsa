@@ -273,7 +273,7 @@ class EdgeServer:
                 if aggregated_h_all_rhs is None:
                     aggregated_h_all_rhs = h_val
                 else:
-                    aggregated_h_all_rhs = LHH.Add(aggregated_h_all_rhs, h_val)
+                    aggregated_h_all_rhs = LHH.Mul(aggregated_h_all_rhs, h_val)
 
             except Exception as e:
                 logger.error(f"EdgeServer {self.id}: 验证出错: {e}")
@@ -291,8 +291,8 @@ class EdgeServer:
         # 4. 计算 G_sum 的哈希
         h_plain = LHH.Hash(self.lhh_pp, global_plaintext_model_int)
 
-        # 5. 计算 LHS = H_sum * H_mask (同态加法)
-        lhs = LHH.Add(h_plain, h_mask)
+        # 5. 计算 LHS = H_sum * H_mask (LHH 同态性: H(x)·H(y)=H(x+y))
+        lhs = LHH.Mul(h_plain, h_mask)
 
         # 6. 最终比较
         if lhs == aggregated_h_all_rhs:
@@ -472,11 +472,11 @@ class EdgeServer:
                 return False
 
             aggregated_rhs = (pkg.H_k if aggregated_rhs is None
-                              else LHH.Add(aggregated_rhs, pkg.H_k))
+                              else LHH.Mul(aggregated_rhs, pkg.H_k))
 
         # 2. LHH 验证 raw sum
         H_sum_raw = LHH.Hash(self.lhh_pp, raw_sum_int)
-        lhs = LHH.Add(H_sum_raw, H_mask_raw)
+        lhs = LHH.Mul(H_sum_raw, H_mask_raw)
         if lhs != aggregated_rhs:
             logger.error(f"EdgeServer {self.id}: p2 LHH mismatch")
             return False
