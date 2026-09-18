@@ -19,6 +19,7 @@ experiments/
 /results_*/
 
 # 批跑日志与控制台重定向
+/*.log
 *.stdout.txt
 *.stderr.txt
 *.out
