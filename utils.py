@@ -1,4 +1,5 @@
 import hashlib
+import math
 import os
 from dataclasses import dataclass
 from functools import lru_cache
@@ -143,6 +144,139 @@ class LHH:
         is elliptic-curve point addition.
         """
         return h1 + h2
+
+    @staticmethod
+    def Exp(h: Point, scalar: int) -> Point:
+        """H^k in multiplicative notation = k·H (EC 标量乘).
+
+        用于加权验证: LHH.Hash(Σ_k w_k·x_k) == ∏_k LHH.Hash(x_k)^{w_k}。
+        仅支持非负整数标量 (掩码域权重 w_k 为整数化结果)。
+        """
+        if not isinstance(scalar, int) or scalar < 0:
+            raise ValueError(f"LHH.Exp requires a non-negative int scalar, got {scalar!r}")
+        if scalar == 0:
+            return LHH.CURVE.generator * 0
+        return h * scalar
+
+
+def staleness_int_weights(alphas, scale: int = 65536) -> list:
+    """浮点陈旧度权重的掩码域整数化: w_k = round(α_k·scale).
+
+    cloud (构造加权 M_Q / 加权聚合) 与 ES (独立复算比对) 必须共用本实现,
+    否则整数化舍入差异会造成验证侧误拒。
+    """
+    return [int(round(float(a) * scale)) for a in alphas]
+
+
+def staleness_alpha(metric: str, staleness: int, sigma: float,
+                    dist: Optional[float] = None) -> float:
+    """陈旧度补偿系数 α_k (公开确定性规则).
+
+    仅 version (版本差 s_k=v−r_k) 与 rel2 (参数相对漂移) 可由 ES 依据
+    共识量 (checkpoint 版本、签名绑定的 base_version、共识历史模型) 独立
+    复算; wait 度量依赖云端缓冲调度状态, 不在本原语内 (策略绑定场景必须
+    拒绝)。
+    """
+    if metric == 'version':
+        return 1.0 / (staleness + 1.0) ** sigma
+    if metric == 'rel2':
+        if dist is None:
+            raise ValueError("rel2 metric requires the parameter-drift distance")
+        return math.exp(-sigma * dist)
+    raise ValueError(f"staleness metric {metric!r} is not ES-recomputable")
+
+
+class AlignmentSigmaPolicy:
+    """Aσ-VCM 方向一致性 σ 档位选择 (公开规则, cloud 与 ES 共用同一实现).
+
+    用前若干个具有非零补偿的 checkpoint 估计 cos(C^(0), Δtrain) 并一次锁定
+    σ 档位; 全部输入均为公开量 (安全聚合后的 raw sum、共识版本历史、S_k、
+    base_version、γ), 不读取单组明文。因此 ES 可在验证侧独立复算同一 σ_eff。
+
+    两阶段语义 (与主循环/验证的时序对齐):
+      - tentative_eff(cos): 输入本 checkpoint 的方向一致性 (无效轮传 None),
+        返回本轮 σ_eff —— 探测期返回保守 σ, 达到 warmup 时立即按本次决策
+        返回锁定档位; 不修改持久状态。
+      - commit_observation(cos): checkpoint 成功提交后落地 EMA/探测/锁定
+        状态。验证失败或未提交的候选不落地, 云端与 ES 状态不漂移。
+    """
+
+    def __init__(self, sigma_fallback: float, sigma_high: float,
+                 ema_beta: float, warmup: int,
+                 boost_threshold: float, mid_threshold: float):
+        self.sigma_fallback = float(sigma_fallback)
+        self.sigma_high = float(sigma_high)
+        self.ema_beta = float(ema_beta)
+        self.warmup = int(warmup)
+        self.boost_threshold = float(boost_threshold)
+        self.mid_threshold = float(mid_threshold)
+        self.cos_ema: Optional[float] = None
+        self.locked: Optional[float] = None
+        self._probe_sum = 0.0
+        self._probe_count = 0
+
+    def tentative_eff(self, cos: Optional[float]) -> float:
+        """本 checkpoint 的 σ_eff (含本次 cos 的试探性档位决策, 不落地)."""
+        if self.locked is not None:
+            return self.locked
+        if cos is None:
+            return self.sigma_fallback
+        mean = (self._probe_sum + cos) / (self._probe_count + 1)
+        if self._probe_count + 1 >= self.warmup:
+            if mean >= self.boost_threshold:
+                return self.sigma_high
+            if mean >= self.mid_threshold:
+                return 0.0
+            return self.sigma_fallback
+        return self.sigma_fallback
+
+    def commit_observation(self, cos: Optional[float]) -> None:
+        """checkpoint 成功提交后落地本次观测 (仅有效 cos 推进状态)."""
+        if cos is None:
+            return
+        self.cos_ema = (cos if self.cos_ema is None
+                        else self.ema_beta * self.cos_ema
+                        + (1.0 - self.ema_beta) * cos)
+        if self.locked is None:
+            self._probe_sum += cos
+            self._probe_count += 1
+            if self._probe_count >= self.warmup:
+                probe_mean = self._probe_sum / self._probe_count
+                if probe_mean >= self.boost_threshold:
+                    self.locked = self.sigma_high
+                elif probe_mean >= self.mid_threshold:
+                    self.locked = 0.0
+                else:
+                    self.locked = self.sigma_fallback
+
+
+def vpda_weights(participation_counts, kappa=0.5, wmin=0.5, wmax=2.0,
+                 scale=65536, all_counts=None):
+    """V-PDA 逆参与权重 (公开规则, main/edge/测试共用同一实现).
+
+    q_k = clip(( mean_j(A_j+1) / (A_k+1) )^κ, wmin, wmax)
+    w_k = round(scale · q_k)   (整数化, 掩码域整数标量乘封闭)
+
+    Args:
+        participation_counts: 选中组的累计入选次数 A_k (当前 checkpoint 不计入).
+        all_counts: 全部组的 A_j (含未选中组); 给定时均值在全部组上取
+            (协议口径: 公平性基准是全体组, 而非被选中的子集)。缺省时
+            退化为在 participation_counts 上取均值 (向后兼容)。
+
+    Returns:
+        (qs, ws): 浮点权重列表与整数权重列表 (与 participation_counts 一一对应)
+    """
+    n = len(participation_counts)
+    if n == 0:
+        return [], []
+    ref = list(all_counts) if all_counts is not None else list(participation_counts)
+    if not ref:
+        return [], []
+    mean_ap1 = sum(c + 1 for c in ref) / len(ref)
+    qs = [min(wmax, max(wmin, (mean_ap1 / (c + 1.0)) ** kappa))
+          for c in participation_counts]
+    ws = [int(round(scale * q)) for q in qs]
+    return qs, ws
 
 
 class SIG:
