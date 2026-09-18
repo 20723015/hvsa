@@ -1,34 +1,57 @@
+import os
+
 import torch
 from torch.utils.data import DataLoader, Subset
 from torchvision import datasets, transforms
 import numpy as np
 
+# 数据集缓存固定在仓库根目录 (与运行时 CWD 无关): 实验脚本常在结果子目录
+# 中以 cwd=子目录 运行, 相对路径 './data' 会导致每个子目录各自下载一份,
+# 并发的首次下载还会互相破坏缓存。
+DEFAULT_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
-def load_data(dataset_name, data_dir='./data'):
-    """下载并加载指定的数据集"""
+
+def _cached_dataset(cls, data_dir, train, transform):
+    """优先使用本地缓存加载, 仅在缺失/损坏时才下载.
+
+    避免并行实验进程在 download=True 下并发校验/重下同一份数据集导致的
+    互相破坏 (torchvision 判定完整性失败时会删除并重下, 并发时会级联失败)。
+    """
+    try:
+        return cls(data_dir, train=train, download=False, transform=transform)
+    except Exception:
+        return cls(data_dir, train=train, download=True, transform=transform)
+
+
+def load_data(dataset_name, data_dir=None):
+    """下载并加载指定的数据集 (缓存优先, 见 _cached_dataset).
+
+    data_dir 缺省为仓库根目录下的 data/ (绝对路径), 与 CWD 无关。
+    """
+    data_dir = data_dir or DEFAULT_DATA_DIR
     if dataset_name == 'MNIST':
         transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.1307,), (0.3081,))
         ])
-        train_dataset = datasets.MNIST(data_dir, train=True, download=True, transform=transform)
-        test_dataset = datasets.MNIST(data_dir, train=False, download=True, transform=transform)
+        train_dataset = _cached_dataset(datasets.MNIST, data_dir, True, transform)
+        test_dataset = _cached_dataset(datasets.MNIST, data_dir, False, transform)
 
     elif dataset_name == 'FashionMNIST':
         transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.5,), (0.5,))
         ])
-        train_dataset = datasets.FashionMNIST(data_dir, train=True, download=True, transform=transform)
-        test_dataset = datasets.FashionMNIST(data_dir, train=False, download=True, transform=transform)
+        train_dataset = _cached_dataset(datasets.FashionMNIST, data_dir, True, transform)
+        test_dataset = _cached_dataset(datasets.FashionMNIST, data_dir, False, transform)
 
     elif dataset_name == 'CIFAR10':
         transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
-        train_dataset = datasets.CIFAR10(data_dir, train=True, download=True, transform=transform)
-        test_dataset = datasets.CIFAR10(data_dir, train=False, download=True, transform=transform)
+        train_dataset = _cached_dataset(datasets.CIFAR10, data_dir, True, transform)
+        test_dataset = _cached_dataset(datasets.CIFAR10, data_dir, False, transform)
 
     else:
         raise ValueError(f"未知的数据集: {dataset_name}")

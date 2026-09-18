@@ -101,73 +101,97 @@ for d in D_values:
     res_D['so_comm'].append(m[11])
 
 # ==========================================
-# 4. 绘图与 PDF 输出 (极限放大版 + 独立标题)
+# 4. 绘图与输出 (4 行 x 2 列: 每行一个指标, 左列随 N / 右列随 d)
+#    设计要点: 单一共享图例 + 左侧竖排行标 + 顶部列头 + 角标 (a)-(h),
+#    去掉每张子图重复的标题与图例, 让 HVSA 曲线成为视觉焦点。
 # ==========================================
+from matplotlib.lines import Line2D
+
 plt.rcParams.update({
     'font.family': 'sans-serif',
-    'font.size': 24,
-    'axes.labelsize': 28,
-    'xtick.labelsize': 22,
-    'ytick.labelsize': 22
+    'font.sans-serif': ['Arial', 'DejaVu Sans'],
+    'font.size': 19,
+    'axes.labelsize': 20,
+    'xtick.labelsize': 16,
+    'ytick.labelsize': 16,
+    'axes.linewidth': 1.1,
 })
 
-fig, axes = plt.subplots(2, 4, figsize=(28, 14))
+BLUE_DARK = '#14314F'
 
-colors = ['#888888', '#2CA02C', '#E15759']
-labels = ['VeriFL', 'VLMRS', 'HVSA']
+# 两条 baseline 用冷/中性色, HVSA 用醒目红并加粗加大
+STYLE = {
+    'VeriFL': dict(color='#8C8C8C', linestyle=':',  linewidth=2.6, marker='s',
+                   markersize=7, markerfacecolor='white', markeredgewidth=1.6),
+    'VLMRS': dict(color='#3B6FB0', linestyle='--', linewidth=2.6, marker='^',
+                  markersize=7, markerfacecolor='white', markeredgewidth=1.6),
+    'HVSA':  dict(color='#E23B41', linestyle='-',  linewidth=4.2, marker='o',
+                  markersize=8, markerfacecolor='#E23B41', markeredgecolor='white',
+                  markeredgewidth=1.2, zorder=5),
+}
 
+# 每行一个指标: (三条曲线的数据键, y 轴单位, 是否 log, 行标题)
+ROWS = [
+    (('cv_comp', 'cl_comp', 'co_comp'), 'Latency (ms)',  True,  'User Computation\nLatency'),
+    (('cv_comm', 'cl_comm', 'co_comm'), 'Overhead (KB)', False, 'User Communication\nOverhead'),
+    (('sv_comp', 'sl_comp', 'so_comp'), 'Latency (ms)',  True,  'CS Computation\nLatency'),
+    (('sv_comm', 'sl_comm', 'so_comm'), 'Overhead (MB)', True,  'CS Communication\nOverhead'),
+]
+# 两列: (数据字典, x 轴数据, x 轴标签)
+COLS = [
+    (res_N, N_values, 'Number of Users'),
+    (res_D, D_values, 'Model Dimension'),
+]
 
-# 【新增】: 在函数参数中加入 title_text
-def plot_sub(ax, x_data, y1, y2, y3, xlab, ylab, label_text, title_text, logy=False):
-    ax.plot(x_data, y1, linestyle=':', color=colors[0], label=labels[0], linewidth=4.0)
-    ax.plot(x_data, y2, linestyle='-.', color=colors[1], label=labels[1], linewidth=4.0)
-    ax.plot(x_data, y3, linestyle='-', color=colors[2], label=labels[2], linewidth=6.0)
+fig, axes = plt.subplots(4, 2, figsize=(13, 15.5))
+fig.subplots_adjust(left=0.095, right=0.985, top=0.895,
+                    bottom=0.060, hspace=0.50, wspace=0.18)
 
-    # 设置加粗的大字号标题，pad=15 稍微拉开标题与图的距离
-    ax.set_title(title_text, fontsize=28, fontweight='bold', pad=15)
+panel_tags = iter(['(a)', '(b)', '(c)', '(d)', '(e)', '(f)', '(g)', '(h)'])
 
-    ax.set_xlabel(xlab, fontweight='bold')
-    ax.set_ylabel(ylab, fontweight='bold')
+for r, (keys, ylab, logy, _metric) in enumerate(ROWS):
+    for c, (res, xvals, xlab) in enumerate(COLS):
+        ax = axes[r, c]
+        for name, key in zip(['VeriFL', 'VLMRS', 'HVSA'], keys):
+            ax.plot(xvals, res[key], label=name, **STYLE[name])
 
-    ax.legend(fontsize=18, frameon=True, edgecolor='black', framealpha=0.9)
-    ax.grid(True, linestyle='--', alpha=0.7, linewidth=1.5)
+        if logy:
+            ax.set_yscale('log')
+        ax.set_xlabel(xlab, fontweight='bold', labelpad=4)
+        ax.set_ylabel(ylab, fontweight='bold', labelpad=4)
+        ax.grid(True, which='major', linestyle='--', alpha=0.30, linewidth=0.7)
+        ax.grid(True, which='minor', linestyle=':', alpha=0.18, linewidth=0.5)
+        ax.tick_params(direction='out', length=4, width=1.0)
+        for sp in ('top', 'right'):
+            ax.spines[sp].set_visible(False)
+        ax.margins(x=0.02)
 
-    if logy:
-        ax.set_yscale('log')
+        # 角标 (a)-(h): 左上角小圆牌
+        ax.text(0.035, 0.955, next(panel_tags), transform=ax.transAxes,
+                fontsize=17, fontweight='bold', va='top', ha='left', color=BLUE_DARK,
+                bbox=dict(boxstyle='round,pad=0.28', fc='white', ec='#C4D0E0', alpha=0.9))
 
-    ax.text(0.5, -0.22, label_text, transform=ax.transAxes,
-            fontsize=32, fontweight='bold', ha='center', va='top')
+# --- 每行指标名: 横排放在该行两图正上方居中 (每个指标只出现一次) ---
+for r, (_keys, _ylab, _logy, metric) in enumerate(ROWS):
+    pL = axes[r, 0].get_position()
+    pR = axes[r, 1].get_position()
+    xc = (pL.x0 + pR.x1) / 2
+    yt = pL.y1 + 0.010
+    fig.text(xc, yt, metric.replace('\n', ' '), ha='center', va='bottom',
+             fontsize=20, fontweight='bold', color=BLUE_DARK)
 
+# --- 全图共享的单一图例 (顶部居中) ---
+legend_handles = [Line2D([0], [0], **{k: v for k, v in STYLE[name].items()
+                                       if k not in ('zorder',)}, label=name)
+                  for name in ['VeriFL', 'VLMRS', 'HVSA']]
+fig.legend(legend_handles, ['VeriFL', 'VLMRS', 'HVSA'],
+           loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=3,
+           fontsize=19, frameon=True, edgecolor='#C4D0E0', framealpha=0.95,
+           handlelength=2.6, columnspacing=2.4, borderpad=0.7)
 
-# ==========================================
-# 第一排: 随用户数量 N 变化 (去掉了 ($N$) 并加上了对应标题)
-# ==========================================
-plot_sub(axes[0, 0], N_values, res_N['cv_comp'], res_N['cl_comp'], res_N['co_comp'],
-         'Number of Users', 'Latency (ms)', '(a)', 'User Computation Latency', logy=True)
-plot_sub(axes[0, 1], N_values, res_N['cv_comm'], res_N['cl_comm'], res_N['co_comm'],
-         'Number of Users', 'Overhead (KB)', '(b)', 'User Communication Overhead')
-plot_sub(axes[0, 2], N_values, res_N['sv_comp'], res_N['sl_comp'], res_N['so_comp'],
-         'Number of Users', 'Latency (ms)', '(c)', 'CS Computation Latency')
-plot_sub(axes[0, 3], N_values, res_N['sv_comm'], res_N['sl_comm'], res_N['so_comm'],
-         'Number of Users', 'Overhead (MB)', '(d)', 'CS Communication Overhead', logy=True)
-
-# ==========================================
-# 第二排: 随模型维度 d 变化 (去掉了 ($d$) 并加上了对应标题)
-# ==========================================
-plot_sub(axes[1, 0], D_values, res_D['cv_comp'], res_D['cl_comp'], res_D['co_comp'],
-         'Model Dimension', 'Latency (ms)', '(e)', 'User Computation Latency', logy=True)
-plot_sub(axes[1, 1], D_values, res_D['cv_comm'], res_D['cl_comm'], res_D['co_comm'],
-         'Model Dimension', 'Overhead (KB)', '(f)', 'User Communication Overhead')
-plot_sub(axes[1, 2], D_values, res_D['sv_comp'], res_D['sl_comp'], res_D['so_comp'],
-         'Model Dimension', 'Latency (ms)', '(g)', 'CS Computation Latency')
-plot_sub(axes[1, 3], D_values, res_D['sv_comm'], res_D['sl_comm'], res_D['so_comm'],
-         'Model Dimension', 'Overhead (MB)', '(h)', 'CS Communication Overhead')
-
-# 【关键调整】: h_pad 必须加大 (这里设为 5.0)，否则第二排的 Title 会压在第一排的 (a)(b)(c)(d) 标号上
-plt.tight_layout(pad=3.0, h_pad=0.8, w_pad=3.0)
-
-# ✅ 导出为高质量 PDF
-save_path = 'exp_comparison_final.pdf'
-plt.savefig(save_path, format='pdf', dpi=300, bbox_inches='tight')
-print(f"✅ 实验巨无霸对比图表 (带标题版) 已成功保存至: {save_path}")
-plt.show()
+# 导出: PDF (供海报嵌入) + PNG (供快速预览)
+pdf_path = 'exp_comparison_final.pdf'
+png_path = 'exp_comparison_final.png'
+plt.savefig(pdf_path, format='pdf', bbox_inches='tight')
+plt.savefig(png_path, format='png', dpi=200, bbox_inches='tight')
+print("[OK] saved:", pdf_path, "|", png_path)
