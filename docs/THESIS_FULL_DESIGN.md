@@ -3,6 +3,13 @@
 > 本文档为研究点 1（HVSA）与研究点 2（检查点式组级半异步）的整合硕士论文设计文档。
 > 实验部分仅给出设计框架与预期趋势，所有数值留空待回填。
 > 研究点 2 协议公式与 `THESIS_POINT2_STALENESS_AWARE_REUSE.md`（已定稿）一致；实验设计在其基础上扩展（如 reuse×compensation 2×2 消融），属框架性扩充而非协议改动。
+> **2026-09-14 修订（第五轮，finalize 闭环 P0 修复）**：⑰ finalize 由"直接写 ledger"改为**可验证**——校验 TA 签名并核对持久化 `prepared_checkpoints`（完整 receipt 字节 + token 元数据 + `result_digest`），伪造或未经 prepare 的 receipt 无法落地；同一 receipt 重复 finalize **幂等成功**（返回 `already`，不重复消费），同版本不同 receipt 冲突破坏摘要一致性时才拒绝；同版本换候选时新 prepare 原子替换记录、旧 receipt 随之作废；⑱ 提交改为 **stage → TA finalize → publish → notify** 四阶段事务（新增 `commit_tx.py`）——stage 只读校验并把变更写入持久化 journal，Cloud 不再出现"已提交而 TA 未落地/TA 已落地而 ES 未推进"的静默分叉；finalize/publish/notify 均幂等，阶段边界崩溃可重放收敛（含"仅通知部分 ES"分叉）；⑲ `confirm_receipt` 核对完整 receipt（签名 + prepare 记录 + 已 finalize），`--ta-state-path` 持久化 TA ledger；补伪造 finalize、幂等/冲突、prepare 替换、四阶段崩溃恢复测试（`tests/test_receipt_flow.py`）。
+>
+> **2026-09-13 修订（第四轮，独立验收 P0/P1 修复）**：⑬ 结果摘要绑定——vote/receipt 绑定 ES 实际验证的 `raw sum`/`M_Q`/`final model` 摘要，Cloud 提交与 ES 推进双重核对，取诚实 receipt 后偷换结果被拒；⑭ TA 授权改 prepare/finalize 两阶段——提交失败不推进 ledger 与权威状态，重复 finalize 由主键约束拒绝；⑮ ES 推进前增加 TA ledger 确认（`confirm_receipt`）；⑯ `config_hash` 只哈希科学配置（产物参数单列）；`--deterministic` 修复 warn_only 覆盖为严格模式；补真实 `s_max` 负例与结果绑定回归，`pytest.ini` 限定收集范围。
+>
+> **2026-09-13 修订（第三轮，验收缺口补全）**：⑨ 重放防护改为 TA 权威 ledger（SQLite 仅追加：token 注册/消费 + checkpoint 版本）驱动的授权流——ES 签名 vote → TA 验票与约束核验 → 原子落地并签发 `CheckpointReceipt` → Cloud 凭 receipt 提交、ES 凭 receipt 推进（4.2.2/4.3.9）；⑩ verify-on 组合边界 fail-fast（`vcm_mode` 白名单、`agg_shrink`/`server_opt` 不兼容、`--attack` 强制 `--verify`）；⑪ 可复现性强化：异配置结果非零退出、NPZ/JSON 原子替换、`--deterministic` 严格确定性、元数据含配置模式版本与 CUDA/cuDNN/线程数；⑫ RA-CMA 统一降为可选后处理组件。
+>
+> **2026-09-13 修订（第二轮，10 周计划第 1-3 周落地）**：④ 主问题统一为"跨组同步等待、mixed-version 偏差、恶意 Cloud 下的聚合策略完整性"（4.1），stale reuse 彻底退出主目标；⑤ 条件性偏差界 4.1 删除 stale 项（移入附录 A.5 备选分析），新增 σ/Aσ 策略条件正确性小节；⑥ 全文清除"首次"（待检索日志支持后再以"据本文检索所知"恢复）、"根本冲突"、"整体验证轻量"表述，exactly-once 降级为"至多一次纳入的重放防护"；⑦ 协议新增版本化 `ProtocolConfig` 与 `policy_config_digest` manifest 绑定（4.3.6/4.3.10），TA/ES 独立复算落地（声明值只作审计）；⑧ 实验基建（config_hash/运行元数据/--output-dir/--run-id/--force）与策略绑定攻击族注入（4.5.3）已实现。
 
 ## 论文设计与数值实现的评审边界
 
@@ -34,11 +41,11 @@
 
 # 中文摘要
 
-分层联邦学习（Hierarchical Federated Learning）在"云—边—端"架构下兼顾了隐私与通信效率，但仍面临两大痛点：一是客户端本地模型在上传与聚合过程中可能泄露隐私（梯度/参数泄露攻击），二是云端聚合结果可能被不可信云服务器篡改而难以被参与方检测。本文围绕**单可信权威机构（TA）约束下的轻量可验证安全聚合**展开，提出两个递进的研究点。
+分层联邦学习（Hierarchical Federated Learning）在"云—边—端"架构下兼顾了隐私与通信效率，但仍面临两大痛点：一是客户端本地模型在上传与聚合过程中可能泄露隐私（梯度/参数泄露攻击），二是云端聚合结果可能被不可信云服务器篡改而难以被参与方检测。本文围绕**单可信权威机构（TA）约束下、以定长验证通信为特征的可验证安全聚合**展开，提出两个递进的研究点。
 
 研究点一提出 **HVSA**（Hierarchical Verifiable Secure Aggregation），在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端参数隐私，利用线性同态哈希（LHH）与 Ed25519 签名让边缘服务器（ES）能够对云端聚合结果进行高效验证，验证通信开销与模型维度无关。理论分析表明，在 PRG 伪随机性、TA 永不合谋且实际在线参与数满足 `N_online(t)−c≥2` 的假设下，即使 Cloud 与全部 ES 及至多 `c≤N_online(t)−2` 个客户端合谋，也不能从允许公开的聚合结果中恢复任一剩余客户端参数；在 LHH 抗碰撞与 Ed25519 EUF-CMA 假设下，云端任何篡改均可被边缘检测；同时协议对客户端掉线具有自然鲁棒性，掉线用户的掩码与更新自动成对剔除，不破坏验证等式。
 
-研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组内 stale reuse、masked group package、checkpoint 批量聚合与 Direct-VCM 后置补偿，将跨组训练扩展为组级半异步机制。安全分析将 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA；客户端隐私按实际 checkpoint 客户端数满足 `N_Q−c≥2` 判定，组/全局聚合允许公开。在 IID、一步更新与耦合相同随机性的条件下，本文给出单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 刻画条件性多步传播，不直接继承参考论文的完整收敛定理。
+研究点二在研究点一的密码学闭环基础上，针对同步聚合的"全局等待"与"掉线训练浪费"问题，提出**检查点式组级半异步安全聚合**。通过组包缓冲与 checkpoint 触发、面向公开确定性聚合策略的策略绑定可验证加权聚合（V-PDA/σ 权重与补偿参数均由边缘独立复算，恶意云端不能自行选择权重）、masked group package、checkpoint 批量聚合与 Direct-VCM 后置补偿，将跨组训练扩展为组级半异步机制。安全分析将 Cloud 篡改攻击归约到 LHH 抗碰撞与 Ed25519 EUF-CMA，并证明权重伪造/改标在策略绑定下被确定性拒绝；客户端隐私按实际 checkpoint 客户端数满足 `N_Q−c≥2` 判定，组/全局聚合允许公开。在 IID、一步更新与耦合相同随机性的条件下，本文给出单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 刻画条件性多步传播，不直接继承参考论文的完整收敛定理。
 
 **关键词**：联邦学习；分层聚合；安全聚合；可验证聚合；半异步；陈旧性复用
 
@@ -46,11 +53,11 @@
 
 # Abstract
 
-Hierarchical Federated Learning balances privacy and communication efficiency under a "cloud-edge-end" architecture, yet it still faces two major pain points: (i) client-side local models may leak privacy during upload and aggregation (gradient/parameter inversion attacks); (ii) aggregation results may be tampered with by an untrusted cloud server and such tampering is hard for participants to detect. This thesis focuses on **lightweight verifiable secure aggregation under a single Trusted Authority (TA)** and proposes two progressive research points.
+Hierarchical Federated Learning balances privacy and communication efficiency under a "cloud-edge-end" architecture, yet it still faces two major pain points: (i) client-side local models may leak privacy during upload and aggregation (gradient/parameter inversion attacks); (ii) aggregation results may be tampered with by an untrusted cloud server and such tampering is hard for participants to detect. This thesis focuses on **verifiable secure aggregation under a single Trusted Authority (TA), characterized by fixed-length verification communication**, and proposes two progressive research points.
 
 Research Point 1 proposes **HVSA** (Hierarchical Verifiable Secure Aggregation). Under a "cloud-edge-end-single TA" architecture, HVSA protects client parameter privacy via PRG masking, and enables Edge Servers (ES) to efficiently verify cloud aggregation results via Linear Homomorphic Hashing (LHH) and Ed25519 signatures, with verification communication overhead independent of model dimension. Under PRG pseudorandomness, a fully trusted non-colluding TA, and `N_online(t)-c≥2`, the privacy result allows the Cloud to collude with all ESs and up to `c≤N_online(t)-2` clients while protecting each remaining client's parameters; aggregate results may be public. Under LHH collision resistance and Ed25519 EUF-CMA, cloud tampering with an accepted result is detectable; meanwhile, masks and updates of dropped clients are removed in pairs without breaking the verification equation.
 
-Research Point 2 extends this cryptographic closure with intra-group stale reuse, masked group packages, checkpoint aggregation, and Direct-VCM post-compensation. Client privacy is evaluated on the actual checkpoint population under `N_Q-c≥2`, while group and global aggregates may be public. Under IID one-step updates with coupled identical randomness, the thesis gives a conditional single-checkpoint bias bound and models multi-checkpoint propagation as `e_{t+1}≤L_Te_t+ε_t`; it does not directly inherit a complete convergence theorem from either reference paper.
+Research Point 2 extends this cryptographic closure with group-package buffering and checkpoint triggering, policy-bound verifiable weighted aggregation (V-PDA/staleness weights and compensation parameters are independently recomputed at the edge, so a malicious cloud cannot choose weights itself), masked group packages, checkpoint aggregation, and Direct-VCM post-compensation. Cloud tampering is reduced to LHH collision resistance and Ed25519 EUF-CMA, and weight forgery or relabeling is deterministically rejected under policy binding. Client privacy is evaluated on the actual checkpoint population under `N_Q-c≥2`, while group and global aggregates may be public. Under IID one-step updates with coupled identical randomness, the thesis gives a conditional single-checkpoint bias bound and models multi-checkpoint propagation as `e_{t+1}≤L_Te_t+ε_t`; it does not directly inherit a complete convergence theorem from either reference paper.
 
 **Keywords**: Federated Learning; Hierarchical Aggregation; Secure Aggregation; Verifiable Aggregation; Semi-Asynchronous; Staleness Reuse
 
@@ -83,7 +90,7 @@ Research Point 2 extends this cryptographic closure with intra-group stale reuse
 - **MAFSA**：多层异步 + 掉线客户端新旧结果融合，但其权重方向使越旧 stale 权重越大。
 - **DVAFL**（Chen et al., IEEE TMC 2026）：版本控制机制（VCM）补偿陈旧更新，采用"补偿+降权"双机制。
 
-完全异步与"逐轮在线验证"的密码学闭环存在根本冲突，现有工作未解决在单 TA + LHH 验证链路下引入异步性的问题。
+完全异步与"逐轮在线验证"的密码学闭环难以直接兼容（验证粒度需与掩码聚合粒度一致），现有工作未给出在单 TA + LHH 验证链路下引入异步性的方案。
 
 ## 1.3 本文主要贡献
 
@@ -91,12 +98,12 @@ Research Point 2 extends this cryptographic closure with intra-group stale reuse
 
 **研究点一（HVSA）：**
 - 1-a 单 TA 分层可验证安全聚合架构：单 TA 即可支持掩码分发与聚合掩码计算，无需多 TA/门限 TA。
-- 1-b 在单 TA 约束下首次将 LHH + Ed25519 验证外包到边缘：验证式 `H(W_sum^raw)·H(M_global)=∏_k H_k`，验证通信与模型维度无关。
+- 1-b 在单 TA 约束下将 LHH + Ed25519 验证外包到边缘：验证式 `H(W_sum^raw)·H(M_global)=∏_k H_k`，验证通信与模型维度无关（新颖性表述以检索日志为前提，见 1.2 与第 2 章）。
 - 1-c 验证外包到边缘：客户端零验证开销，验证由 ES 承担。
 
 **研究点二（检查点半异步扩展）：**
-- 2-a 在单 TA + LHH 验证链路下首次引入 checkpoint 级组级半异步：借鉴 FedBuff 缓冲思想提升至组包粒度，将跨组同步 barrier 扩展为 buffer+checkpoint 半异步。
-- 2-b 安全聚合兼容的组内 stale reuse：复用客户端掉线未上传结果，权重 `ρ_i=ρ_max·e^{−β_c·E_i}` 随陈旧度衰减（修正 MAFSA 方向），掩码前本地混合，不破坏验证链路。
+- 2-a 在单 TA + LHH 验证链路下引入 checkpoint 级组级半异步：借鉴 FedBuff 缓冲思想提升至组包粒度，将跨组同步 barrier 扩展为 buffer+checkpoint 半异步；安全聚合兼容的组内 stale reuse（掩码前本地混合，修正 MAFSA 权重方向）作为其客户端级组件保留，不单列创新点（新颖性表述以检索日志为前提）。
+- 2-b 策略绑定的可验证加权聚合：checkpoint 场景下面向公开确定性聚合策略（V-PDA 逆参与权重、σ 陈旧度权重）的策略绑定、边缘独立复算与加权 LHH 验证——恶意云端不能自行选择权重或补偿策略参数，一切可采纳权重来源均须可由 ES 依据共识量独立复算。
 - 2-c 面向 mixed-version 组包的公开确定性后置补偿（Direct-VCM）与 checkpoint 验证：`C_k=S_k·γ_vcm·(W(t)−W(t_k))`，ES 基于已验证 raw sum 本地重构最终模型。
 
 ## 1.4 论文结构安排
@@ -167,7 +174,7 @@ VerifyNet、VeriFL、VLMRS、GPVO-FL 等通过同态哈希/签名/承诺实现�
 
 ## 3.1 引言
 
-本章针对研究点一问题——如何在单 TA 约束下既保护客户端参数隐私、又让边缘方能高效验证云端聚合结果、且验证开销不随模型维度膨胀——提出 HVSA 协议。设计目标为：客户端参数隐私、边缘可验证云端聚合、验证开销与维度无关、客户端零验证负担。
+本章针对研究点一问题——如何在单 TA 约束下既保护客户端参数隐私、又让边缘方能高效验证云端聚合结果、且验证通信开销不随模型维度膨胀——提出 HVSA 协议。设计目标为：客户端参数隐私、边缘可验证云端聚合、验证**通信**开销与维度无关（LHH 计算本身仍为 O(d)，定长的是验证所传输的哈希）、客户端零验证负担。
 
 ## 3.2 系统模型与威胁模型
 
@@ -390,6 +397,8 @@ Dropout 处理不需要单独的密码学步骤，只需 ES→TA 的在线列表
 | Cloud | O(Md) | O(Md) |
 | 验证(ES) | O(d) 哈希 + O(1) 通信 | O(1) |
 
+注意口径：**与维度无关的只是验证通信量**（LHH 输出为定长 ~32B 哈希）；ES 侧的 LHH 计算本身仍是 O(d)（对 `W_sum^raw` 逐维哈希）。本文所有"验证开销与维度无关"的表述均指验证通信开销，不得写成"验证计算开销与维度无关"。
+
 ## 3.4 安全分析
 
 本章给出 HVSA 在第 3.2 节威胁模型下的三条核心定理：隐私性（Theorem 3.1）、验证可靠性（Theorem 3.2）与掉线鲁棒性（Theorem 3.3）。所有定理均以"安全参数 λ、可忽略函数 negl(λ)、概率多项式时间（PPT）敌手"的标准密码学框架表述；归约目标为本协议直接调用的原语（PRG、LHH、Ed25519、KA）。设掩码域宽度 `R = MASK_HIGH − MASK_LOW ≈ 2·10^9`，模 2^64 整数算术。
@@ -496,8 +505,9 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 
 | 项目 | 配置 |
 |------|------|
-| 硬件 | ___ |
-| 数据集 | MNIST、CIFAR-10 |
+| 硬件 | AMD Ryzen 7 7745HX (8 核/16 线程) + 31.2 GB RAM + NVIDIA GeForce RTX 4070 Laptop GPU (8 GB, compute capability 8.9) |
+| 软件环境 | Windows 10.0.26100 / Python 3.9.15 / PyTorch 2.7.0+cu118 / CUDA 11.8 / cuDNN 9.1.0 / torch 线程数 8 |
+| 数据集 | MNIST、FashionMNIST、CIFAR-10 |
 | 模型 | MLP、CNN |
 | 聚合 | FedAvg-form |
 | 层级 | 1 Cloud + M Edge + N Users |
@@ -546,7 +556,7 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 
 ## 3.6 本章小结
 
-本章提出 HVSA——单 TA 分层可验证安全聚合协议。协议通过 PRG 掩码保护客户端参数隐私（Theorem 3.1），通过 LHH 同态哈希与 Ed25519 签名让 ES 以定长通信开销验证云端聚合结果（Theorem 3.2），并通过"在线集合驱动的掩码求和"实现对客户端掉线的自然鲁棒性（Theorem 3.3）。实验框架覆盖 IID/Non-IID 收敛、DLG 防御、参数分布一致性、开销对比与验证开销维度无关性五个方面。HVSA 的同步聚合语义留下"全组同步 barrier"与"掉线训练浪费"两个工程问题，下一章将以检查点式组级半异步扩展解决。
+本章提出 HVSA——单 TA 分层可验证安全聚合协议。协议通过 PRG 掩码保护客户端参数隐私（Theorem 3.1），通过 LHH 同态哈希与 Ed25519 签名让 ES 以定长**通信**开销验证云端聚合结果（Theorem 3.2；LHH 计算仍为 O(d)），并通过"在线集合驱动的掩码求和"实现对客户端掉线的自然鲁棒性（Theorem 3.3）。实验框架覆盖 IID/Non-IID 收敛、DLG 防御、参数分布一致性、开销对比与验证通信开销维度无关性五个方面。HVSA 的同步聚合语义留下"全组同步 barrier"与"掉线训练浪费"两个工程问题，下一章将以检查点式组级半异步扩展解决。
 
 ---
 
@@ -554,27 +564,31 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 
 ## 4.1 引言
 
-第 3.4.4 节指出 HVSA 的同步语义留下三个工程问题：
+本章的主问题定义为三点：**跨组同步等待、mixed-version 偏差、恶意 Cloud 下的聚合策略完整性**。第 3.4.4 节指出 HVSA 的同步语义留下的工程现象可归并为：
 
-1. **(i) 全组同步 barrier**——所有 ES 必须在 Phase 4c 前到齐，墙钟时间受最慢 ES 制约；
-2. **(ii) 掉线训练浪费**——客户端完成 Phase 2 训练但未赶上封组的更新被直接丢弃（Theorem 3.3 仅保证协议正确，不回收训练算力）；
-3. **(iii) 逐轮在线验证难以推广到完全异步**——每次全局下发都需 TA 在线求 `M_global`，与"来一个更新一个"的纯异步模式冲突。
+1. **(i) 跨组同步等待**——全组同步 barrier 要求所有 ES 在 Phase 4c 前到齐，墙钟时间受最慢组制约；
+2. **(ii) mixed-version 偏差**——半异步下同一 checkpoint 的选中组包基于不同基版本 `W(t_k)`（`t_k<t`），直接平均引入版本失配偏差；
+3. **(iii) 恶意 Cloud 下的聚合策略完整性**——一旦聚合从等权扩展到加权（V-PDA/σ）并引入补偿，权重与补偿策略若可由 Cloud 声明，恶意 Cloud 即可自行选择权重、重分配各组贡献，且不受密码学检测（见下）。
 
-一个直接的思路是引入完全异步（FedBuff/MAFSA/DVAFL 式），但问题 (iii) 表明该路线与单 TA + LHH 的逐轮验证闭环**根本冲突**：验证粒度必须与掩码聚合粒度一致，完全异步下不存在可验证的"聚合结果"。换言之，不能把现有异步方案直接搬进本架构，必须先回答"异步边界放哪里验证链路才不破"。
+此外，客户端完成训练但未赶上封组的更新被直接丢弃（掉线训练浪费，3.4.4 (ii)）作为附带现象处理：由安全聚合兼容的组内 stale reuse 组件以掩码前本地混合的方式回收（4.3.3），其收益边界如实呈现（4.5.4、附录 A.3.3），不承担本章主目标。逐轮在线验证与完全异步的兼容性问题（3.4.4 (iii)）则是架构选择的出发点：验证粒度需与掩码聚合粒度一致，因此本文不采用"来一个更新一个"的完全异步，而是主动收缩异步边界（见下）。
 
-**核心论点：主动把异步边界收缩到 checkpoint 级。** 组内仍同步封组，组间用 buffer+checkpoint 半异步；Cloud 保存组级掩码包而非明文，验证粒度收缩到 checkpoint 选中集合。这一洞见同时给出三个问题的解：
+**核心论点：主动把异步边界收缩到 checkpoint 级。** 组内仍同步封组，组间用 buffer+checkpoint 半异步；Cloud 保存组级掩码包而非明文，验证粒度收缩到 checkpoint 选中集合。这一架构决策给出三个主问题的解：
 
-- **问题 (i) → buffer+checkpoint 半异步（创新点 1）**：跨组同步 barrier 扩展为"组包缓冲 + checkpoint 触发"，验证粒度收缩到 checkpoint 选中集合。
-- **问题 (ii) → 组内 stale reuse（创新点 2）**：复用掉线客户端未上传的训练结果；为不破坏单 TA 掩码链路，混合必须在掩码前由客户端本地完成（4.3.3）。
-- **问题 (iii) → checkpoint 级验证粒度**：验证对象从"单轮全局和"变为"checkpoint 选中集合的 raw sum"，TA 在线求掩码的频率从"逐更新"降到"每 checkpoint 一次"（4.3.5 按选中集合 `Q(t)` 释放 `M_Q`），仍保持 LHH 定长验证。
+- **问题 (i) → buffer+checkpoint 半异步（创新点 1）**：跨组同步 barrier 扩展为"组包缓冲 + checkpoint 触发"，TA 在线求掩码的频率从"逐更新"降到"每 checkpoint 一次"（4.3.5 按选中集合 `Q(t)` 释放 `M_Q`），仍保持 LHH 定长验证。
+- **问题 (ii) → Direct-VCM 组级后置补偿（创新点 3，支撑机制 B）**：mixed-version 组包在解掩码后以公开确定性方式补偿 `C_k=S_k·γ_vcm·(W(t)−W(t_k))`，ES 基于已验证 raw sum 本地重构最终模型（4.3.7）。
+- **问题 (iii) → 策略绑定的可验证加权聚合（创新点 2，支撑机制 A）**：整数加权 LHH `∏_k H_k^{w_k}` 本身只是线性同态的直接推广，且 LHH 等式对任意整数权重都成立——权重的正确性不能靠 LHH 保证，只能靠"公开确定性策略规则 + 来源声明绑定 + ES/TA 独立复算"保证：**恶意云端不能自行选择权重**（4.3.10）。
 
-异步边界收缩本身引入一个新后果：选中集合中组包基于不同基版本 `W(t_k)`（mixed-version），需要 **Direct-VCM 组级后置补偿（创新点 3）** 在解掩码后以公开确定性方式修正，并维持 checkpoint 级验证。因此三个机制不是并列拼装，而是同一架构决策（checkpoint 级异步边界）依次引发的三个必要组件（见附录 A 的组织逻辑）。
+三个创新点不是并列拼装，而是同一架构决策（checkpoint 级异步边界）依次引发的必要组件：半异步产生 mixed-version，mixed-version 需要补偿，加权与补偿则要求策略绑定（见附录 A 的组织逻辑）。
 
 本章创新点（措辞定稿）：
 
-- **创新点 1**：单 TA 可验证安全聚合下的检查点式组级半异步扩展。
-- **创新点 2**：安全聚合兼容的组内 stale reuse 机制（修正 MAFSA 方向）。
-- **创新点 3**：面向 mixed-version 组包的公开确定性后置补偿与 checkpoint 验证机制。
+- **创新点 1（核心贡献）**：单 TA 与 LHH 验证约束下的 checkpoint 组级半异步安全聚合协议。
+- **创新点 2（支撑机制 A）**：策略来源绑定、TA/ES 独立复算与 fail-closed 验证——面向公开确定性聚合策略（V-PDA/σ），恶意云端不能自行选择聚合权重或补偿策略参数（α/γ/mode），一切可采纳权重类均须可由边缘依据共识量独立复算（4.3.10）。
+- **创新点 3（支撑机制 B）**：面向 mixed-version 组包的公开确定性后置补偿（Direct-VCM）与 checkpoint 验证机制。
+
+固定 σ 与 Aσ 仅作为可选策略实例和消融呈现，不列为独立创新；stale reuse 只保留为负结果与特殊场景边界（附录 A.3.3、A.5）。
+
+> 措辞纪律：创新点 2 的新颖性**不在**"整数加权 LHH 能乘权重"（`∏ H_k^{w_k}` 是线性同态的直接推广，不足以立住）；可立住的表述是策略绑定三元组（策略绑定、边缘独立复算、可验证加权聚合）。新颖性声明一律以检索日志与全文比较为前提（1.2、第 2 章综述），未经支持不写"首次"。
 
 ## 4.2 系统模型扩展与威胁模型
 
@@ -587,8 +601,9 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 继承 3.2.2 全部假设，并扩展：
 
 - **Malicious Cloud（点 2 适用）**：可篡改聚合结果、丢弃或重放组包。防 Cloud 篡改 checkpoint **选中**的聚合结果（`W_sum^raw`）。
+- **策略声明不可信（点 2 适用）**：Cloud 不得自行选择聚合权重或补偿策略参数。checkpoint 中的一切加权量（V-PDA 逆参与权重、σ 陈旧度整数权重）与补偿策略参数（衰减系数 `α_k`、Aσ 的 `σ*` 档位、`γ_vcm`、`vcm_mode`、momentum）要么由 ES 依据共识量与本地协议配置独立复算比对，要么声明值与配置不符即拒绝（4.3.10）。ES 的全部策略配置由 TA/本地管理员在初始化时预置并本地持有，不由 Cloud 下发。特别是 Cloud 不得把伪造权重改标为其他权重来源以绕过复算，也不得把预定的权重来源降级为等权（`none`）或在合法来源间择优——权重来源本身由 ES 本地协议配置唯一确定（4.3.10 来源绑定），每个可采纳权重来源都必须有一条 ES 可复算的公开规则；凡配置要求衰减而度量不可复算或所需共识历史/α 被省略，一律 fail-closed 拒绝。
 - **安全目标与显式出界（点 2）**：主协议只提供 checkpoint 选中聚合结果的完整性检测；检测到攻击或不一致即丢弃本次 checkpoint，不推进全局版本。它不保证恶意 Cloud 下的训练可用性，也不提供 anti-censorship 保证；manifest 漏选、候选组包静默丢弃和调度审查均不属于主协议安全目标。全局模型由 ES 基于已验证结果本地确定性重构并作为共识量维护，不把 Cloud 分发的模型作为规范结果。
-- **exactly-once 语义声明**：每个组包携带唯一且被 ES 签名绑定的 `package_token`。TA 维护规范的、仅追加的 `Aggregated_IDs` 共识状态，Cloud 可持镜像但无权改写规范状态；已提交 token 再次入队或入选时拒绝。完整 ACK/缓存并发属于实现层，不作数学前提。
+- **至多一次纳入（重放防护）声明**：每个组包携带唯一且被 ES 签名绑定的 `package_token`，ES 封包后即向 TA 注册该 token。TA 以仅追加的持久化 ledger（SQLite 主键约束）为**唯一权威状态**，记录 token 注册、token 消费与 checkpoint 版本；Cloud 仅持非权威缓存，可重启或被篡改而不影响权威状态。checkpoint 提交需经权威授权流（prepare/finalize 两阶段）：全部 ES 对候选投票（签名 vote，绑定 `result_digest` = 已验证的 raw sum/M_Q/final model 摘要）→ TA 验票、核验 token 已注册且未消费、核验调度约束与版本连续性 → 签发 `CheckpointReceipt`（**此时不写 ledger**）→ Cloud 凭有效 receipt 提交 → 提交成功后 TA 才原子落地 ledger（版本 + token 消费）；ES 见有效 receipt、结果摘要一致且 ledger 已确认才推进版本与策略状态（4.3.9）。本协议提供的是基于唯一 token、TA 权威 ledger 与 receipt 授权的**重放防护（至多一次纳入）**，不声称完整分布式 exactly-once——完整 ACK 与原子提交留作展望（5.2）；ACK/缓存并发属于实现层，不作数学前提。
 - **单 TA 信任假设**：同 3.2.2，TA 完全可信且永不参与任何合谋。
 
 ## 4.3 协议设计
@@ -649,7 +664,9 @@ Cloud 维护组包缓冲区 `B`，每组至多一个在途包。过期判据 `s_
 - 常规：`|B_legal|≥K` 时按到达顺序选最早 `K` 个。
 - 超时：最早合法组包等待达 `Δ_timeout` 且 `1≤|B_legal|<K` 时，对全部合法组包保守 checkpoint。
 
-发布 `checkpoint_manifest(t)`（含 mode、|Q|、各组包元数据）及公开摘要 `h_manifest`，先广播给 TA 与 ES。
+发布 `checkpoint_manifest(t)`（含 mode、|Q|、各组包元数据、**协议配置摘要 `policy_config_digest`** 与规范 checkpoint 版本）及公开摘要 `h_manifest`，先广播给 TA 与 ES。
+
+`policy_config_digest` 是版本化 `ProtocolConfig`（绑定 `K`、`s_max`、权重来源、σ 策略及参数、`γ_vcm` 与 VCM mode、momentum、V-PDA 参数、配置版本号）规范 JSON 序列化的 SHA-256。配置在系统初始化时由 TA/本地管理员预置并同步持有于 TA 与全部 ES，不由 Cloud 下发；ES 校验 manifest 声明的摘要与其本地配置一致（缺失或错配即拒绝，fail-closed），使"云端另选策略"在配置层面即被排除（4.3.10）；TA 同样依据该配置与本地参与历史独立复算权重，云端声明值只作审计。
 
 可选调度增强（消融项，不改密码链路）：adaptive s_max、公平保底（`D_fair`）、选择策略（FIFO/Fresh-first/Fairness-aware）。
 
@@ -744,9 +761,9 @@ ReconstructW(t+1, accepted, W_sum^raw, public_state):
 
 `public_state` 中所有量均为公开共识量：`W(t)`、`W(t_k)` 为历史全局模型（ES 持有），`S_k(t_k)` 在组包元数据中（已通过 manifest 一致性），`γ_vcm` 为协议超参。因此**补偿项 `C_k` 完全由公开量确定**，Cloud 无法注入一个独立的恶意补偿值；ES 本地派生的 `W(t+1)` 是规范结果，Cloud 广播的模型仅作参考。若系统同时接收 Cloud 广播结果，可将其与 ES 本地派生结果做确定性一致性检查，但该检查不构成新的 LHH 验证对象。
 
-### 4.3.9 状态转移与 exactly-once
+### 4.3.9 状态转移与重放防护（至多一次纳入）
 
-被选中组包移出 buffer、对应组获 `W(t+1)` 并开始下一轮；未选中组包继续等待或过期。客户端级/组级状态分界清晰，不反向生成 stale 候选；唯一 ID + 拒绝重放保证 exactly-once。
+被选中组包移出 buffer、对应组获 `W(t+1)` 并开始下一轮；未选中组包继续等待或过期。客户端级/组级状态分界清晰，不反向生成 stale 候选；唯一 ID + 拒绝重放提供"至多一次纳入"的重放防护。
 
 #### 唯一 ID 生成规则
 
@@ -761,15 +778,66 @@ package_token = f"{edge_id}:{base_version}:{nonce}"
 
 `package_token` 作为组包元数据的一部分写入 manifest 与 buffer 索引。`base_version` 嵌入 ID 保证"基于同一全局模型版本的同组重复封组"不会被误认为重放；`nonce` 保证同一 ES 在同一 `base_version` 下的多次封组可区分。
 
-#### TA 维护的已聚合组包 ID 共识集合与去重逻辑
+#### TA 权威 ledger 与授权流（token 注册 → vote → receipt → 提交 → 推进）
 
-TA 维护规范的、持久化且仅追加的已聚合组包 ID 集合 `Aggregated_IDs`；Cloud 可维护只读镜像以加速筛选。每次 checkpoint 验证并提交后，由 TA 将本轮选中组包的 `package_token` 追加到规范集合。组包入 buffer 与 checkpoint 选中时均依据该共识状态做去重检查：
+重放防护的权威状态完全置于 TA：TA 以仅追加的持久化 ledger（SQLite `PRIMARY KEY`/`UNIQUE` 约束）记录四类事实——(i) `registered_tokens`（ES 封包时注册的合法 token）、(ii) `consumed_tokens`（已随终结 checkpoint 消费的 token）、(iii) `checkpoints`（`version` 主键 + `receipt_id` 唯一）、(iv) `prepared_checkpoints`（prepare 阶段原子保存的完整 receipt 字节 + token 元数据 + `result_digest`，按版本唯一）。Cloud 的 buffer/`aggregated_ids` 只是非权威缓存：重启、清空或篡改均不影响权威状态，也不能使任何 token 被二次消费。
+
+授权分 **prepare / finalize 两阶段**，并叠加以 stage 为起点的提交事务（P0 修复）：
 
 ```text
-CheckExactlyOnce(Π_k, buffer_phase, Aggregated_IDs):
+PrepareCheckpoint(Q, {vote_e}, v, trigger_mode, config) -> receipt | REJECT
+  // 1. vote 完整性: 覆盖全部 ES、验签、passed、
+  //    v / token_digest / config_digest / result_digest 一致
+  // 2. 调度约束: normal ⇒ |Q| = K; timeout ⇒ 1 ≤ |Q| < K;
+  //    ∀Π_k ∈ Q: 0 ≤ v − t_k ≤ s_max
+  // 3. token 状态: 全部已注册 (ES 封包登记) 且未被消费 (ledger 权威)
+  // 4. 版本连续性: v == ledger 下一个未用版本号
+  // 5. 返回 receipt = SIG_TA(receipt_id, v, token_digest,
+  //                           tokens, trigger_mode, result_digest),
+  //    并原子写入持久化 prepared_checkpoints: 完整 receipt 字节 +
+  //    token 元数据 (token→edge_id/base_version) + result_digest
+  //    —— prepare 仍不消费 token、不推进版本
+
+FinalizeCheckpoint(receipt) -> committed | already | REJECT  // Cloud 提交成功后调用
+  // 1. 校验 receipt 的 TA 签名 —— 伪造 receipt 直接拒绝
+  // 2. 核对同 receipt_id 的 prepare 记录, 摘要逐字节一致
+  //    —— 未经 prepare 签发 / 内容被改的 receipt 无法落地
+  // 3. 幂等: 该记录已 finalize ⇒ 返回 already (重放不重复消费)
+  // 4. 原子事务: 写 checkpoints(v, receipt_id, token_digest) +
+  //    consumed_tokens(全部 token, 带真实 edge_id/base_version) +
+  //    标记 prepare 记录 finalized; 任一约束冲突 ⇒ 整体回滚
+```
+
+提交事务 **stage → TA finalize → publish → notify**（`commit_tx.run_commit_transaction`）：stage 只做只读校验（receipt 签名/版本/token/结果摘要、buffer 原包仍在）并把"提交成功要应用的变更"写入持久化 journal，**不触碰 Cloud 权威状态**；TA finalize 成功（ledger 落地）后才 publish（消费 buffer、版本 +1、写模型历史）并 notify（TA 与各 ES 幂等推进共识状态）。TA finalize 被协议拒绝时丢弃 stage，Cloud/TA/ES 三者均停在原版本 —— 旧实现"Cloud 已本地提交而 TA 未落地"的分叉不再出现；finalize/publish/notify 三阶段幂等，进程内异常可在 journal 上重放收敛。
+
+**结果摘要绑定 `result_digest`**（P0-1）：`result_digest = H(v, token_digest, raw sum, M_Q, final model)`。ES 在投票时把"自己实际验证过的聚合结果"钉进 vote；TA 要求全部 vote 的 `result_digest` 一致并写入 receipt；Cloud 提交时按提交内容重算并与 receipt 比对（不一致即拒绝）；ES 收到 commit 通知时同样要求 receipt 的 `result_digest` 等于本地已验证候选的摘要、通知模型与已验证模型一致，且 receipt 已在 ledger 落地（`confirm_receipt`，核对**完整 receipt**：签名 + prepare 记录 + 已 finalize，而非只查 `receipt_id`）才推进。因此**取得诚实 receipt 后再替换 `raw sum`/`final model` 会在 commit 层与 ES 侧双重被拒**。
+
+两阶段语义带来三条明确结论：(a) **提交失败（commit 守卫拒绝、finalize 核对失败、异常中断）不推进任何权威状态** —— token 未被消费、版本未推进，可安全重选重试，不存在"更新被授权但未聚合"的悬空消费；(b) **至多一次消费且可安全重放** —— 同一 receipt 重复 finalize 幂等返回 `already`；对同一版本提交两份不同 receipt 则因与 prepare 记录摘要不符被确定性拒绝；同版本换候选时新 prepare 替换记录、旧 receipt 随之作废；(c) **提交事务可恢复** —— stage journal 与三阶段幂等使"finalize 成功但 publish/notify 未完成"（含"仅通知部分 ES 后崩溃"的 Cloud v+1 / ES v 分叉）可在进程内重放收敛。需要说明的是跨进程恢复还要求 ES/TA 共识状态持久化（本实现的 ES 状态是内存态），故进程重启后遗留 journal 一律 fail-closed 丢弃；完整跨节点 ACK/原子提交仍在出界范围（5.2）。
+
+ES 收到 commit 通知时**只有 receipt 验签通过、版本严格等于本地已提交版本 +1、结果摘要与本地已验证候选一致、且 receipt 已在 TA ledger 落地**，才推进参与计数、版本历史与 Aσ 策略状态——重放通知、跳版本通知与结果调包均被拒绝；通知版本 ≤ 本地已提交版本时幂等跳过（崩溃恢复重发通知不重复计数）。
+
+#### 唯一 ID 生成规则
+
+每个组包 `Π_k(t_k)` 在入 buffer 时由 ES 分配全局唯一的 `package_token`：
+
+```text
+package_token = f"{edge_id}:{base_version}:{nonce}"
+// edge_id      = ES 的全局唯一标识（PKI 注册）
+// base_version = h_base(t_k)，本组本轮训练所基于的全局模型版本摘要
+// nonce        = ES 维护的单调递增计数器，每次封组 +1（持久化）
+```
+
+`package_token` 作为组包元数据的一部分写入 manifest 与 buffer 索引，并在封包时经 `register_token` 登记入 TA ledger。`base_version` 嵌入 ID 保证"基于同一全局模型版本的同组重复封组"不会被误认为重放；`nonce` 保证同一 ES 在同一 `base_version` 下的多次封组可区分。
+
+#### Cloud 侧非权威缓存与去重逻辑
+
+Cloud 维护只读镜像 `aggregated_ids` 以加速筛选（非权威，可重启重建）。组包入 buffer 与 checkpoint 选中时做本地去重检查：
+
+```text
+CheckExactlyOnce(Π_k, buffer_phase, aggregated_ids):
   // buffer_phase ∈ {"on_enqueue", "on_select"}
-  if Π_k.package_token ∈ Aggregated_IDs:
-    return REJECT_REPLAY                            // 已聚合过，拒绝重放
+  if Π_k.package_token ∈ aggregated_ids:
+    return REJECT_REPLAY                            // 本地缓存命中，快速拒绝
   if buffer_phase == "on_enqueue":
     // 同 (edge_id, base_version) 在 buffer 中不应已存在
     // （ES 单组在途规则，4.3.6）
@@ -779,25 +847,63 @@ CheckExactlyOnce(Π_k, buffer_phase, Aggregated_IDs):
   return ACCEPT
 ```
 
-#### Checkpoint 完成后的状态转移
+该本地检查只作快速路径；**权威拒绝由 TA ledger 在授权时给出**（缓存被清空或篡改不构成绕过）。
+
+### 4.3.10 策略绑定的可验证加权聚合
+
+第 3 章主协议是等权聚合；研究点 2 的实验主线需要两类非等权扩展：**V-PDA 逆参与权重**（对高参与组降权，缓解参与偏差）与 **σ 陈旧度权重**（对陈旧组包降权或衰减其补偿项）。本节给出把这两类权重纳入验证链路的协议语义，其核心不是"整数加权 LHH 能乘权重"——`∏_k H_k^{w_k}` 只是线性同态的直接推广——而是**恶意云端不能自行选择权重**。
+
+#### 掩码域整数化与加权验证等式
+
+EC 群标量乘只支持整数标量，故浮点权重须整数化后进入掩码域（共用实现，云端与 ES 同一函数）：
 
 ```text
-FinalizeCheckpoint(accepted, B, Aggregated_IDs, group_state):
-  // —— 选中组包 ——
-  for each Π_k ∈ accepted:
-    B.remove(Π_k)
-    Aggregated_IDs.add(Π_k.package_token)
-    group_state[k].W_current ← W(t+1)               // 该组进入下一轮
-    group_state[k].stale_candidate ← null            // 清除 stale 候选
-  // —— 未选中组包 ——
-  for each Π_k ∈ B \ accepted:
-    if t − t_k > s_max:
-      B.remove(Π_k)                                 // 过期丢弃
-    else:
-      keep Π_k in B                                 // 继续等待下一 checkpoint
+w_k = round(α_k · 2^16)                     (整数化, w_k > 0)
+M_Q^w  = Σ_{Π_k∈Q} w_k · M_k                (TA 按声明权重构造加权掩码和)
+W̄_Q^w = Σ_{Π_k∈Q} w_k · W̄_k                (云端加权聚合)
+W_sum^raw = W̄_Q^w − M_Q^w = Σ w_k·(样本量加权和)_k
 ```
 
-`exactly-once` 由三重保证：(a) `package_token` 唯一性及其签名绑定防止合法组包被改名；(b) TA 维护的 `Aggregated_IDs` 仅追加共识状态防止跨 checkpoint 重放；(c) ES 单组在途规则 + `nonce` 单调性防止 ES 在同一 `base_version` 下重复封组。上述机制保证 stale reuse 不破坏组级 exactly-once 语义。
+LHH 同态验证等式相应变为：
+
+```text
+H(W_sum^raw) · H(M_Q^w) = ∏_{Π_k∈Q} H_k^{w_k}
+```
+
+**关键观察：该等式对任意正整数权重 `{w_k}` 都成立**（对每个 k，`H(w_k·W̄_k) = H_k^{w_k}` 由线性同态直接给出）。因此 LHH 等式约束的是"raw sum 与声明权重的掩码算术一致"，**不约束权重本身的取值**。若权重可由 Cloud 自由声明，Cloud 即可任意重分配各组贡献——这不是密码学可检测的攻击，必须由策略层消除。
+
+#### 权重来源与 ES 独立复算
+
+协议要求每个 checkpoint 声明 `weight_source ∈ {none, vpda, staleness}`，且**每个可采纳来源都必须对应一条 ES 可独立复算的公开确定性规则**：
+
+| 来源 | 公开规则（ES 复算输入） | 输入可信性 |
+|------|------------------------|-----------|
+| `none` | 等权 `w_k=1` | — |
+| `vpda` | `w_k = round(2^16·clip((mean_j(A_j+1)/(A_k+1))^κ, w_min, w_max))`，均值在全部组上取 | 参与历史 `A_k` 由各 ES 从每个成功提交的 checkpoint 选中集合独立累计（commit 通知驱动），Cloud 无法伪造 |
+| `staleness` | `α_k` 由陈旧度度量与协议超参 `σ` 决定：`version` 度量 `α_k=(v−r_k+1)^{−σ}`；`rel2` 度量 `α_k=exp(−σ·‖W(v)−W(r_k)‖/‖W(v)−W(0)‖)` | `v` 与 `r_k` 为共识版本（`r_k` 由组包签名绑定，`v` 由 ES 本地已提交版本计数绑定），历史模型为共识值 |
+
+`wait` 度量（按云端缓冲等待时间衰减）依赖 Cloud 的调度状态，**不存在 ES 可复算的公开规则**，故不可作为策略绑定的权重来源；开启验证时一律拒绝（fail-closed）。
+
+**来源绑定**：采用哪个权重来源不是云端可选项——它由协议配置（`participation_debias`、`sigma_target`、`σ`）唯一确定，并以 `expected_weight_source` 形式在 ES 本地持有（与云端同源接线）。ES 验证时**首先**核对 `declared_source == expected_source`，不符即拒绝；来源核对通过后，按该唯一规则独立复算 `{w_k}` 并与声明值逐项比对，同时按同一公开规则复算补偿系数 `{α_k}`（固定 `σ` 或 Aσ 的 `σ*` 档位）并与声明值比对。**策略配置的预置方**：ES 的全部策略配置（权重来源、σ 及其度量、γ/mode/momentum、Aσ 对齐阈值）在系统初始化阶段由 TA/本地管理员预置并本地持有，不属于任何 Cloud 可下发的协议消息——策略"来自哪"因此是配置问题而非传输问题，其正确性不依赖对云端声明的任何信任。由此：
+
+- **来源降级/择优**（把预定的 `vpda`/`staleness` 降级为 `none` 静默退回等权、或在两条合法规则之间声明更有利的一条）：来源核对第一步即拒绝——这类攻击不伪造任何数值、只改变"本应执行的策略"，仅靠数值复算拦不住，必须由来源绑定关闭；
+- **伪造权重**（任选 `{w_k}`）：与该唯一来源的复算值不匹配 → 拒绝；
+- **改标攻击**（把伪造的 V-PDA 权重声明为 `staleness`，或反之）：来源核对即拒（声明来源 ≠ 期望来源）；数值层面两条规则的复算值也不同，改标不提供任何绕过路径；
+- **策略参数篡改**（`γ_vcm`/`vcm_mode`/momentum/`σ*`）：这些量为 ES 预置的协议配置，声明值与配置不符即拒绝；`α_k` 与 `σ*` 一律由 ES 复算，云端声明值仅用于比对。
+
+**复算失败的 fail-closed 语义**：协议严格区分"合法策略不产生 α"（σ=0 等权补偿）与"策略不可复算"（`wait` 度量含云端调度状态、rel2 所需共识历史缺失）两种情形，二者不共用任何返回值/消息形态。凡 ES 本地配置要求衰减而度量不可复算，或 bundle 缺少补偿所需共识历史（含 `W(v)` 本身——省略该条目等价于静默关闭 VCM 补偿），ES 一律确定性拒绝：云端**省略 α 或历史条目**与伪造它们同样是攻击，不能把衰减策略静默关闭。
+
+#### 版本与历史的绑定
+
+σ 权重与 VCM 补偿都以 checkpoint 版本 `v` 和基版本 `r_k` 为输入，必须钉死：`r_k` 已由组包签名的 `base_hash` 绑定到共识历史；`v` 由 ES 本地维护的已提交版本计数（每次 commit 通知推进）与本地已提交模型历史绑定——bundle 声明的 `checkpoint_version` 必须等于 ES 本地计数，声明的 `W(v)` 必须与本地历史一致，Cloud 谎报版本以配合伪造权重或补偿值即被拒绝。
+
+#### 提交语义与状态落地
+
+ES 在验证阶段对策略量只做**试探性复算与比对**；Aσ 的方向探测状态（EMA/探测计数/档位锁定）仅在 checkpoint 成功提交后由 commit 通知落地。验证失败或未提交的候选不推进任何一侧（云端与 ES）的策略状态，保证双方状态序列一致，不因攻击候选漂移。
+
+#### 安全语义小结
+
+策略绑定不引入新密码学原语，也不改变 Theorem 4.1 的归约对象（`W_sum^raw` 仍由 LHH 等式保护）。它把"权重与补偿策略"从 Cloud 的自由声明空间移入公开确定性规则空间：对可复算来源，伪造/改标成功当且仅当伪造值等于公开规则的复算值（此时二者无差别，不构成攻击），未检测概率为 0；对不可复算来源（`wait`），协议直接拒绝，fail-closed。代码实现见 `edge.py::p2_verify_checkpoint`（复算与比对）、`utils.py`（共享公开规则：`vpda_weights`/`staleness_alpha`/`staleness_int_weights`/`AlignmentSigmaPolicy`）。
 
 ## 4.4 安全分析
 
@@ -927,6 +1033,8 @@ if Π_k.package_token ∈ Aggregated_IDs:
 
 **附注 4.1（compensation tampering）.** `C_k` 由 `Q(t)`、共识维护的历史模型、`S_k` 和公开超参数唯一确定，不是 Cloud 可以自由提交的独立密码学输入。ES 在 `raw sum` 验证通过后本地重算 `W_sum^corr` 与 `W(t+1)`；若同时收到 Cloud 广播结果，可将不一致记录为确定性的重构检查失败。该检查不依赖新的密码原语，也不意味着 `W_sum^corr` 获得独立的 LHH 证明。
 
+**附注 4.2（weight/policy tampering，策略绑定）.** 加权路径（4.3.10）下，LHH 验证等式 `H(W_sum^raw)·H(M_Q^w)=∏_k H_k^{w_k}` 对**任意**正整数权重 `{w_k}` 成立——权重本身不是 LHH 的约束对象。因此"Cloud 伪造权重 / 把伪造权重改标为其他来源 / 篡改补偿策略参数"不由 Theorem 4.1 的归约覆盖，而由 4.3.10 的策略绑定机制覆盖，分两层：**来源绑定**——本 run 的权重来源由 ES 本地协议配置唯一确定（`expected_weight_source`；全部策略配置由 TA/本地管理员预置，不经 Cloud 下发），声明值仅作一致性核对，把预定来源降级为等权 `none` 或在合法来源间择优于来源核对即被确定性拒绝（未检测概率 0，数值无需伪造即可检出）；**数值绑定**——每个可采纳权重来源对应一条 ES 可依据共识量独立复算的公开确定性规则，权重当且仅当等于该规则的复算值才被接受（此时与诚实值无差别）；补偿系数 `α_k` 与 `σ*` 档位同理由公开规则复算比对，且复算失败（不可复算度量、共识历史缺失）与"合法不产生 α"严格区分——云端省略 α 或省略 `W(v)` 等历史条目与伪造它们同样被确定性拒绝，衰减策略不能被静默关闭；`γ_vcm`/`vcm_mode`/momentum 为 ES 预置协议配置，声明不符即拒绝。依赖的前提是 (A6) 版本与历史由共识维护（4.3.10 的版本绑定把 `v`、`W(v)` 钉到 ES 本地已提交状态），以及参与历史 `A_k` 由 ES 从 commit 通知独立累计。`wait` 等不可复算度量不在可采纳来源集合内，开启验证时 fail-closed 拒绝。
+
 ### 4.4.2 隐私保持
 
 研究点二仍只保护客户端个人参数；ES/组级聚合与 CS/checkpoint 聚合允许公开。令
@@ -945,7 +1053,7 @@ N_Q(t) = Σ_{Π_k(t_k)∈Q(t)} n_k(t_k)
 
 ### 4.4.3 收敛性分析
 
-本节只给出与 `MAFSA`/`DVAFL` 分析思路对齐的、针对当前协议的一步偏差刻画，不直接继承两篇参考论文的收敛定理。原因是当前协议同时改变了 stale 权重方向、补偿粒度（客户端级变为组级）、补偿位置（LHH 验证后）和参与集合（checkpoint 选中集合）。因此，本节结论应写成“条件性偏差上界”，而不是完整收敛定理。
+本节只给出与 `MAFSA`/`DVAFL` 分析思路对齐的、针对当前主协议的一步偏差刻画，不直接继承两篇参考论文的收敛定理。原因是主协议改变了补偿粒度（客户端级变为组级）、补偿位置（LHH 验证后）和参与集合（checkpoint 选中集合）；stale reuse 不在主协议主线中（附录 A.3.3），其客户端级偏差项单独移入附录 A.5 作备选机制分析。因此，本节结论应写成“条件性偏差上界”，而不是完整收敛定理。
 
 #### 假设与记号
 
@@ -956,7 +1064,7 @@ N_Q(t) = Σ_{Π_k(t_k)∈Q(t)} n_k(t_k)
 | **(C1) 局部更新映射 Lipschitz** | IID 默认条件下，一步本地更新映射 `T_i(w)` 满足 `‖T_i(w)−T_i(w')‖≤(1+ηL)‖w−w'‖`；例如 `T_i(w)=w−η∇F_i(w)` 且 `∇F_i` 为 `L`-Lipschitz |
 | **(C2) 单步位移有界** | 全局模型经 SGD 型更新，单步位移满足 `‖W(v+1) − W(v)‖ ≤ ηB`，`η` 为学习率，`B` 为有效梯度范数上界 |
 | **(C3) 陈旧上界** | 客户端陈旧度 `E_i = t_k − t_i ≤ E_max`，组级陈旧度 `s_k = t − t_k ≤ s_max` |
-| **(C4) 混合系数有界** | `ρ_i ≤ ρ_max ≤ 0.5`（4.3.3 stale reuse） |
+| **(C4) 混合系数有界**（仅附录 A.5 备选分析使用） | `ρ_i ≤ ρ_max ≤ 0.5`；主协议不含 stale reuse，核心偏差界不使用 (C4) |
 | **(C5) 补偿系数有界** | `γ_vcm` 为协议超参，固定常数 |
 | **(C6) 组样本量有界** | `S_k(t_k)>0`，且 checkpoint 使用真实样本量加权；不需要把 `S_max/S_min` 人为引入偏差界 |
 | **(C7) 随机性耦合** | 比较 stale 与 fresh 本地更新时，采用确定性本地更新，或对两条比较轨迹耦合使用完全相同的随机样本/随机种子；否则需在界中另加 SGD 方差项 |
@@ -965,24 +1073,292 @@ N_Q(t) = Σ_{Π_k(t_k)∈Q(t)} n_k(t_k)
 
 #### 条件性界与推导说明
 
-**条件性界 4.1（单 checkpoint 偏差上界，非完整收敛定理）.** *在 (C1)-(C7) 假设下，并把理想结果定义为“同一 checkpoint 选中客户端、同一真实样本量权重、所有组均从 `W(t)` 出发且不使用 stale/VCM”的 FedAvg-form 结果，则一次 checkpoint 的偏差满足：*
+**条件性界 4.1（单 checkpoint 偏差上界，非完整收敛定理）.** *在 (C1)-(C3)、(C5)-(C7) 假设下，并把理想结果定义为“同一 checkpoint 选中客户端、同一真实样本量权重、所有组均从 `W(t)` 出发、无版本失配”的 FedAvg-form 结果，则一次 checkpoint 的偏差满足：*
 
 ```text
-‖Δ_bias‖ ≤ ρ_max · (1 + ηL) · E_max · ηB
-              + (|1 − γ_vcm| + ηL) · s_max · ηB
+‖Δ_bias‖ ≤ (|1 − γ_vcm| + ηL) · s_max · ηB
 ```
 
-*第一项对应客户端级 stale reuse；第二项对应组级 mixed-version 结果在 Direct-VCM 后的残差。由于实际 checkpoint 是按 `S_k` 做加权平均，分子中的组样本量和会被 `S_Q` 归一化，不应额外留下 `S_max/S_min` 因子。*
+*该项对应组级 mixed-version 结果在 Direct-VCM 后的残差；客户端级 stale reuse 项（`ρ_max·(1+ηL)·E_max·ηB`）仅当 reuse 作为可选组件启用时才出现，见附录 A.5，不进入主协议的核心偏差界。由于实际 checkpoint 是按 `S_k` 做加权平均，分子中的组样本量和会被 `S_Q` 归一化，不应额外留下 `S_max/S_min` 因子。*
 
 在 IID 和一步梯度更新下，`γ_vcm≈1` 时，第二项可由版本位移的一阶项抵消到 `ηL·s_max·ηB` 量级；若要把这种“补偿确实降低偏差”升级为严格结论，还需要额外的线性化/梯度同向性假设。
 
-**说明.** 偏差 `Δ_bias` 由两个来源叠加：客户端级 stale reuse 引入的偏差 `Δ_stale`，与组级 mixed-version 结果在 Direct-VCM 后的残差 `Δ_vcm`。下面给出条件性上界；它用于说明 `ρ_max`、`E_max`、`γ_vcm` 与 `s_max` 如何进入误差控制，不声称已经得到参考论文的完整多步收敛率。
+**说明.** 主协议下偏差 `Δ_bias` 只由组级 mixed-version 结果在 Direct-VCM 后的残差 `Δ_vcm` 构成；客户端级 stale reuse 偏差 `Δ_stale` 不在主线（附录 A.3.3），其推导移入附录 A.5 备选分析。本界用于说明 `γ_vcm` 与 `s_max` 如何进入误差控制，不声称已经得到参考论文的完整多步收敛率。
+
+##### 步骤 (ii)：组级版本失配偏差 `‖Δ_vcm‖` 的界
+
+理想聚合中所有组包基于同一全局模型 `W(t)`（即 `t_k = t`）。本协议中组包 `Π_k(t_k)` 基于 `W(t_k)`，`t_k < t`，需 Direct-VCM 补偿 `C_k = S_k·γ_vcm·(W(t) − W(t_k))`。
+
+对一步更新映射 `T_k(w)=w−η∇F_k(w)`，令 `G_k=W(t)−W(t_k)`。组包结果与从 `W(t)` 出发的理想结果之差，在加入 Direct-VCM 后为：
 
 ```text
-‖Δ_bias‖ ≤ ‖Δ_stale‖ + ‖Δ_vcm‖
+res_k = T_k(W(t_k)) + γ_vcm G_k − T_k(W(t))
 ```
 
-分别界两项。
+由 `T_k(w)=w−η∇F_k(w)` 和 (C1)：
+
+```text
+res_k = (γ_vcm−1)G_k − η(∇F_k(W(t_k))−∇F_k(W(t)))
+‖res_k‖ ≤ (|1−γ_vcm| + ηL)·‖G_k‖
+```
+
+再由 (C2) 与 (C3) `s_k = t − t_k ≤ s_max`：
+
+```text
+‖G_k‖ = ‖W(t) − W(t_k)‖ ≤ s_k·ηB ≤ s_max·ηB
+‖res_k‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
+```
+
+组级残差在 raw sum 中按 `S_k` 累加，归一化后仍由最大组级残差控制：
+
+```text
+Δ_vcm^{norm} = (1/S_Q) · Σ_{Π_k∈Q} S_k · res_k
+‖Δ_vcm^{norm}‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
+```
+
+##### 综合
+
+由步骤 (ii) 的归一化结果，主协议的条件性单 checkpoint 偏差上界为：
+
+```text
+‖Δ_bias‖ ≤ ‖Δ_vcm^{norm}‖ ≤ (|1−γ_vcm|+ηL)·s_max·ηB
+```
+
+该界是本文在 IID/一步更新条件下的条件性单 checkpoint 偏差上界，不是直接来自 `MAFSA` 或 `DVAFL` 的定理；若同时启用 stale reuse 组件，总界再加上附录 A.5 的客户端级项。对 Dirichlet Non-IID，需额外引入局部梯度异质性或 bounded gradient dissimilarity 项；本文将其作为实验验证，不把 IID 上界无条件外推到 Non-IID。
+
+#### σ/Aσ 的策略条件正确性
+
+固定 σ 与 Aσ 是聚合策略的可选实例（4.3.10），对其偏差刻画采用**策略条件**口径：
+
+- **比较对象**：与 σ/Aσ 同归一化权重的当前版本理想聚合 `W_ref = Σ_k ŵ_k·T_k(W(t)) / Σ_k ŵ_k`（`ŵ_k` 为协议归一化权重，`T_k` 为一步更新映射）。在该口径下，σ 衰减与 Aσ 档位选择只经由 Direct-VCM 残差项（条件性界 4.1）影响偏差，不引入新的无偏性破坏；σ 的实际收益（方差稳定化）由 4.5 对照实验验证。
+- **与标准 FedAvg 比较**：若改以等权 FedAvg-form 为比较对象，需在界中额外加入权重分布偏移项 `‖Δ_weight‖ = O(‖ŵ − s_k/S_Q‖_1 · max_k ‖T_k(W(t)) − W(t)‖)`，即陈旧度降权相对等权的贡献重分配误差；本文不把该口径与条件性界 4.1 混用。
+- **Aσ**：仅在给定已提交策略状态（`σ*` 已按 4.3.10 公开规则锁定）的条件下分析——锁定后 Aσ 等价于固定 `σ*` 的策略实例，偏差界与固定 σ 情形相同；探测期采用保守 `σ=σ_fallback` 同理。本文不宣称 Aσ 的完整收敛率，其档位决策本身的可验证性由 4.3.10 覆盖。
+
+#### 条件性多 checkpoint 误差传播
+
+单 checkpoint 偏差不能在没有更新映射稳定性假设时直接线性相加。令 `e_t=‖W(t)−W^*(t)‖`，若理想 checkpoint 更新映射对输入模型是 `L_T`-Lipschitz，且第 `t` 次 checkpoint 由 mixed-version/VCM 引入的局部扰动为 `ε_t`（启用 reuse 组件时另含附录 A.5 的客户端级项），则
+
+```text
+e_{t+1} ≤ L_T·e_t + ε_t,
+e_T ≤ L_T^T·e_0 + Σ_{j=0}^{T−1} L_T^{T−1−j}·ε_j.
+```
+
+只有在额外满足非扩张条件 `L_T≤1`、初始误差 `e_0=0` 且各步 `ε_j≤ε` 时，才能进一步得到 `e_T≤Tε`；若 `L_T>1`，误差可能被放大，不能宣称无条件线性累积。条件性界 4.1 与上述递推均未覆盖：
+- non-IID 下的客户端漂移（需更强假设如 bounded gradient dissimilarity）；
+- SGD 噪声的方差（需有界方差假设 `E[‖∇F − ∇f_i‖²] ≤ σ²`）；
+- `ρ_i` 与数据分布的耦合（stale reuse 偏向数据稳定的客户端）。
+
+完整收敛率（如 `O(1/√T)` 邻域收敛）需在当前协议上重新建立，并补充有界方差、独立鞅差、局部梯度异质性与 checkpoint 选择过程的假设，不能直接引用 `MAFSA` 或 `DVAFL` 的收敛率。这里的结论只说明 `γ_vcm` 与 `s_max`（启用 reuse 组件时另有 `ρ_max`、`E_max`，见附录 A.5）如何进入可调的偏差控制项；实际 `γ_vcm`/σ 是否带来精度和收敛收益，交由 4.5 的对照和消融实验验证。
+
+### 4.4.4 出界声明重申
+
+manifest 漏选/审查（anti-censorship）、样本量虚报、完整 ACK 协议不作主协议安全保证。
+
+## 4.5 实验评估
+
+### 4.5.1 实验环境
+
+| 项目 | 配置 |
+|------|------|
+| 硬件 | AMD Ryzen 7 7745HX (8 核/16 线程) + 31.2 GB RAM + NVIDIA GeForce RTX 4070 Laptop GPU (8 GB, compute capability 8.9) |
+| 软件环境 | Windows 10.0.26100 / Python 3.9.15 / PyTorch 2.7.0+cu118 / CUDA 11.8 / cuDNN 9.1.0 / torch 线程数 8 |
+| 数据集 | MNIST、FashionMNIST、CIFAR-10 |
+| 模型 | MLP、CNN |
+| 聚合 | FedAvg-form |
+| 层级 | 1 Cloud + M Edge + N Users |
+| 密码 | LHH(P-256) / Ed25519 / PRG(AES-CTR/HKDF) / QUANTIZE_SCALE=1e6 |
+| 种子数 | ≥3（含置信区间） |
+
+### 4.5.2 五组主线对比
+
+为分离各机制的贡献，设计五组递进主线（与既有实验矩阵的阶梯一致）：
+
+1. **Sync-HVSA**：研究点 1 同步聚合基线。
+2. **Grouped-HVSA + Inter-Group Sync（G2）**：引入一次性分组与组间同步。
+3. **+ Buffer/Checkpoint Semi-Async（G3，半异步①）**：引入组包缓冲与 checkpoint 触发。
+4. **+ Direct-VCM（G3v，③）**：引入 mixed-version 组级后置补偿。
+5. **+ σ 陈旧度幂衰减（G5，完整方案 = G3+VCM+σ）**：引入补偿端陈旧度衰减。
+
+stale reuse **不进入主线**：受控实验表明其在暂时断连场景无稳定正收益（其最有利场合 0/3 全负，三 regime 复现），仅以消融与被否定替代设计呈现（4.5.4、附录 A.3.3）。
+
+五组采用**逐一叠加**设计，其**增量增益**是各机制必要性的直接度量。**口径纪律（写作时必须遵守）**：
+
+- 每个机制的增益只相对其**直接前驱**报告并标注口径：checkpoint 半异步 = `G3−G2`；Direct-VCM = `G3v−G3`；σ = `G5−G3v`。
+- 既有实验参照值（同 seed 配对差，来自 `point2_results_registry` 已验证批次）：
+  - **VCM 相对 G3**：IID `+2.47 ± 0.27 pp`（5/5 正）；MNIST Non-IID `+1.12 ± 2.59 pp`（5/8 正，不显著）。
+  - **σ 相对 G3v**：MNIST Non-IID 约 `+1.45 pp`（5 seeds，std `3.0→1.5` 方差稳定化）；IID 约 `−0.8 pp`（0/5，一致轻微有害——stale 偏置≈0 时降权只损失有效样本量，故 σ 建议 Non-IID 启用 / IID 关闭，或由 Aσ 自适应选择档位，见 4.5.4）。
+  - **严禁**把 `+2.47 / +1.12` 直接标成"VCM+σ"的联合收益：那是 VCM 相对 G3 的单机制口径。"VCM+σ"联合效果须以 `G5−G3` 的净差另行报告并注明其构成（VCM 分量相对 G3、σ 分量相对 G3v）。
+- 报告均值时必须同时给出配对 std 与正/负种子数，不隐藏方差、不筛选 seed；Non-IID 下不显著的结果表述为"趋势"而非"增益"。
+
+- **指标**：达到目标精度的墙钟时间、平均等待时间、最终精度、compensation gain（按 `G3v−G3` 口径）、σ gain（按 `G5−G3v` 口径）、verification overhead、组包过期率、重复贡献率、组间公平性、有效吞吐量。
+- **数值**：___（留空待回填；回填时按上述口径逐项标注基准）
+
+### 4.5.2' 竞争性基线对比
+
+为定位本协议在分层安全聚合与半异步 FL 中的相对性能，引入以下基线（基线数据优先取自原文报告，本实验在相同数据集/模型下复现关键指标作为参照）：
+
+| 基线 | 特点 | 对齐维度 |
+|------|------|---------|
+| **FedAvg / HFL** | 同步分层聚合，无安全/验证 | 同步聚合上界 |
+| **FedBuff** | 缓冲异步，单客户端粒度 | 异步基线 |
+| **MAFSA** | 多层异步 + stale 融合（权重方向为 `α=e^{-βE}` 作用于 fresh） | stale reuse 方向对比 |
+| **DVAFL** | VCM 版本控制补偿（Chen et al., IEEE TMC 2026） | 补偿机制对比 |
+
+- **对比指标**：达到目标精度墙钟时间、最终精度、compensation gain、σ gain（口径同 4.5.2）。
+- **预期**：HVSA 系列在验证开销上优于所有基线（因 LHH 定长验证）；完整方案（G3+VCM+σ）在异构性下墙钟时间优于同步基线；stale reuse 方向修正（Ours Decayed-Stale）相对 MAFSA 方向仅作消融对照（主线已不含 reuse，见 4.5.2）。
+- **数值**：___（留空待回填）
+
+### 4.5.3 攻击实验
+
+以第 5 组（完整方案）为基座，与性能基线分开，验证 Theorem 4.1 的篡改检测能力：
+
+- **tamper_raw_sum**：Cloud 篡改 `W_sum^raw`，预期 LHH 等式失败。
+- **tamper_manifest**：Cloud 篡改组包元数据，预期 manifest 一致性或 Ed25519 验签失败。
+- **drop_replace_pkg**：Cloud 丢弃合法组包并替换为伪造/重放组包，预期 manifest 一致性或签名验证失败。
+- **replay**：Cloud 重放已消费的组包，预期 `Aggregated_IDs` 确定性拒绝。
+
+策略绑定攻击（对应附注 4.2 与 4.3.10，需在加权路径 + verify on 下验证）：
+
+- **weight_forge**：Cloud 任选正整数权重提交（σ-agg/V-PDA 路径），预期 ES 独立复算不匹配拒绝。
+- **weight_relabel**：Cloud 把伪造的 V-PDA 权重改标为 `staleness`（或反之），预期按声明来源复算仍不匹配拒绝。
+- **source_downgrade**：Cloud 把预定权重来源（V-PDA/staleness-agg）降级为等权 `none`，或在合法来源间择优声明（数值无需伪造），预期来源绑定核对确定性拒绝（4.3.10）。
+- **alpha_or_sigma_tamper**：Cloud 篡改 `alphas`（如全 1 关闭衰减）或谎报 Aσ 锁定档位，预期 ES 复算 `α/σ*` 不匹配拒绝；另验证 γ/mode/版本错位声明的拒绝。
+- **wait_metric_fail_closed**：`wait` 度量（不可复算）作为权重/衰减策略提交，预期验证模式下确定性拒绝——包括云端**省略 alphas** 的变体（不可复算与"合法不产生 α"严格区分，省略不能把衰减策略静默关闭）。
+
+- **指标**：tampering detection rate（应接近 100%）、误拒率（clean control 应为 0）、检测阶段、失败后版本与策略状态是否推进。
+- **注入实现**：`main_point2.py --attack` 已覆盖全部攻击族（主四类 + 策略绑定五类 `weight_forge/weight_relabel/source_downgrade/alpha_tamper/history_missing`）；配置不适用的攻击（如等权路径伪造权重、全新鲜包下 α 无差别）在注入时记录"不适用"或以区分性注入值处理，报告中以 clean control 补齐。每类攻击 100 个随机化单元与 Tiny 5 种子端到端属于第 8 周实验执行。
+- **既有单测证据**：`tests/test_vpda.py`（V-PDA 伪造权重拒绝）、`tests/test_policy_binding.py`（σ 权重复算、双向改标拒绝、来源降级拒绝、α/σ* 篡改拒绝、γ/momentum/版本/配置摘要拒绝、wait fail-closed、TA 独立复算审计）、`_verify_p03.py`（四类主攻击 100% 检出）。攻击实验（多 seed 端到端检出率）数值：___（留空待回填）
+
+### 4.5.4 消融实验
+
+**机制交互检验（协同证据）**：为验证 4.1 的因果链（三个机制是同一架构决策的展开而非并列拼装），先于逐参数消融设置两组交互实验：
+
+- **I1：VCM × checkpoint 开关**。在 checkpoint 关闭（inter-group sync，全部组包 `t_k=t`）下 VCM 补偿 `C_k=S_k·γ_vcm·(W(t)−W(t_k))≡0`，无 mixed-version 可补；开启 checkpoint 后 VCM 才可能产生增益。预期：VCM 增益≈0（checkpoint off）→ 显著为正（checkpoint on），证明补偿被架构内生需要。
+- **I2：reuse × buffer 开关**。stale reuse 在半异步时间线下有更多"未赶上封组"场景可复用；同步下复用机会少。预期：reuse 增益在 buffer on 时显著大于 buffer off，证明复用与该架构的时间线强耦合。
+
+I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证据：若某机制在开关两端增益一致，则其与架构无耦合，需重新定位。
+
+**消融顺序**：
+
+1. **reuse-rule**（none / mafsa / ours，必做，验方向修正）
+2. **No Compensation**（γ_vcm=0）
+3. **Direct-VCM**（γ_vcm=1.0）
+4. **reuse × compensation 2×2**（与 I1/I2 互补：2×2 检验两机制间的联合效应，I1/I2 检验各机制与架构的耦合）
+5. **ρ_max**∈{0.25, 0.5}、**β_c**∈{0.1, 0.3, 0.5}
+6. **γ_vcm**∈{0.5, 0.8, 1.0}
+7. **K**∈{2, 3, 5}
+8. **s_max**∈{2, 3, 5}
+9. **policy**（FIFO / Fresh-first / Fairness-aware）
+10. **adaptive s_max**（off / on）
+
+**超参表**：
+
+| 参数 | 取值 |
+|------|------|
+| ρ_max | {0.25, 0.5} |
+| β_c | {0.1, 0.3, 0.5} |
+| γ_vcm | {0, 0.5, 0.8, 1.0} |
+| K | {2, 3, 5} |
+| s_max | {2, 3, 5} |
+| Δ_timeout | 开关对比 |
+| policy | FIFO / Fresh-first / Fairness-aware |
+| D_fair | {1, 2, 3} |
+
+- **数值**：___（留空待回填）
+
+## 4.6 本章小结
+
+本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组包缓冲与 checkpoint 触发、策略绑定的可验证加权聚合（V-PDA/σ 权重与补偿参数由 ES 独立复算，恶意云端不能自行选择权重）、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏；安全聚合兼容的组内 stale reuse 作为客户端级组件保留，其精度收益边界由实验如实刻画（附注：多轮受控实验表明其在暂时断连下无稳定正收益，不入创新点）。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA（Theorem 4.1）；权重伪造与改标由策略绑定的公开规则复算确定性拒绝（附注 4.2）；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship。在 `N_Q−c≥2` 下，加权聚合与 Direct-VCM 补偿不削弱客户端个人参数隐私（Theorem 4.2）；在 IID 与耦合相同随机性的条件下，给出条件性单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 描述多 checkpoint 传播；只有 `L_T≤1` 等额外条件下才得到线性界，不把参考论文的完整收敛率直接继承为本文定理。
+
+---
+
+# 第 5 章 总结与展望
+
+## 5.1 全文总结
+
+本文在单 TA 约束下，先提出 HVSA 实现分层可验证安全聚合，再以检查点式组级半异步扩展解决同步等待与掉线浪费，同时保持掩码与 LHH 验证闭环。具体地：
+
+**研究点一（HVSA）**：在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端个人参数（Theorem 3.1：TA 永不合谋，Cloud 可与全部 ES 及 `c≤N_online−2` 个客户端合谋），利用 LHH 与 Ed25519 让 ES 以定长通信开销验证云端聚合结果，并通过"在线集合驱动的掩码求和"实现掉线鲁棒性。Cloud 知道聚合掩码和全局聚合结果符合协议隐私边界；ES 验证通过后直接用 `W_sum^raw/N_online` 得到共识模型。
+
+**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组包缓冲/checkpoint 触发、策略绑定的可验证加权聚合（V-PDA/σ 权重与补偿参数由 ES 依据共识量独立复算，恶意云端不能自行选择权重）与 Direct-VCM 组级后置补偿实现半异步扩展；安全聚合兼容的组内 stale reuse 作为客户端级组件保留，其收益边界由实验如实刻画。`package_token` 被 ES 签名绑定，`Aggregated_IDs` 是 TA 维护的仅追加共识状态。客户端隐私按 `N_Q−c≥2` 判定，不要求 `|Q|≥2`；组/全局聚合允许公开。在 IID、一步更新和耦合相同随机性下给出单 checkpoint 偏差上界；多步只给出 `e_{t+1}≤L_Te_t+ε_t` 的条件性传播式。
+
+## 5.2 未来工作展望
+
+- **双 TA / 门限 TA**：以进一步分散信任，消除单点信任假设。
+- **基版本对齐的更新量混合**：stale reuse 更严格变体，对 stale 与 fresh 的基版本对齐做更强约束。
+- **完整 ACK / 原子提交协议的协议化**：将"至多一次纳入"的重放防护升级为完整分布式 exactly-once 协议。
+- **anti-censorship 可审计调度**：将 manifest 漏选/调度审查纳入可审计安全保证。
+- **完整收敛率证明**：在 Lipschitz/有界方差/独立鞅差假设下，将条件性界 4.1 的单步偏差刻画推进为当前协议的 `O(1/√T)` 邻域收敛分析（见 4.4.3）。
+
+---
+
+# 参考文献
+
+1. Shiwen Zhang et al. “MAFSA: A Multi-Layer Asynchronous Federated Learning with Staleness-Awareness in Edge Computing.” *Engineering Applications of Artificial Intelligence*, 2026. DOI: `10.1016/j.engappai.2026.114369`.
+2. Chuyi Chen, Yanchao Zhao, Zhe Zhang, Wenzhong Li, and Jie Wu. “Toward Efficient and Scalable Asynchronous Federated Learning via Stragglers Version Control.” *IEEE Transactions on Mobile Computing*, 2026. DOI: `10.1109/TMC.2025.3609568`.
+3. Lam M. Nguyen et al. “Federated Learning with Buffered Asynchronous Aggregation.” *AISTATS*, 2022.
+4. Jiaming Xu and Shen Wang. “FedFleet: A Hierarchical Federated Learning Framework for Faster Convergence in Heterogeneous IoT Systems.” *IEEE Internet of Things Journal*, 2025.
+
+---
+
+# 附录 A 设计决策记录
+
+> 本附录保留研究点 2 从多轮讨论收敛到最终协议的关键取舍理由，正文为行文简洁未展开。
+> 与正文口径一致，供答辩/审稿追溯设计动机。
+>
+> **组织逻辑**：所有取舍归因于三层——A.1 **约束层**（单 TA 掩码 + LHH 验证链路施加的硬约束，回答"为什么不能直接借鉴现有异步方案"）、A.2 **架构层**（checkpoint 级异步边界的确定）、A.3 **组件层**（各机制在约束内的实现取舍）。约束层在先：它决定了哪些方案根本不可行，架构层与组件层均在其允许的空间内取值。
+
+## A.1 约束层：单 TA 掩码 + LHH 验证链路施加的设计约束
+
+主协议的一切设计受制于一条硬约束：**解掩码前不得引入任何破坏 TA 掩码和与 LHH 对应关系的变换**。以下四项取舍均由该约束直接推出，也是"为什么不能把 FedBuff/MAFSA/DVAFL 直接搬进本架构"的正面回答。
+
+### A.1.1 为什么不引入解掩码前的组间连续非等权系数
+
+曾考虑 `λ_g=λ_0/(1+β_g·s_g)` 这类陈旧度加权。但一旦不同组在解掩码前后带不同连续权重，会改变 TA 掩码和与 LHH 的对应关系，破坏研究点 1 的验证链路。故主协议只保留解掩码后、LHH 验证后的 Direct-VCM 公开确定性补偿。
+
+### A.1.2 为什么去掉降权路径
+
+DVAFL 是"补偿+降权"双机制（straggler 既被降权又被补偿）。本文在 masked group package 约束下无法对单个组包做解掩码前的连续降权，故只保留补偿，用 `s_max` 硬截断 + 补偿替代软降权。这使系统对 `s_max` 取值更敏感，故 `s_max∈{2,3,5}` 列为必做消融。
+
+### A.1.3 为什么样本量权重只乘明文不乘掩码
+
+客户端上传 `w̄_i^k=s_i^k·w_i^k+m_i^k`。若 `s_i^k` 也乘掩码，TA 求掩码和时就需额外按样本量加权，改变单 TA 掩码求和方式。只乘明文可让解掩码后直接恢复 strict sample-weighted sum，同时不改变 TA 按参与集合求掩码和的链路。
+
+### A.1.4 全局模型为何是共识量而非 Cloud 分发量
+
+`W(t+1)` 由参与 checkpoint 的 ES 基于已验证 raw sum **本地独立重构**（公开确定性计算），各 ES 算得一致即为共识。Cloud 即使广播 `W(t+1)` 也仅作参考，规范结果以 ES 本地派生为准。因此 Cloud 无法在补偿/归一化阶段注入篡改——补偿输入（历史全局模型）是共识量，不作攻击面。
+
+## A.2 架构层：为什么把异步边界收缩到 checkpoint 级
+
+最初考虑过完全异步（组包"来一个更新一个"），但完全异步下每次全局下发都需在线验证，与单 TA + LHH 的逐轮验证闭环难以直接兼容（验证粒度需与掩码聚合粒度一致）。最终选择：组内仍同步封组，组间用 buffer+checkpoint 半异步，验证粒度为 checkpoint 选中集合。一句话：**不是把验证硬塞进完全异步，而是主动收缩异步边界以保住密码学闭环。** 该架构决策同时引出三个必要组件：checkpoint 触发本身（4.3.6）、mixed-version 的补偿（4.3.7）与掉线浪费的复用（4.3.3），故三者不是并列拼装而是同一决策的展开。
+
+## A.3 组件层：各机制的关键实现取舍
+
+### A.3.1 stale reuse 权重方向的修正
+
+MAFSA 原始定义 `α_i=exp(−β_c·E_i)` 作用于 fresh model，导致版本间隔 `E_i` 越大、stale 权重 `1−α_i` 反而越大。考虑到间隔越大陈旧结果与当前优化方向偏差风险越高，本文将指数衰减量改为直接控制 stale 项并加 `ρ_max≤0.5` 上界，保证新结果主导。故表述为"受 MAFSA 启发的时效性修正"而非"直接采用 MAFSA 加权公式"。
+
+### A.3.2 为什么 VCM 用 S_k 而非 n_k
+
+`W_sum^raw` 本身处在"样本量加权和"量纲中，组间补偿项必须同量纲才能与最终 `S_Q` 归一化一致。故 `C_k=S_k·γ_vcm·G_k`，而非按客户端个数 `n_k`。`n_k` 仅承担在线计数与最小在线人数约束。
+
+### A.3.3 为什么 stale reuse 降级为组件、策略绑定上位为创新点 2
+
+**reuse 降级**：多轮受控实验（同 seed 配对、控制失败率）表明，组内 stale reuse 在其最有利的场合（同失败率下 reuse on/off）0/3 全负；突发离线、极端 Non-IID、MAFSA 忠实掉线回收语义、delta 重锚定等变体均无稳定正收益。机理是协议本身已吸收暂时断连（K-of-E 替换 + `S_Q` 重归一化 + VCM 重锚定），复用只剩注入陈旧偏置；唯一有价值的形态是"永久丢失 + 参与跌破封组下限"的旁路回收（+18~+50pp 恢复参与可行性），属系统级机制，不入主线创新点。因此 4.1 的创新点 2 不再是 reuse；reuse 以安全聚合兼容组件 + 被否定替代设计呈现。
+
+**策略绑定上位**：把等权聚合扩展为加权（V-PDA/σ）后出现一个真问题——LHH 验证等式 `∏_k H_k^{w_k}` 对任意正整数权重成立，权重本身不受密码学约束；若允许 Cloud 声明权重，恶意 Cloud 即可任意重分配各组贡献，甚至把伪造权重改标为不做独立复算的来源绕过检查。`∏ H_k^{w_k}` 只是线性同态的直接推广，不足以构成创新；可立住的贡献是"恶意云端不能自行选择权重"——面向公开确定性聚合策略的策略绑定、边缘独立复算与可验证加权安全聚合（4.3.10、附注 4.2）。
+
+## A.4 显式出界的考量
+
+下列方向有价值但会稀释主线，统一出界：完全异步、解掩码前连续陈旧度系数 `β_g`、双 TA/门限 TA、全局异步轨迹在线审计、anti-censorship 可审计调度、First/Second-order VCM、组级质量追踪、HGA-FL 式 bias correction。出界是为让研究点 2 保持"一个能讲圆的协议扩展"而非大拼盘。
+
+---
+
+## A.5 备选机制分析：stale reuse 的偏差项
+
+> stale reuse 已不入主协议主线（A.3.3）。本节保留其客户端级偏差项的推导，仅在 reuse 作为可选组件启用时，将其并入总界：
+> `‖Δ_bias‖ ≤ ρ_max·(1+ηL)·E_max·ηB + (|1−γ_vcm|+ηL)·s_max·ηB`。
+> 该分析使用假设 (C1)-(C4)（4.4.3 假设表），其余假设与正文一致。
 
 ##### 步骤 (i)：客户端级陈旧偏差 `‖Δ_stale‖` 的界
 
@@ -1033,243 +1409,6 @@ w_i^k = (1−ρ_i)·w_i^{new,k} + ρ_i·w_i^{stale,k}
 ```text
 ‖Δ_stale^{norm}‖ ≤ ρ_max·(1 + ηL)·E_max·ηB
 ```
-
-##### 步骤 (ii)：组级版本失配偏差 `‖Δ_vcm‖` 的界
-
-理想聚合中所有组包基于同一全局模型 `W(t)`（即 `t_k = t`）。本协议中组包 `Π_k(t_k)` 基于 `W(t_k)`，`t_k < t`，需 Direct-VCM 补偿 `C_k = S_k·γ_vcm·(W(t) − W(t_k))`。
-
-对一步更新映射 `T_k(w)=w−η∇F_k(w)`，令 `G_k=W(t)−W(t_k)`。组包结果与从 `W(t)` 出发的理想结果之差，在加入 Direct-VCM 后为：
-
-```text
-res_k = T_k(W(t_k)) + γ_vcm G_k − T_k(W(t))
-```
-
-由 `T_k(w)=w−η∇F_k(w)` 和 (C1)：
-
-```text
-res_k = (γ_vcm−1)G_k − η(∇F_k(W(t_k))−∇F_k(W(t)))
-‖res_k‖ ≤ (|1−γ_vcm| + ηL)·‖G_k‖
-```
-
-再由 (C2) 与 (C3) `s_k = t − t_k ≤ s_max`：
-
-```text
-‖G_k‖ = ‖W(t) − W(t_k)‖ ≤ s_k·ηB ≤ s_max·ηB
-‖res_k‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
-```
-
-组级残差在 raw sum 中按 `S_k` 累加，归一化后仍由最大组级残差控制：
-
-```text
-Δ_vcm^{norm} = (1/S_Q) · Σ_{Π_k∈Q} S_k · res_k
-‖Δ_vcm^{norm}‖ ≤ (|1−γ_vcm| + ηL)·s_max·ηB
-```
-
-##### 综合
-
-由步骤 (i) 与 (ii) 的归一化结果：
-
-```text
-‖Δ_bias‖ ≤ ‖Δ_stale^{norm}‖ + ‖Δ_vcm^{norm}‖
-           ≤ ρ_max·(1+ηL)·E_max·ηB
-             + (|1−γ_vcm|+ηL)·s_max·ηB
-```
-
-该界是本文在 IID/一步更新条件下的条件性单 checkpoint 偏差上界，不是直接来自 `MAFSA` 或 `DVAFL` 的定理。对 Dirichlet Non-IID，需额外引入局部梯度异质性或 bounded gradient dissimilarity 项；本文将其作为实验验证，不把 IID 上界无条件外推到 Non-IID。
-
-#### 条件性多 checkpoint 误差传播
-
-单 checkpoint 偏差不能在没有更新映射稳定性假设时直接线性相加。令 `e_t=‖W(t)−W^*(t)‖`，若理想 checkpoint 更新映射对输入模型是 `L_T`-Lipschitz，且第 `t` 次由 stale reuse/VCM 引入的局部扰动为 `ε_t`，则
-
-```text
-e_{t+1} ≤ L_T·e_t + ε_t,
-e_T ≤ L_T^T·e_0 + Σ_{j=0}^{T−1} L_T^{T−1−j}·ε_j.
-```
-
-只有在额外满足非扩张条件 `L_T≤1`、初始误差 `e_0=0` 且各步 `ε_j≤ε` 时，才能进一步得到 `e_T≤Tε`；若 `L_T>1`，误差可能被放大，不能宣称无条件线性累积。条件性界 4.1 与上述递推均未覆盖：
-- non-IID 下的客户端漂移（需更强假设如 bounded gradient dissimilarity）；
-- SGD 噪声的方差（需有界方差假设 `E[‖∇F − ∇f_i‖²] ≤ σ²`）；
-- `ρ_i` 与数据分布的耦合（stale reuse 偏向数据稳定的客户端）。
-
-完整收敛率（如 `O(1/√T)` 邻域收敛）需在当前协议上重新建立，并补充有界方差、独立鞅差、局部梯度异质性与 checkpoint 选择过程的假设，不能直接引用 `MAFSA` 或 `DVAFL` 的收敛率。这里的结论只说明 `ρ_max`、`E_max`、`γ_vcm` 与 `s_max` 如何进入可调的偏差控制项；实际 `γ_vcm` 是否带来精度和收敛收益，交由 4.5 的对照和消融实验验证。
-
-### 4.4.4 出界声明重申
-
-manifest 漏选/审查（anti-censorship）、样本量虚报、完整 ACK 协议不作主协议安全保证。
-
-## 4.5 实验评估
-
-### 4.5.1 实验环境
-
-| 项目 | 配置 |
-|------|------|
-| 硬件 | ___ |
-| 数据集 | MNIST、CIFAR-10 |
-| 模型 | MLP、CNN |
-| 聚合 | FedAvg-form |
-| 层级 | 1 Cloud + M Edge + N Users |
-| 密码 | LHH(P-256) / Ed25519 / PRG(AES-CTR/HKDF) / QUANTIZE_SCALE=1e6 |
-| 种子数 | ≥3（含置信区间） |
-
-### 4.5.2 五组主线对比
-
-为分离各机制的贡献，设计五组递进主线：
-
-1. **Sync-HVSA**：研究点 1 同步聚合基线。
-2. **Grouped-HVSA + Inter-Group Sync**：引入一次性分组与组间同步。
-3. **+ Buffer/Checkpoint Semi-Async**：引入组包缓冲与 checkpoint 触发。
-4. **+ Intra-Group Stale Reuse**：引入组内 stale reuse。
-5. **+ Direct-VCM Group Compensation**：完整方案（含组级补偿）。
-
-五组采用**逐一叠加**设计，其**增量增益**是各机制必要性的直接度量：G3−G2 衡量 checkpoint 半异步、G4−G3 衡量 stale reuse、G5−G4 衡量 Direct-VCM。该设计同时作为对"机制拼凑"质疑的经验检验——若某步增量为负或近零，则表明该机制非必要，协议应裁剪之。增量需结合 4.1 的因果链解释：VCM 的增益应主要来自 mixed-version（仅在半异步下出现），stale reuse 的增益应主要来自半异步时间线下增多的"未赶上封组"场景，而非叠加式堆砌。
-
-- **指标**：达到目标精度的墙钟时间、平均等待时间、最终精度、compensation gain、stale reuse gain、stale-weight stability、verification overhead、组包过期率、重复贡献率、组间公平性、有效吞吐量。
-- **数值**：___（留空待回填）
-
-### 4.5.2' 竞争性基线对比
-
-为定位本协议在分层安全聚合与半异步 FL 中的相对性能，引入以下基线（基线数据优先取自原文报告，本实验在相同数据集/模型下复现关键指标作为参照）：
-
-| 基线 | 特点 | 对齐维度 |
-|------|------|---------|
-| **FedAvg / HFL** | 同步分层聚合，无安全/验证 | 同步聚合上界 |
-| **FedBuff** | 缓冲异步，单客户端粒度 | 异步基线 |
-| **MAFSA** | 多层异步 + stale 融合（权重方向为 `α=e^{-βE}` 作用于 fresh） | stale reuse 方向对比 |
-| **DVAFL** | VCM 版本控制补偿（Chen et al., IEEE TMC 2026） | 补偿机制对比 |
-
-- **对比指标**：达到目标精度墙钟时间、最终精度、stale reuse gain、compensation gain。
-- **预期**：HVSA 系列在验证开销上优于所有基线（因 LHH 定长验证）；stale reuse 方向修正（Ours Decayed-Stale）应优于 MAFSA 方向；完整方案（Group 5）在异构性下墙钟时间优于同步基线。
-- **数值**：___（留空待回填）
-
-### 4.5.3 攻击实验
-
-以第 5 组（完整方案）为基座，与性能基线分开，验证 Theorem 4.1 的篡改检测能力：
-
-- **tamper_raw_sum**：Cloud 篡改 `W_sum^raw`，预期 LHH 等式失败。
-- **tamper_manifest**：Cloud 篡改组包元数据，预期 manifest 一致性或 Ed25519 验签失败。
-- **drop_replace_pkg**：Cloud 丢弃合法组包并替换为伪造/重放组包，预期 manifest 一致性或签名验证失败。
-- **replay**：Cloud 重放已消费的组包，预期 `Aggregated_IDs` 确定性拒绝。
-
-- **指标**：tampering detection rate（应接近 100%）。
-- **数值**：___（留空待回填）
-
-### 4.5.4 消融实验
-
-**机制交互检验（协同证据）**：为验证 4.1 的因果链（三个机制是同一架构决策的展开而非并列拼装），先于逐参数消融设置两组交互实验：
-
-- **I1：VCM × checkpoint 开关**。在 checkpoint 关闭（inter-group sync，全部组包 `t_k=t`）下 VCM 补偿 `C_k=S_k·γ_vcm·(W(t)−W(t_k))≡0`，无 mixed-version 可补；开启 checkpoint 后 VCM 才可能产生增益。预期：VCM 增益≈0（checkpoint off）→ 显著为正（checkpoint on），证明补偿被架构内生需要。
-- **I2：reuse × buffer 开关**。stale reuse 在半异步时间线下有更多"未赶上封组"场景可复用；同步下复用机会少。预期：reuse 增益在 buffer on 时显著大于 buffer off，证明复用与该架构的时间线强耦合。
-
-I1/I2 的"开关 × 机制"交互增量是回应机制拼凑质疑的核心证据：若某机制在开关两端增益一致，则其与架构无耦合，需重新定位。
-
-**消融顺序**：
-
-1. **reuse-rule**（none / mafsa / ours，必做，验方向修正）
-2. **No Compensation**（γ_vcm=0）
-3. **Direct-VCM**（γ_vcm=1.0）
-4. **reuse × compensation 2×2**（与 I1/I2 互补：2×2 检验两机制间的联合效应，I1/I2 检验各机制与架构的耦合）
-5. **ρ_max**∈{0.25, 0.5}、**β_c**∈{0.1, 0.3, 0.5}
-6. **γ_vcm**∈{0.5, 0.8, 1.0}
-7. **K**∈{2, 3, 5}
-8. **s_max**∈{2, 3, 5}
-9. **policy**（FIFO / Fresh-first / Fairness-aware）
-10. **adaptive s_max**（off / on）
-
-**超参表**：
-
-| 参数 | 取值 |
-|------|------|
-| ρ_max | {0.25, 0.5} |
-| β_c | {0.1, 0.3, 0.5} |
-| γ_vcm | {0, 0.5, 0.8, 1.0} |
-| K | {2, 3, 5} |
-| s_max | {2, 3, 5} |
-| Δ_timeout | 开关对比 |
-| policy | FIFO / Fresh-first / Fairness-aware |
-| D_fair | {1, 2, 3} |
-
-- **数值**：___（留空待回填）
-
-## 4.6 本章小结
-
-本章提出研究点二——检查点式组级半异步安全聚合扩展。在研究点一 HVSA 的密码学闭环基础上，通过组内 stale reuse（修正 MAFSA 权重方向）、组包缓冲与 checkpoint 触发、Direct-VCM 组级后置补偿三个机制，将跨组训练组织从"全组同步 barrier"扩展为"组包缓冲 + checkpoint 触发"的组级半异步机制，同时保持单 TA 掩码与 LHH 验证链路不被破坏。安全分析证明：对 checkpoint 选中聚合结果的完整性检测可归约到 LHH 抗碰撞或 Ed25519 EUF-CMA；检测失败即丢弃本次 checkpoint，不推进全局版本，也不保证恶意 Cloud 下的训练可用性或 anti-censorship（Theorem 4.1）。在 `N_Q−c≥2` 下，stale reuse 与 Direct-VCM 补偿不削弱客户端个人参数隐私（Theorem 4.2）；在 IID 与耦合相同随机性的条件下，给出条件性单 checkpoint 偏差上界，并以 `e_{t+1}≤L_Te_t+ε_t` 描述多 checkpoint 传播；只有 `L_T≤1` 等额外条件下才得到线性界，不把参考论文的完整收敛率直接继承为本文定理。
-
----
-
-# 第 5 章 总结与展望
-
-## 5.1 全文总结
-
-本文在单 TA 约束下，先提出 HVSA 实现分层可验证安全聚合，再以检查点式组级半异步扩展解决同步等待与掉线浪费，同时保持掩码与 LHH 验证闭环。具体地：
-
-**研究点一（HVSA）**：在"云—边—端—单 TA"架构下，通过 PRG 掩码保护客户端个人参数（Theorem 3.1：TA 永不合谋，Cloud 可与全部 ES 及 `c≤N_online−2` 个客户端合谋），利用 LHH 与 Ed25519 让 ES 以定长通信开销验证云端聚合结果，并通过"在线集合驱动的掩码求和"实现掉线鲁棒性。Cloud 知道聚合掩码和全局聚合结果符合协议隐私边界；ES 验证通过后直接用 `W_sum^raw/N_online` 得到共识模型。
-
-**研究点二（检查点半异步扩展）**：在研究点一密码学闭环基础上，通过组内 stale reuse、组包缓冲/checkpoint 与 Direct-VCM 组级后置补偿实现半异步扩展。`package_token` 被 ES 签名绑定，`Aggregated_IDs` 是 TA 维护的仅追加共识状态。客户端隐私按 `N_Q−c≥2` 判定，不要求 `|Q|≥2`；组/全局聚合允许公开。在 IID、一步更新和耦合相同随机性下给出单 checkpoint 偏差上界；多步只给出 `e_{t+1}≤L_Te_t+ε_t` 的条件性传播式。
-
-## 5.2 未来工作展望
-
-- **双 TA / 门限 TA**：以进一步分散信任，消除单点信任假设。
-- **基版本对齐的更新量混合**：stale reuse 更严格变体，对 stale 与 fresh 的基版本对齐做更强约束。
-- **完整 ACK / 原子提交协议的协议化**：将 exactly-once 语义从"声明"升级为完整协议。
-- **anti-censorship 可审计调度**：将 manifest 漏选/调度审查纳入可审计安全保证。
-- **完整收敛率证明**：在 Lipschitz/有界方差/独立鞅差假设下，将条件性界 4.1 的单步偏差刻画推进为当前协议的 `O(1/√T)` 邻域收敛分析（见 4.4.3）。
-
----
-
-# 参考文献
-
-1. Shiwen Zhang et al. “MAFSA: A Multi-Layer Asynchronous Federated Learning with Staleness-Awareness in Edge Computing.” *Engineering Applications of Artificial Intelligence*, 2026. DOI: `10.1016/j.engappai.2026.114369`.
-2. Chuyi Chen, Yanchao Zhao, Zhe Zhang, Wenzhong Li, and Jie Wu. “Toward Efficient and Scalable Asynchronous Federated Learning via Stragglers Version Control.” *IEEE Transactions on Mobile Computing*, 2026. DOI: `10.1109/TMC.2025.3609568`.
-3. Lam M. Nguyen et al. “Federated Learning with Buffered Asynchronous Aggregation.” *AISTATS*, 2022.
-4. Jiaming Xu and Shen Wang. “FedFleet: A Hierarchical Federated Learning Framework for Faster Convergence in Heterogeneous IoT Systems.” *IEEE Internet of Things Journal*, 2025.
-
----
-
-# 附录 A 设计决策记录
-
-> 本附录保留研究点 2 从多轮讨论收敛到最终协议的关键取舍理由，正文为行文简洁未展开。
-> 与正文口径一致，供答辩/审稿追溯设计动机。
->
-> **组织逻辑**：所有取舍归因于三层——A.1 **约束层**（单 TA 掩码 + LHH 验证链路施加的硬约束，回答"为什么不能直接借鉴现有异步方案"）、A.2 **架构层**（checkpoint 级异步边界的确定）、A.3 **组件层**（各机制在约束内的实现取舍）。约束层在先：它决定了哪些方案根本不可行，架构层与组件层均在其允许的空间内取值。
-
-## A.1 约束层：单 TA 掩码 + LHH 验证链路施加的设计约束
-
-主协议的一切设计受制于一条硬约束：**解掩码前不得引入任何破坏 TA 掩码和与 LHH 对应关系的变换**。以下四项取舍均由该约束直接推出，也是"为什么不能把 FedBuff/MAFSA/DVAFL 直接搬进本架构"的正面回答。
-
-### A.1.1 为什么不引入解掩码前的组间连续非等权系数
-
-曾考虑 `λ_g=λ_0/(1+β_g·s_g)` 这类陈旧度加权。但一旦不同组在解掩码前后带不同连续权重，会改变 TA 掩码和与 LHH 的对应关系，破坏研究点 1 的验证链路。故主协议只保留解掩码后、LHH 验证后的 Direct-VCM 公开确定性补偿。
-
-### A.1.2 为什么去掉降权路径
-
-DVAFL 是"补偿+降权"双机制（straggler 既被降权又被补偿）。本文在 masked group package 约束下无法对单个组包做解掩码前的连续降权，故只保留补偿，用 `s_max` 硬截断 + 补偿替代软降权。这使系统对 `s_max` 取值更敏感，故 `s_max∈{2,3,5}` 列为必做消融。
-
-### A.1.3 为什么样本量权重只乘明文不乘掩码
-
-客户端上传 `w̄_i^k=s_i^k·w_i^k+m_i^k`。若 `s_i^k` 也乘掩码，TA 求掩码和时就需额外按样本量加权，改变单 TA 掩码求和方式。只乘明文可让解掩码后直接恢复 strict sample-weighted sum，同时不改变 TA 按参与集合求掩码和的链路。
-
-### A.1.4 全局模型为何是共识量而非 Cloud 分发量
-
-`W(t+1)` 由参与 checkpoint 的 ES 基于已验证 raw sum **本地独立重构**（公开确定性计算），各 ES 算得一致即为共识。Cloud 即使广播 `W(t+1)` 也仅作参考，规范结果以 ES 本地派生为准。因此 Cloud 无法在补偿/归一化阶段注入篡改——补偿输入（历史全局模型）是共识量，不作攻击面。
-
-## A.2 架构层：为什么把异步边界收缩到 checkpoint 级
-
-最初考虑过完全异步（组包"来一个更新一个"），但完全异步下每次全局下发都需在线验证，与单 TA + LHH 的逐轮验证闭环冲突。最终选择：组内仍同步封组，组间用 buffer+checkpoint 半异步，验证粒度为 checkpoint 选中集合。一句话：**不是把验证硬塞进完全异步，而是主动收缩异步边界以保住密码学闭环。** 该架构决策同时引出三个必要组件：checkpoint 触发本身（4.3.6）、mixed-version 的补偿（4.3.7）与掉线浪费的复用（4.3.3），故三者不是并列拼装而是同一决策的展开。
-
-## A.3 组件层：各机制的关键实现取舍
-
-### A.3.1 stale reuse 权重方向的修正
-
-MAFSA 原始定义 `α_i=exp(−β_c·E_i)` 作用于 fresh model，导致版本间隔 `E_i` 越大、stale 权重 `1−α_i` 反而越大。考虑到间隔越大陈旧结果与当前优化方向偏差风险越高，本文将指数衰减量改为直接控制 stale 项并加 `ρ_max≤0.5` 上界，保证新结果主导。故表述为"受 MAFSA 启发的时效性修正"而非"直接采用 MAFSA 加权公式"。
-
-### A.3.2 为什么 VCM 用 S_k 而非 n_k
-
-`W_sum^raw` 本身处在"样本量加权和"量纲中，组间补偿项必须同量纲才能与最终 `S_Q` 归一化一致。故 `C_k=S_k·γ_vcm·G_k`，而非按客户端个数 `n_k`。`n_k` 仅承担在线计数与最小在线人数约束。
-
-## A.4 显式出界的考量
-
-下列方向有价值但会稀释主线，统一出界：完全异步、解掩码前连续陈旧度系数 `β_g`、双 TA/门限 TA、全局异步轨迹在线审计、anti-censorship 可审计调度、First/Second-order VCM、组级质量追踪、HGA-FL 式 bias correction。出界是为让研究点 2 保持"一个能讲圆的协议扩展"而非大拼盘。
-
 ---
 
 ## 附：全文一致性自检
@@ -1286,3 +1425,11 @@ MAFSA 原始定义 `α_i=exp(−β_c·E_i)` 作用于 fresh model，导致版本
 - [x] 附录 A 重排为 A.1 约束层 / A.2 架构层 / A.3 组件层 / A.4 出界，与 4.1 的组织逻辑呼应
 - [x] 4.5.4 增设 I1/I2 机制交互检验（VCM×checkpoint、reuse×buffer），`run_all_ablations.py` 已同步
 - [x] 三机制定位为"同一架构决策的展开"而非并列拼装（4.1 末段 + A.2 末段）
+- [x] 验证开销口径统一为"验证**通信**开销与维度无关"（LHH 计算仍为 O(d)，见 3.3.7 口径注）
+- [x] 实验增益口径纪律：VCM 相对 G3、σ 相对 G3v 分别报告，禁止把 VCM 单机制增益标成 "VCM+σ" 联合收益（4.5.2）
+- [x] 创新点 2 = 策略绑定的可验证加权聚合（4.3.10 + 附注 4.2 + A.3.3），stale reuse 降级为组件（4.1、A.3.3），协议实现与强表述对齐：`edge.py` 独立复算覆盖全部可采纳权重来源，且来源绑定闭合（来源由协议配置唯一确定，降级为 none / 合法来源间择优于来源核对即拒，`tests/test_policy_binding.py` 含降级攻击回归）
+- [x] 主问题统一为"同步等待/mixed-version 偏差/策略完整性"（4.1）；核心偏差界 4.1 不含 stale 项（A.5 备选分析）；"首次/根本冲突/整体验证轻量"已清除，exactly-once 降级为重放防护
+- [x] 协议配置绑定：版本化 `ProtocolConfig` + manifest 携带 `policy_config_digest`（4.3.6），ES fail-closed 校验、TA/ES 独立复算权重（云端声明值只作审计）；实验基建 config_hash/运行元数据与策略绑定攻击族注入（`main_point2.py --attack weight_forge|weight_relabel|source_downgrade|alpha_tamper|history_missing`）
+- [x] 权威授权流（prepare/finalize 两阶段 + stage/finalize/publish/notify 提交事务）：TA 仅追加且可持久化 ledger（SQLite 主键；`prepared_checkpoints` 保存完整 receipt 字节 + token 元数据 + `result_digest`）+ ES 签名 vote（绑定 `result_digest`）+ `CheckpointReceipt`；授权不消费、提交成功才落地；Cloud 先 stage（只读校验 + journal）再凭 receipt 且结果摘要一致才 publish、ES 凭 receipt＋摘要＋ledger 完整确认且版本严格 +1 才推进（4.2.2、4.3.9）；finalize 幂等（同 receipt 重放返回 `already`，不同 receipt 冲突拒绝）；负例覆盖 token 未注册/已消费、K/timeout/真实 s_max 违约、版本跳变、vote 篡改、Cloud 重启重放、receipt 篡改、伪造或未经 prepare 的 finalize、诚实 receipt 后偷换 raw sum/final model、提交失败不推进 ledger、finalize 幂等与冲突、prepare 替换、stage→finalize→publish→notify 四阶段崩溃恢复、prepared 记录与 TA 密钥跨重启持久化（`tests/test_receipt_flow.py`）
+- [x] 可复现性：科学配置（数据/种子/模型/训练/协议/攻击）与产物配置（run_id/output_dir/tag/force/ta-state-path）分离，`config_hash` 只含科学配置；异配置非零退出；产物原子替换；`--deterministic` 为严格模式（`use_deterministic_algorithms(True)`，无 warn_only 覆盖）；`pytest.ini` 限定 `testpaths=tests`
+- [x] verify-on 组合边界 fail-fast 与可复现性：非法组合启动即失败；异配置结果非零退出；产物原子替换；`--deterministic` 严格模式；元数据含 config_mode_version/CUDA/cuDNN/threads/commandline
