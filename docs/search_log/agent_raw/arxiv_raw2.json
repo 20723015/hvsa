@@ -1,0 +1,454 @@
+{
+ "all:\"homomorphic hash\"": [
+  {
+   "arxiv": "2108.00100v2",
+   "title": "Quantum collision finding for homomorphic hash functions",
+   "pub": "2021-07-30",
+   "upd": "2021-08-10",
+   "authors": [
+    "Juan Carlos Garcia-Escartin",
+    "Vicent Gimeno",
+    "Julio José Moyano-Fernández"
+   ],
+   "cats": [
+    "cs.CR",
+    "math.AC",
+    "quant-ph"
+   ],
+   "abs": "Hash functions are a basic cryptographic primitive. Certain hash functions try to prove security against collision and preimage attacks by reductions to known hard problems. These hash functions usually have some additional properties that allow for that reduction. Hash functions which are additive or multiplicative are vulnerable to a quantum attack using the hidden subgroup problem algorithm for quantum computers. Using a quantum oracle to the hash, we can reconstruct the kernel of the hash function, which is enough to find collisions and second preimages. When the hash functions are additive with respect to the group operation in an Abelian group, there is always an efficient implementation of this attack. We present concrete attack examples to provable hash functions, including a preimage attack to $\\oplus$-linear hash functions and for certain multiplicative homomorphic hash schemes."
+  },
+  {
+   "arxiv": "1203.4063v1",
+   "title": "Homomorphic Hashing for Sparse Coefficient Extraction",
+   "pub": "2012-03-19",
+   "upd": "2012-03-19",
+   "authors": [
+    "Petteri Kaski",
+    "Mikko Koivisto",
+    "Jesper Nederlof"
+   ],
+   "cats": [
+    "cs.CC"
+   ],
+   "abs": "We study classes of Dynamic Programming (DP) algorithms which, due to their algebraic definitions, are closely related to coefficient extraction methods. DP algorithms can easily be modified to exploit sparseness in the DP table through memorization. Coefficient extraction techniques on the other hand are both space-efficient and parallelisable, but no tools have been available to exploit sparseness. We investigate the systematic use of homomorphic hash functions to combine the best of these methods and obtain improved space-efficient algorithms for problems including LINEAR SAT, SET PARTITION, and SUBSET SUM. Our algorithms run in time proportional to the number of nonzero entries of the last segment of the DP table, which presents a strict improvement over sparse DP. The last property also gives an improved algorithm for CNF SAT with sparse projections."
+  },
+  {
+   "arxiv": "1306.5646v3",
+   "title": "SL2 homomorphic hash functions: Worst case to average case reduction and short collision search",
+   "pub": "2013-06-24",
+   "upd": "2015-12-23",
+   "authors": [
+    "Ciaran Mullan",
+    "Boaz Tsaban"
+   ],
+   "cats": [
+    "cs.CR",
+    "math.GR"
+   ],
+   "abs": "We study homomorphic hash functions into SL(2,q), the 2x2 matrices with determinant 1 over the field with $q$ elements. Modulo a well supported number theoretic hypothesis, which holds in particular for concrete homomorphisms proposed thus far, we provide a worst case to average case reduction for these hash functions: upto a logarithmic factor, a random homomorphism is as secure as _any_ concrete homomorphism. For a family of homomorphisms containing several concrete proposals in the literature, we prove that collisions of length O(log(q)) can be found in running time O(sqrt(q)). For general homomorphisms we offer an algorithm that, heuristically and according to experiments, in running time O(sqrt(q)) finds collisions of length O(log(q)) for q even, and length O(log^2(q)/loglog(q))$ for arbitrary q. While exponetial time, our algorithms are faster in practice than all earlier generic algorithms, and produce much shorter collisions."
+  },
+  {
+   "arxiv": "2302.03290v3",
+   "title": "Homomorphic Hashing Based on Elliptic Curve Cryptography",
+   "pub": "2023-02-07",
+   "upd": "2023-02-15",
+   "authors": [
+    "Abel C. H. Chen"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "For avoiding the exposure of plaintexts in cloud environments, some homomorphic hashing algorithms have been proposed to generate the hash value of each plaintext, and cloud environments only store the hash values and calculate the hash values for future needs. However, longer hash value generation time and longer hash value summary time may be required by these homomorphic hashing algorithms with higher security strengths. Therefore, this study proposes a homomorphic hashing based on elliptic curve cryptography (ECC) to provide a homomorphic hashing function in accordance with the characteristics of ECC. Furthermore, mathematical models and practical cases have been given to prove the proposed method. In experiments, the results show that the proposed method have higher efficiency with different security strengths."
+  },
+  {
+   "arxiv": "2507.21096v1",
+   "title": "HexaMorphHash HMH- Homomorphic Hashing for Secure and Efficient Cryptographic Operations in Data Integrity Verification",
+   "pub": "2025-07-01",
+   "upd": "2025-07-01",
+   "authors": [
+    "Krishnendu Das"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.DB"
+   ],
+   "abs": "In the realm of big data and cloud computing, distributed systems are tasked with proficiently managing, storing, and validating extensive datasets across numerous nodes, all while maintaining robust data integrity. Conventional hashing methods, though straightforward, encounter substan tial difficulties in dynamic settings due to the necessity for thorough rehashing when nodes are altered. Consistent hashing mitigates some of these challenges by reducing data redistribution; however, it still contends with limitations in load balancing and scalability under intensive update conditions. This paper introduces an innovative approach using a lattice based homomorphic hash function HexaMorphHash that facilitates constant time, incremental updates while preserving a constant digest size. By utilizing the complexity of the Short Integer Solutions SIS problem, our method secures strong protective measures, even against quantum threats. We further com pare our method with existing ones such as direct signatures for each update, comprehensive database signing, Merkle tree based techniques, AdHash, MuHash, ECMH, and homomorphic sig nature schemes highlighting notable advancements in computational efficiency, memory usage, and scalability. Our contributions present a viable solution for frequent update dissemination in expansive distributed systems, safeguarding both data integrity and system performance."
+  },
+  {
+   "arxiv": "2010.04607v1",
+   "title": "Using Homomorphic hashes in coded blockchains",
+   "pub": "2020-10-08",
+   "upd": "2020-10-08",
+   "authors": [
+    "Doriane Perard",
+    "Xavier Goffin",
+    "Jérôme Lacan"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "One of the scalability issues of blockchains is the increase of their sizes which can prevent users from storing them and thus from contributing to the decentralization effort. Recent works developed the concept of coded blockchains, which allow users to store only some coded fragments of the blockchains. However, this solution is not protected against malicious nodes that can propagate erroneous coded fragments. We propose in the paper to add homomorphic hashes to this system. This allows for instantaneous detection of erroneous fragments and thus avoids decoding with wrong data. We describe the integration of this mechanism in coded blockchains and we evaluate its complexity theoretically and by simulation."
+  },
+  {
+   "arxiv": "1908.05385v1",
+   "title": "Secure Coded Cooperative Computation at the Heterogeneous Edge against Byzantine Attacks",
+   "pub": "2019-08-15",
+   "upd": "2019-08-15",
+   "authors": [
+    "Yasaman Keshtkarjahromi",
+    "Rawad Bitar",
+    "Venkat Dasari",
+    "Salim El Rouayheb",
+    "Hulya Seferoglu"
+   ],
+   "cats": [
+    "cs.DC"
+   ],
+   "abs": "Edge computing is emerging as a new paradigm to allow processing data at the edge of the network, where data is typically generated and collected, by exploiting multiple devices at the edge collectively. However, offloading tasks to other devices leaves the edge computing applications at the complete mercy of an attacker. One of the attacks, which is also the focus of this work, is Byzantine attacks, where one or more devices can corrupt the offloaded tasks. Furthermore, exploiting the potential of edge computing is challenging mainly due to the heterogeneous and time-varying nature of the devices at the edge. In this paper, we develop a secure coded cooperative computation mechanism (SC3) that provides both security and computation efficiency guarantees by gracefully combining homomorphic hash functions and coded cooperative computation. Homomorphic hash functions are used against Byzantine attacks and coded cooperative computation is used to improve computation efficiency when edge resources are heterogeneous and time-varying. Simulations results show that SC3 improves task completion delay significantly."
+  },
+  {
+   "arxiv": "2006.12733v2",
+   "title": "A verifiable quantum key agreement protocol based on six-qubit cluster states",
+   "pub": "2020-06-23",
+   "upd": "2021-04-13",
+   "authors": [
+    "Li-Juan Liu",
+    "Zhi-Hui Li"
+   ],
+   "cats": [
+    "quant-ph"
+   ],
+   "abs": "Quantum key agreement requires all participants to recover the shared key together, so it is crucial to resist the participant attack. In this paper, we propose a verifiable multi-party quantum key agreement protocol based on the six-qubit cluster states. A verifiable distributor who preserves some subsequences of the six-qubit cluster states is introduced into this protocol, thus the participants can not obtain the shared key in advance. Besides, the correctness and simultaneity of the shared key are guaranteed by the trusted design combiner and homomorphic hash function. Furthermore, the security analysis shows that the new protocol can resist the external and internal attacks."
+  },
+  {
+   "arxiv": "1601.06502v1",
+   "title": "Elliptic Curve Multiset Hash",
+   "pub": "2016-01-25",
+   "upd": "2016-01-25",
+   "authors": [
+    "Jeremy Maitin-Shepard",
+    "Mehdi Tibouchi",
+    "Diego Aranha"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "A homomorphic, or incremental, multiset hash function, associates a hash value to arbitrary collections of objects (with possible repetitions) in such a way that the hash of the union of two collections is easy to compute from the hashes of the two collections themselves: it is simply their sum under a suitable group operation. In particular, hash values of large collections can be computed incrementally and/or in parallel. Homomorphic hashing is thus a very useful primitive with applications ranging from database integrity verification to streaming set/multiset comparison and network coding. Unfortunately, constructions of homomorphic hash functions in the literature are hampered by two main drawbacks: they tend to be much longer than usual hash functions at the same security level (e.g. to achieve a collision resistance of 2^128, they are several thousand bits long, as opposed to 256 bits for usual hash functions), and they are also quite slow. In this paper, we introduce the Elliptic Curve Multiset Hash (ECMH), which combines a usual bit string-valued hash function like BLAKE2 with an efficient encoding into binary elliptic curves to overcome both difficulties. On the one hand, the size of ECMH digests is essentially optimal: 2m-bit hash values provide O(2^m) collision resistance. On the other hand, we demonstrate a highly-efficient software implementation of ECMH, which our thorough empirical evaluation shows to be capable of processing over 3 million set elements per second on a 4 GHz Intel Haswell machine at the 128-bit security level---many times faster than previous practical methods."
+  },
+  {
+   "arxiv": "2603.29688v1",
+   "title": "Client-Verifiable and Efficient Federated Unlearning in Low-Altitude Wireless Networks",
+   "pub": "2026-03-31",
+   "upd": "2026-03-31",
+   "authors": [
+    "Yuhua Xu",
+    "Mingtao Jiang",
+    "Chenfei Hu",
+    "Yinglong Wang",
+    "Chuan Zhang",
+    "Meng Li"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "In low-altitude wireless networks (LAWN), federated learning (FL) enables collaborative intelligence among unmanned aerial vehicles (UAVs) and integrated sensing and communication (ISAC) devices while keeping raw sensing data local. Due to the \"right to be forgotten\" requirements and the high mobility of ISAC devices that frequently enter or leave the coverage region of UAV-assisted servers, the influence of departing devices must be removed from trained models. This necessity motivates the adoption of federated unlearning (FUL) to eliminate historical device contributions from the global model in LAWN. However, existing FUL approaches implicitly assume that the UAV-assisted server executes unlearning operations honestly. Without client-verifiable guarantees, an untrusted server may retain residual device information, leading to potential privacy leakage and undermining trust. To address this issue, we propose VerFU, a privacy-preserving and client-verifiable federated unlearning framework designed for LAWN. It empowers ISAC devices to validate the server-side unlearning operations without relying on original data samples. By integrating linear homomorphic hash (LHH) with commitment schemes, VerFU constructs tamper-proof records of historical updates. ISAC devices ensure the integrity of unlearning results by verifying decommitment parameters and utilizing the linear composability of LHH to check whether the global model accurately removes their historical contributions. Furthermore, VerFU is capable of efficiently processing parallel unlearning requests and verification from multiple ISAC devices. Experimental results demonstrate that our framework efficiently preserves model utility post-unlearning while maintaining low communication and verification overhead."
+  },
+  {
+   "arxiv": "1611.03982v6",
+   "title": "Efficient Proofs of Retrievability with Public Verifiability for Dynamic Cloud Storage",
+   "pub": "2016-11-12",
+   "upd": "2018-08-16",
+   "authors": [
+    "Binanda Sengupta",
+    "Sushmita Ruj"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Cloud service providers offer various facilities to their clients. The clients with limited resources opt for some of these facilities. They can outsource their bulk data to the cloud server. The cloud server maintains these data in lieu of monetary benefits. However, a malicious cloud server might delete some of these data to save some space and offer this extra amount of storage to another client. Therefore, the client might not retrieve her file (or some portions of it) as often as needed. Proofs of retrievability (POR) provide an assurance to the client that the server is actually storing all of her data appropriately and they can be retrieved at any point of time. In a dynamic POR scheme, the client can update her data after she uploads them to the cloud server. Moreover, in publicly verifiable POR schemes, the client can delegate her auditing task to some third party specialized for this purpose. In this work, we exploit the homomorphic hashing technique to design a publicly verifiable dynamic POR scheme that is more efficient (in terms of bandwidth required between the client and the server) than the \"state-of-the-art\" publicly verifiable dynamic POR scheme. We also analyze security and performance of our scheme."
+  }
+ ],
+ "all:\"linear homomorphic\" AND all:\"verifiable\"": [
+  {
+   "arxiv": "2603.29688v1",
+   "title": "Client-Verifiable and Efficient Federated Unlearning in Low-Altitude Wireless Networks",
+   "pub": "2026-03-31",
+   "upd": "2026-03-31",
+   "authors": [
+    "Yuhua Xu",
+    "Mingtao Jiang",
+    "Chenfei Hu",
+    "Yinglong Wang",
+    "Chuan Zhang",
+    "Meng Li"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "In low-altitude wireless networks (LAWN), federated learning (FL) enables collaborative intelligence among unmanned aerial vehicles (UAVs) and integrated sensing and communication (ISAC) devices while keeping raw sensing data local. Due to the \"right to be forgotten\" requirements and the high mobility of ISAC devices that frequently enter or leave the coverage region of UAV-assisted servers, the influence of departing devices must be removed from trained models. This necessity motivates the adoption of federated unlearning (FUL) to eliminate historical device contributions from the global model in LAWN. However, existing FUL approaches implicitly assume that the UAV-assisted server executes unlearning operations honestly. Without client-verifiable guarantees, an untrusted server may retain residual device information, leading to potential privacy leakage and undermining trust. To address this issue, we propose VerFU, a privacy-preserving and client-verifiable federated unlearning framework designed for LAWN. It empowers ISAC devices to validate the server-side unlearning operations without relying on original data samples. By integrating linear homomorphic hash (LHH) with commitment schemes, VerFU constructs tamper-proof records of historical updates. ISAC devices ensure the integrity of unlearning results by verifying decommitment parameters and utilizing the linear composability of LHH to check whether the global model accurately removes their historical contributions. Furthermore, VerFU is capable of efficiently processing parallel unlearning requests and verification from multiple ISAC devices. Experimental results demonstrate that our framework efficiently preserves model utility post-unlearning while maintaining low communication and verification overhead."
+  },
+  {
+   "arxiv": "2507.02281v4",
+   "title": "Linearly Homomorphic Ring Signature Scheme over Lattices",
+   "pub": "2025-07-03",
+   "upd": "2026-03-27",
+   "authors": [
+    "Heng Guo",
+    "Jia Li",
+    "Yanan Wang",
+    "Fengxia Liu",
+    "Zhiyong Zheng",
+    "Kun Tian"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Construct the first provably secure linear homomorphic ring signature scheme. Ring signatures allow a signer to anonymously sign a message on behalf of a user group (ring) and are widely applied in areas such as identity protection, electronic voting, and privacy enhancement in blockchain. Homomorphic signatures, on the other hand, support verifiable computations on signed data. The integration of anonymity and computability in homomorphic ring signatures holds the potential to create new application scenarios for privacy-preserving distributed systems. It is worth noting that Choi and Kim first introduced the concept of linear homomorphic ring signatures in 2017 and proposed a specific scheme. However, their scheme lacks a complete security proof, leaving its security theoretically unconfirmed. To address this research gap, this paper presents the first provably secure lattice-based linear homomorphic ring signature scheme, designed for scenarios where the ring size is O(log n). This scheme not only combines the anonymity of ring signatures with the malleability of homomorphic signatures but also achieves resistance against quantum attacks."
+  }
+ ],
+ "all:\"hierarchical secure aggregation\"": [
+  {
+   "arxiv": "2507.14768v2",
+   "title": "Hierarchical Secure Aggregation with Heterogeneous Security Constraints and Arbitrary User Collusion",
+   "pub": "2025-07-19",
+   "upd": "2026-01-10",
+   "authors": [
+    "Zhou Li",
+    "Xiang Zhang",
+    "Jiawen Lv",
+    "Jihao Fan",
+    "Haiqiang Chen",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.IT",
+    "cs.CR",
+    "cs.DC",
+    "cs.LG"
+   ],
+   "abs": "In hierarchical secure aggregation (HSA), a server communicates with clustered users through an intermediate layer of relays to compute the sum of users' inputs under two security requirements -- server security and relay security. Server security requires that the server learns nothing beyond the desired sum even when colluding with a subset of users, while relay security requires that each relay remains oblivious to the users' inputs under collusion. Existing work on HSA enforces homogeneous security where \\tit{all} inputs must be protected against \\tit{any} subset of potential colluding users with sizes up to a predefined threshold. Such a \\homo formulation cannot capture scenarios with \\tit{\\het} \\secty \\reqs where \\diff users may demand various levels of protection. In this paper, we study hierarchical secure aggregation (HSA) with heterogeneous security requirements and arbitrary user collusion. Specifically, we consider scenarios where the inputs of certain groups of users must remain information-theoretically secure against inference by the server or any relay, even if the server or any relay colludes with an arbitrary subset of other users. Under server security, the server learns nothing about these protected inputs beyond the prescribed aggregate sum, despite any such collusion. Under relay security, each relay similarly obtains no information about the protected inputs under the same collusion model. We characterize the optimal communication rates achievable across all layers for all parameter regimes. Furthermore, we study the minimum source keys required at the users to ensure security. For this source key requirement, we provide tight characterizations in two broad regimes determined by the security and collusion constraints, and establish a general information-theoretic lower bound together with a bounded-gap achievable scheme for the remaining regime."
+  },
+  {
+   "arxiv": "2503.04564v6",
+   "title": "Fundamental Limits of Hierarchical Secure Aggregation with Cyclic User Association",
+   "pub": "2025-03-06",
+   "upd": "2026-01-26",
+   "authors": [
+    "Xiang Zhang",
+    "Zhou Li",
+    "Kai Wan",
+    "Hua Sun",
+    "Mingyue Ji",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.IT",
+    "cs.AI",
+    "cs.CR",
+    "cs.DC"
+   ],
+   "abs": "Secure aggregation is motivated by federated learning (FL) where a cloud server aims to compute an {aggregated} model (i.e., weights of deep neural networks) of the locally-trained models of numerous clients {through an iterative communication process}, while adhering to data security requirements. Hierarchical secure aggregation (HSA) extends this concept to a three-layer hierarchical network, where clustered users communicate with the server through an intermediate layer of relays. In HSA, beyond conventional server security, relay security is also enforced to ensure that the relays remain oblivious to the users' inputs (an abstraction of the local models in FL). {Existing studies on HSA that jointly consider communication and secret key generation efficiency typically assume that each user is associated with only one relay, limiting opportunities for coding across inter-cluster users to achieve efficient communication and key generation.} In this paper, we consider HSA with a cyclic association pattern where each user is connected to $B$ consecutive relays in a wrap-around manner. We propose an efficient aggregation scheme which includes a message design for the inputs inspired by gradient coding-a well-known technique for efficient communication in distributed computing-along with a highly non-trivial security key design."
+  },
+  {
+   "arxiv": "2604.26344v1",
+   "title": "On the Capacity of Hierarchical Secure Aggregation with Groupwise Keys",
+   "pub": "2026-04-29",
+   "upd": "2026-04-29",
+   "authors": [
+    "Minyang Lu",
+    "Zhou Li",
+    "Haiqiang Chen",
+    "Min Xie"
+   ],
+   "cats": [
+    "cs.IT"
+   ],
+   "abs": "We study the hierarchical secure aggregation problem with groupwise keys. The problem consists of an aggregation server, $U$ relays, and $UV$ users, where each relay serves $V$ disjoint users, and each subset of $G$ users shares an independent groupwise key. Two security requirements are imposed: relay security and server security. Specifically, each relay must not learn any information about the users' inputs, and the server must not learn any additional information beyond the recovered sum of all inputs. We first show that the problem is infeasible when $G = 1$. For the feasible regime $1 &lt; G \\le UV$, we fully characterize the optimal rate region. In particular, we prove that both each user and each relay must transmit at least one symbol per input symbol. Furthermore, we characterize the minimum required groupwise key rate as $\\max\\left\\{\\frac{V}{\\binom{UV}{G} - \\binom{(U-1)V}{G}},\\; \\frac{U - 1}{\\binom{UV}{G} - U \\binom{V}{G}}\\right\\},$ where the two terms correspond to the constraints imposed by relay security and server security, respectively. For achievability, we propose an explicit linear coding scheme based on structured precoding matrices, and show that it satisfies both correctness and security requirements. The construction avoids permutation-based symmetrization by leveraging sufficiently generic matrix designs over large fields. Finally, we establish a matching converse, thereby characterizing the optimal rate region."
+  },
+  {
+   "arxiv": "2511.20117v1",
+   "title": "On hierarchical secure aggregation against relay and user collusion",
+   "pub": "2025-11-25",
+   "upd": "2025-11-25",
+   "authors": [
+    "Min Xu",
+    "Xuejiao Han",
+    "Kai Wan",
+    "Gennian Ge"
+   ],
+   "cats": [
+    "cs.IT"
+   ],
+   "abs": "Secure aggregation (SA) is fundamental to privacy preservation in federated learning (FL), enabling model aggregation while preventing disclosure of individual user updates. This paper addresses hierarchical secure aggregation (HSA) against relay and user collusion in homogeneous networks, where each user connects to $n$ relays and each relay serves $m$ users. In the two-phase communication framework, users transmit masked data to relays, which then process and forward compiled messages to the server for exact sum recovery. The primary objective is to devise a transmission scheme such that the server can finish the aggregation task, while any group of $T_h$ colluding relays and $T_u$ colluding users cannot reveal any information about the data owned by the non-colluding users. In this study, we establish fundamental limits on the communication load, defined as the ratio of transmitted information size to original data size, for each user-relay link and each relay-server link. Achievable thresholds for collusion resilience are also derived. When the number of colluding relays and users falls below certain critical thresholds, we construct communication-optimal schemes using methods from network function computation. A limitation of these schemes is their reliance on large random keys. To address this, we derive a lower bound on the required key size and prove its achievability in cyclic networks, where users are connected to relays in a cyclic wrap-around manner. By establishing a connection between HSA and network function computation, this work advances the theoretical limits of communication efficiency and information-theoretic security in secure aggregation."
+  },
+  {
+   "arxiv": "2410.14035v6",
+   "title": "Optimal Communication and Key Rate Region for Hierarchical Secure Aggregation with User Collusion",
+   "pub": "2024-10-17",
+   "upd": "2026-01-15",
+   "authors": [
+    "Xiang Zhang",
+    "Kai Wan",
+    "Hua Sun",
+    "Shiqiang Wang",
+    "Mingyue Ji",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.IT"
+   ],
+   "abs": "Secure aggregation is concerned with the task of securely uploading the inputs of multiple users to an aggregation server without letting the server know the inputs beyond their summation. It finds broad applications in distributed machine learning paradigms such as federated learning (FL) where multiple clients, each having access to a proprietary dataset, periodically upload their locally trained models (abstracted as inputs) to a parameter server which then generates an aggregate (e.g., averaged) model that is sent back to the clients as an initializing point for a new round of local training. To enhance the data privacy of the clients, secure aggregation protocols are developed using techniques from cryptography to ensure that the server infers no more information of the users' inputs beyond the desired aggregated input, even if the server can collude with some users. Although laying the ground for understanding the fundamental utility-security trade-off in secure aggregation, the simple star client-server architecture cannot capture more complex network architectures used in practical systems. Motivated by hierarchical federated learning, we investigate the secure aggregation problem in a $3$-layer hierarchical network consisting of clustered users connecting to an aggregation server through an intermediate layer of relays. Besides the conventional server security which requires that the server learns nothing beyond the desired sum of inputs, relay security is also imposed so that the relays infer nothing about the users' inputs and remain oblivious. For such a hierarchical secure aggregation (HSA) problem, we characterize the optimal multifaceted trade-off between communication (in terms of user-to-relay and relay-to-server communication rates) and secret key generation efficiency (in terms of individual key and source key rates)."
+  },
+  {
+   "arxiv": "2511.18887v1",
+   "title": "Hi-SAFE: Hierarchical Secure Aggregation for Lightweight Federated Learning",
+   "pub": "2025-11-24",
+   "upd": "2025-11-24",
+   "authors": [
+    "Hyeong-Gun Joo",
+    "Songnam Hong",
+    "Seunghwan Lee",
+    "Dong-Joon Shin"
+   ],
+   "cats": [
+    "cs.LG"
+   ],
+   "abs": "Federated learning (FL) faces challenges in ensuring both privacy and communication efficiency, particularly in resource-constrained environments such as Internet of Things (IoT) and edge networks. While sign-based methods, such as sign stochastic gradient descent with majority voting (SIGNSGD-MV), offer substantial bandwidth savings, they remain vulnerable to inference attacks due to exposure of gradient signs. Existing secure aggregation techniques are either incompatible with sign-based methods or incur prohibitive overhead. To address these limitations, we propose Hi-SAFE, a lightweight and cryptographically secure aggregation framework for sign-based FL. Our core contribution is the construction of efficient majority vote polynomials for SIGNSGD-MV, derived from Fermat's Little Theorem. This formulation represents the majority vote as a low-degree polynomial over a finite field, enabling secure evaluation that hides intermediate values and reveals only the final result. We further introduce a hierarchical subgrouping strategy that ensures constant multiplicative depth and bounded per-user complexity, independent of the number of users n."
+  },
+  {
+   "arxiv": "2604.12429v1",
+   "title": "On the Optimality of Hierarchical Secure Aggregation with Arbitrary Heterogeneous Data Assignment",
+   "pub": "2026-04-14",
+   "upd": "2026-04-14",
+   "authors": [
+    "Chenyi Sun",
+    "Ziting Zhang",
+    "Kai Wan",
+    "Xiang Zhang"
+   ],
+   "cats": [
+    "cs.IT"
+   ],
+   "abs": "This paper studies the information theoretic secure aggregation problem in a three-layer hierarchical network with arbitrary heterogeneous data assignment, where clustered users communicate with an aggregation server through an intermediate layer of relays. We consider a more general setting with arbitrary heterogeneous data assignment across users, where `arbitrary' means that the data assignment is given in advance and `heterogeneous' means that the users may hold different numbers of datasets. Each user locally computes the partially aggregated gradients as its input based on the assigned datasets and transmits masked input to its associated relay. The relays then forward the aggregated messages to the server, which aims to recover the sum of the gradients. In this process, while some users may drop out unpredictably, the server needs to correctly recover the desired aggregation from the surviving users. Moreover, the server or any relay may collude with a subset of users. We impose the following security constraints: (i) server security, requiring the server to learn only the sum of gradients without gaining any additional information about individual inputs; and (ii) relay security, ensuring that each relay learns nothing about users' inputs. Under these constraints, we propose an aggregation scheme that guarantees information theoretic security and achieves the optimal two-layer communication loads."
+  },
+  {
+   "arxiv": "2603.19705v1",
+   "title": "On the Fundamental Limits of Hierarchical Secure Aggregation with Dropout and Collusion Resilience",
+   "pub": "2026-03-20",
+   "upd": "2026-03-20",
+   "authors": [
+    "Zhou Li",
+    "Yizhou Zhao",
+    "Xiang Zhang",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.IT"
+   ],
+   "abs": "We study the fundamental communication limits of information-theoretic secure aggregation in a hierarchical network consisting of a server, multiple relays, and multiple users per relay. Communication proceeds over two rounds and two hops, and the system is subject to arbitrary user and relay dropouts. Up to $T$ users may collude with either the server or any single relay. The server aims to recover the sum of the inputs of all users that survive the first round, while learning no additional information beyond the aggregate sum and the inputs of the colluding users. Each relay, however, must learn nothing about the users' inputs except for the information revealed by the inputs of the colluding users under the same collusion model. We introduce a four-dimensional rate tuple that captures the communication cost across rounds and hops. Under a delayed message availability model, we establish necessary and sufficient conditions for feasibility and fully characterize the optimal first-round communication rates. For the second round, we characterize the optimal user-to-relay rate and derive lower and upper bounds on the relay-to-server rate. While these bounds do not coincide in general, they are tight in certain regimes of interest. Our results reveal a sharp threshold phenomenon: secure aggregation is feasible if and only if the total number of surviving users across surviving relays exceeds the collusion threshold. Achievability is established via a vector linear coding scheme with carefully structured correlated randomness exhibiting MDS-like properties, ensuring correctness and information-theoretic security under all possible dropout patterns. Entropic converse bounds are also derived."
+  },
+  {
+   "arxiv": "2601.12853v1",
+   "title": "On Resilient and Efficient Linear Secure Aggregation in Hierarchical Federated Learning",
+   "pub": "2026-01-19",
+   "upd": "2026-01-19",
+   "authors": [
+    "Shudi Weng",
+    "Xiang Zhang",
+    "Yizhou Zhao",
+    "Giuseppe Caire",
+    "Ming Xiao",
+    "Mikael Skoglund"
+   ],
+   "cats": [
+    "cs.DC"
+   ],
+   "abs": "In this paper, we study the fundamental limits of hierarchical secure aggregation under unreliable communication. We consider a hierarchical network where each client connects to multiple relays, and both client-to-relay and relay-to-server links are intermittent. Under this setting, we characterize the minimum communication and randomness costs required to achieve robust secure aggregation. We then propose an optimal protocol that attains these minimum costs, and establish its optimality through a matching converse proof. In addition, we introduce an improved problem formulation that bridges the gap between existing information-theoretic secure aggregation protocols and practical real-world federated learning problems."
+  },
+  {
+   "arxiv": "2601.17995v1",
+   "title": "Coding-Enforced Resilient and Secure Aggregation for Hierarchical Federated Learning",
+   "pub": "2026-01-25",
+   "upd": "2026-01-25",
+   "authors": [
+    "Shudi Weng",
+    "Ming Xiao",
+    "Mikael Skoglund"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.AI"
+   ],
+   "abs": "Hierarchical federated learning (HFL) has emerged as an effective paradigm to enhance link quality between clients and the server. However, ensuring model accuracy while preserving privacy under unreliable communication remains a key challenge in HFL, as the coordination among privacy noise can be randomly disrupted. To address this limitation, we propose a robust hierarchical secure aggregation scheme, termed H-SecCoGC, which integrates coding strategies to enforce structured aggregation. The proposed scheme not only ensures accurate global model construction under varying levels of privacy, but also avoids the partial participation issue, thereby significantly improving robustness, privacy preservation, and learning efficiency. Both theoretical analyses and experimental results demonstrate the superiority of our scheme under unreliable communication across arbitrarily strong privacy guarantees"
+  }
+ ],
+ "all:\"verification outsourcing\" AND all:\"federated\"": [],
+ "all:\"verifiable federated learning\" AND all:\"edge\"": [],
+ "all:\"aggregation integrity\" AND all:\"edge server\"": [],
+ "all:\"multi-server\" AND all:\"secure aggregation\" AND all:\"verifiable\"": [],
+ "all:\"proof of aggregation\"": [],
+ "all:\"homomorphic commitment\" AND all:\"federated learning\"": [
+  {
+   "arxiv": "2604.23437v2",
+   "title": "Scalable and Verifiable Federated Learning for Cross-Institution Financial Fraud Detection",
+   "pub": "2026-04-25",
+   "upd": "2026-05-17",
+   "authors": [
+    "Prajwal Panth",
+    "Nishant Nigam"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.LG"
+   ],
+   "abs": "Financial fraud increasingly exploits institutional boundaries: laundering networks distribute transactions across multiple banks because no single institution can observe the full pattern. Federated Learning (FL) enables collaborative detection without raw data sharing, yet practical deployment in banking environments remains constrained by three pressures. First, homomorphic encryption schemes impose high computational costs that limit real-time aggregation at scale. Second, mask-based protocols such as Google's SecAgg require O(N^2) pairwise key exchanges, which become inefficient as participant count grows. Third, existing protocols provide limited verification that submitted gradient updates are well-formed, leaving aggregation vulnerable to consistency attacks. This paper presents Dynamic Sharded Federated Learning (DSFL), a secure aggregation framework for cross-institution fraud detection. DSFL introduces Dynamic Stochastic Sharding, which partitions participants into small cryptographically ephemeral clusters of fixed size m, reducing communication complexity to O(N*m). Within each cluster, participants submit Linear Integrity Tags, additive-homomorphic commitments that allow the server to verify update consistency without decryption. The mechanism detects inconsistent updates rather than malicious gradients. An Active Neighborhood Recovery protocol handles mid-round dropouts by reconstructing orphaned masks. Experiments on the ULB Credit Card Fraud Detection dataset (284,807 transactions across 10 simulated banking nodes) show that DSFL achieves approximately 34x lower aggregation latency than Paillier-based secure aggregation at N=1000, based on analytical extrapolation from empirical baselines, while maintaining 99% recovery fidelity under a 20% dropout regime. Global fraud recall reached 91.2% (+/-0.8%), above the 68% average of locally trained models."
+  }
+ ],
+ "all:\"privacy-preserving aggregation\" AND all:\"verification\"": [
+  {
+   "arxiv": "2403.15208v1",
+   "title": "VPAS: Publicly Verifiable and Privacy-Preserving Aggregate Statistics on Distributed Datasets",
+   "pub": "2024-03-22",
+   "upd": "2024-03-22",
+   "authors": [
+    "Mohammed Alghazwi",
+    "Dewi Davies-Batista",
+    "Dimka Karastoyanova",
+    "Fatih Turkmen"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Aggregate statistics play an important role in extracting meaningful insights from distributed data while preserving privacy. A growing number of application domains, such as healthcare, utilize these statistics in advancing research and improving patient care. In this work, we explore the challenge of input validation and public verifiability within privacy-preserving aggregation protocols. We address the scenario in which a party receives data from multiple sources and must verify the validity of the input and correctness of the computations over this data to third parties, such as auditors, while ensuring input data privacy. To achieve this, we propose the \"VPAS\" protocol, which satisfies these requirements. Our protocol utilizes homomorphic encryption for data privacy, and employs Zero-Knowledge Proofs (ZKP) and a blockchain system for input validation and public verifiability. We constructed VPAS by extending existing verifiable encryption schemes into secure protocols that enable N clients to encrypt, aggregate, and subsequently release the final result to a collector in a verifiable manner. We implemented and experimentally evaluated VPAS with regard to encryption costs, proof generation, and verification. The findings indicate that the overhead associated with verifiability in our protocol is 10x lower than that incurred by simply using conventional zkSNARKs. This enhanced efficiency makes it feasible to apply input validation with public verifiability across a wider range of applications or use cases that can tolerate moderate computational overhead associated with proof generation."
+  },
+  {
+   "arxiv": "2603.19949v1",
+   "title": "TAPAS: Efficient Two-Server Asymmetric Private Aggregation Beyond Prio(+)",
+   "pub": "2026-03-20",
+   "upd": "2026-03-20",
+   "authors": [
+    "Harish Karthikeyan",
+    "Antigoni Polychroniadou"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.LG"
+   ],
+   "abs": "Privacy-preserving aggregation is a cornerstone for AI systems that learn from distributed data without exposing individual records, especially in federated learning and telemetry. Existing two-server protocols (e.g., Prio and successors) set a practical baseline by validating inputs while preventing any single party from learning users' values, but they impose symmetric costs on both servers and communication that scales with the per-client input dimension $L$. Modern learning tasks routinely involve dimensionalities $L$ in the tens to hundreds of millions of model parameters. We present TAPAS, a two-server asymmetric private aggregation scheme that addresses these limitations along four dimensions: (i) no trusted setup or preprocessing, (ii) server-side communication that is independent of $L$ (iii) post-quantum security based solely on standard lattice assumptions (LWE, SIS), and (iv) stronger robustness with identifiable abort and full malicious security for the servers. A key design choice is intentional asymmetry: one server bears the $O(L)$ aggregation and verification work, while the other operates as a lightweight facilitator with computation independent of $L$. This reduces total cost, enables the secondary server to run on commodity hardware, and strengthens the non-collusion assumption of the servers. One of our main contributions is a suite of new and efficient lattice-based zero-knowledge proofs; to our knowledge, we are the first to establish privacy and correctness with identifiable abort in the two-server setting."
+  },
+  {
+   "arxiv": "2509.04979v1",
+   "title": "Internet 3.0: Architecture for a Web-of-Agents with it's Algorithm for Ranking Agents",
+   "pub": "2025-09-05",
+   "upd": "2025-09-05",
+   "authors": [
+    "Rajesh Tembarai Krishnamachari",
+    "Srividya Rajesh"
+   ],
+   "cats": [
+    "cs.AI"
+   ],
+   "abs": "AI agents -- powered by reasoning-capable large language models (LLMs) and integrated with tools, data, and web search -- are poised to transform the internet into a \\emph{Web of Agents}: a machine-native ecosystem where autonomous agents interact, collaborate, and execute tasks at scale. Realizing this vision requires \\emph{Agent Ranking} -- selecting agents not only by declared capabilities but by proven, recent performance. Unlike Web~1.0's PageRank, a global, transparent network of agent interactions does not exist; usage signals are fragmented and private, making ranking infeasible without coordination. We propose \\textbf{DOVIS}, a five-layer operational protocol (\\emph{Discovery, Orchestration, Verification, Incentives, Semantics}) that enables the collection of minimal, privacy-preserving aggregates of usage and performance across the ecosystem. On this substrate, we implement \\textbf{AgentRank-UC}, a dynamic, trust-aware algorithm that combines \\emph{usage} (selection frequency) and \\emph{competence} (outcome quality, cost, safety, latency) into a unified ranking. We present simulation results and theoretical guarantees on convergence, robustness, and Sybil resistance, demonstrating the viability of coordinated protocols and performance-aware ranking in enabling a scalable, trustworthy Agentic Web."
+  }
+ ]
+}

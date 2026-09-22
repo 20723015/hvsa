@@ -1,0 +1,103 @@
+====================================================================================================
+QUERY: all:"outsourced verification"  ->  1 results
+---
+  arXiv:1307.2991v2 | pub 2013-07-11 | upd 2013-07-12 | cs.DB
+  T: Integrity Verification for Outsourcing Uncertain Frequent Itemset Mining
+  A: Qiwei Lu, Wenchao Huang, Yan Xiong, Xudong Gong
+  ABS: In recent years, due to the wide applications of uncertain data (e.g., noisy data), uncertain frequent itemsets (UFI) mining over uncertain databases has attracted much attention, which differs from the corresponding deterministic problem from the generalized definition and resolutions. As the most costly task in association rule mining process, it has been shown that outsourcing this task to a service provider (e.g.,the third cloud party) brings several benefits to the data owner such as cost relief and a less commitment to storage and computational resources. However, the correctness integri
+====================================================================================================
+QUERY: all:"verify the aggregation"  ->  14 results
+---
+  arXiv:1811.03727v1 | pub 2018-11-09 | upd 2018-11-09 | cs.CR
+  T: VDAS: Verifiable Data Aggregation Scheme for Internet of Things
+  A: Jingwei Liu, Jinping Han, Longfei Wu, Rong Sun, Xiaojiang Du
+  ABS: Along with the miniaturization of various types of sensors, a mass of intelligent terminals are gaining stronger sensing capability, which raises a deeper perception and better prospect of Internet of Things (IoT). With big sensing data, IoT provides lots of convenient services for the monitoring and management of smart cities and people's daily lives. However, there are still many security challenges influencing the further development of IoT, one of which is how to quickly verify the big data obtained from IoT terminals. Aggregate signature is an efficient approach to perform big data authen
+---
+  arXiv:2505.13319v2 | pub 2025-05-19 | upd 2025-05-20 | cs.CR,cs.DC
+  T: SVAFD: A Secure and Verifiable Co-Aggregation Protocol for Federated Distillation
+  A: Tian Wen, Sheng Sun, Yuwei Wang, Peiyan Chen, Zhiyuan Wu, Min Liu
+  ABS: Secure Aggregation (SA) is an indispensable component of Federated Learning (FL) that concentrates on privacy preservation while allowing for robust aggregation. However, most SA designs rely heavily on the unrealistic assumption of homogeneous model architectures. Federated Distillation (FD), which aggregates locally computed logits instead of model parameters, introduces a promising alternative for cooperative training in heterogeneous model settings. Nevertheless, we recognize two major challenges in implementing SA for FD. (i) Prior SA designs encourage a dominant server, who is solely res
+---
+  arXiv:2605.24054v2 | pub 2026-05-22 | upd 2026-08-22 | cs.CR
+  T: Verifiable Secure Aggregation via Dual Servers with Linear Tags in Federated Learning
+  A: Yufei Zhou
+  ABS: Federated learning (FL) enables collaborative model training by aggregating local updates without requiring raw data sharing. However, prior studies have shown that servers can exploit gradient inversion to compromise user privacy or manipulate aggregation results, undermining the utility of the global model. To address these concerns, we propose a secure and verifiable aggregation scheme with lightweight cryptographic primitives for FL. Our method leverages pseudo-random functions (PRFs) and a non-colluding dual-server architecture to achieve secure aggregation with mutual server verification
+---
+  arXiv:2312.13437v1 | pub 2023-12-20 | upd 2023-12-20 | cs.LG,cs.CL
+  T: A General Model for Aggregating Annotations Across Simple, Complex, and Multi-Object Annotation Tasks
+  A: Alexander Braylan, Madalyn Marabella, Omar Alonso, Matthew Lease
+  ABS: Human annotations are vital to supervised learning, yet annotators often disagree on the correct label, especially as annotation tasks increase in complexity. A strategy to improve label quality is to ask multiple annotators to label the same item and aggregate their labels. Many aggregation models have been proposed for categorical or numerical annotation tasks, but far less work has considered more complex annotation tasks involving open-ended, multivariate, or structured responses. While a variety of bespoke models have been proposed for specific tasks, our work is the first to introduce ag
+---
+  arXiv:2304.03841v6 | pub 2023-04-07 | upd 2024-11-08 | cs.CR
+  T: Efficient Secure Aggregation for Privacy-Preserving Federated Machine Learning
+  A: Rouzbeh Behnia, Arman Riasi, Reza Ebrahimi, Sherman S. M. Chow, Balaji Padmanabhan, Thang Hoang
+  ABS: Secure aggregation protocols ensure the privacy of users' data in federated learning by preventing the disclosure of local gradients. Many existing protocols impose significant communication and computational burdens on participants and may not efficiently handle the large update vectors typical of machine learning models. Correspondingly, we present e-SeaFL, an efficient verifiable secure aggregation protocol taking only one communication round during the aggregation phase. e-SeaFL allows the aggregation server to generate proof of honest aggregation to participants via authenticated homomorp
+---
+  arXiv:2601.03031v2 | pub 2026-01-06 | upd 2026-01-09 | cs.CR,cs.LO
+  T: FlexProofs: A Vector Commitment with Flexible Linear Time for Computing All Proofs
+  A: Jing Liu, Liang Feng Zhang
+  ABS: In this paper, we introduce FlexProofs, a new vector commitment (VC) scheme that achieves two key properties: (1) the prover can generate all individual opening proofs for a vector of size $N$ in optimal time ${\cal O}(N)$, and there is a flexible batch size parameter $b$ that can be increased to further reduce the time to generate all proofs; and (2) the scheme is directly compatible with a family of zkSNARKs that encode their input as a multi-linear polynomial. As a critical building block, we propose the first functional commitment (FC) scheme for multi-exponentiations with batch opening. C
+---
+  arXiv:2406.01080v1 | pub 2024-06-03 | upd 2024-06-03 | cs.CR,cs.DC,cs.LG
+  T: No Vandalism: Privacy-Preserving and Byzantine-Robust Federated Learning
+  A: Zhibo Xing, Zijian Zhang, Zi'ang Zhang, Jiamou Liu, Liehuang Zhu, Giovanni Russello
+  ABS: Federated learning allows several clients to train one machine learning model jointly without sharing private data, providing privacy protection. However, traditional federated learning is vulnerable to poisoning attacks, which can not only decrease the model performance, but also implant malicious backdoors. In addition, direct submission of local model parameters can also lead to the privacy leakage of the training dataset. In this paper, we aim to build a privacy-preserving and Byzantine-robust federated learning scheme to provide an environment with no vandalism (NoV) against attacks from 
+---
+  arXiv:2511.00623v3 | pub 2025-11-01 | upd 2026-07-14 | eess.SY,math.OC
+  T: Adaptive Federated Learning to Optimize Integrated Flows in Cyber-Physical Data Centers
+  A: Junhong Liu, Lanxin Du, Yujia Li, Rong-Peng Liu, Yunfeng Li, Fei Teng
+  ABS: Data centers play an increasingly critical role in societal digitalization, yet their rapidly growing energy demand poses significant challenges for sustainable operation. To enhance the energy efficiency of geographically distributed data centers, this paper formulates a multi-period optimization model that captures the interdependence of electricity, heat, and data flows. The optimization of such integrated multi-domain flows inherently involves mixed-integer formulations and the access to proprietary or sensitive datasets, which correspondingly exacerbate computational complexity and raise 
+---
+  arXiv:2408.06885v1 | pub 2024-08-13 | upd 2024-08-13 | cs.CR
+  T: Voltran: Unlocking Trust and Confidentiality in Decentralized Federated Learning Aggregation
+  A: Hao Wang, Yichen Cai, Jun Wang, Chuan Ma, Chunpeng Ge, Xiangmou Qu
+  ABS: The decentralized Federated Learning (FL) paradigm built upon blockchain architectures leverages distributed node clusters to replace the single server for executing FL model aggregation. This paradigm tackles the vulnerability of the centralized malicious server in vanilla FL and inherits the trustfulness and robustness offered by blockchain. However, existing blockchain-enabled schemes face challenges related to inadequate confidentiality on models and limited computational resources of blockchains to perform large-scale FL computations. In this paper, we present Voltran, an innovative hybri
+---
+  arXiv:2608.24658v1 | pub 2026-08-25 | upd 2026-08-25 | cs.AI
+  T: Parason: Revealing Subtask and Trial Parallelism in LLM Reasoning
+  A: Zhengyang Zhang, Zijian Zhang, Jiaxuan Gao, Shusheng Xu, Yi Wu, Song Han
+  ABS: Scaling test-time reasoning has substantially improved the problem-solving ability of large language models (LLMs), but standard autoregressive decoding still executes long reasoning traces sequentially, creating severe latency for difficult tasks (up to days and weeks). Parallel reasoning offers a natural remedy. However, prior systems primarily focus on Subtask Parallelism, where the model learns to decompose a high-level task into smaller chunks that can be solved independently. This approach overlooks another pervasive form of parallelism: Trial Parallelism, where multiple speculative atte
+---
+  arXiv:2311.15617v1 | pub 2023-11-27 | upd 2023-11-27 | cs.LG,cs.CR
+  T: VeryFL: A Verify Federated Learning Framework Embedded with Blockchain
+  A: Yihao Li, Yanyi Lai, Chuan Chen, Zibin Zheng
+  ABS: Blockchain-empowered federated learning (FL) has provoked extensive research recently. Various blockchain-based federated learning algorithm, architecture and mechanism have been designed to solve issues like single point failure and data falsification brought by centralized FL paradigm. Moreover, it is easier to allocate incentives to nodes with the help of the blockchain. Various centralized federated learning frameworks like FedML, have emerged in the community to help boost the research on FL. However, decentralized blockchain-based federated learning framework is still missing, which caus
+---
+  arXiv:2008.08330v1 | pub 2020-08-19 | upd 2020-08-19 | cs.CR,cs.LG,cs.NI
+  T: Toward Smart Security Enhancement of Federated Learning Networks
+  A: Junjie Tan, Ying-Chang Liang, Nguyen Cong Luong, Dusit Niyato
+  ABS: As traditional centralized learning networks (CLNs) are facing increasing challenges in terms of privacy preservation, communication overheads, and scalability, federated learning networks (FLNs) have been proposed as a promising alternative paradigm to support the training of machine learning (ML) models. In contrast to the centralized data storage and processing in CLNs, FLNs exploit a number of edge devices (EDs) to store data and perform training distributively. In this way, the EDs in FLNs can keep training data locally, which preserves privacy and reduces communication overheads. However
+---
+  arXiv:1810.01851v1 | pub 2018-10-03 | upd 2018-10-03 | cs.CR
+  T: EPIC: Efficient Privacy-Preserving Scheme with E2E Data Integrity and Authenticity for AMI Networks
+  A: Ahmad Alsharif, Mahmoud Nabil, Samet Tonyali, Hawzhin Mohammed, Mohamed Mahmoud, Kemal Akkaya
+  ABS: In Advanced Metering Infrastructure (AMI) networks, smart meters should send fine-grained power consumption readings to electric utilities to perform real-time monitoring and energy management. However, these readings can leak sensitive information about consumers' activities. Various privacy-preserving schemes for collecting fine-grained readings have been proposed for AMI networks. These schemes aggregate individual readings and send an aggregated reading to the utility, but they extensively use asymmetric-key cryptography which involves large computation/communication overhead. Furthermore,
+---
+  arXiv:2608.13706v3 | pub 2026-08-13 | upd 2026-09-07 | cs.CL,cs.AI
+  T: CLAIR-Fin: An Adversarial Multi-Agent Framework for Claim-Level Verification and Adaptive Debate in Cross-Modal Financial QA
+  A: Fatema Tuj Johora Faria, Mukaffi Bin Moin, Jubayer Al Mahmud, M. F. Mridha, Md. Alam Hossain
+  ABS: Existing defenses against hallucination in retrieval-augmented and multi-agent pipelines remain partial: evidence is trusted despite modality disagreement, debate verifies an aggregate report rather than individual claims, and such verification occurs only after drafting, leaving inter-agent errors undetected until the final text. To close this gap, we present CLAIR-Fin, a nine-agent framework that decomposes each question into atomic claims maintained in a typed Financial Claim Ledger. Each claim is resolved through Asymmetric Evidence Authority, which conditions evidence trust on claim type 
+====================================================================================================
+QUERY: all:"two-tier" AND all:"secure aggregation"  ->  0 results
+====================================================================================================
+QUERY: all:"edge servers" AND all:"secure aggregation" AND all:"verifiable"  ->  0 results
+====================================================================================================
+QUERY: all:"hierarchical" AND all:"aggregation" AND all:"tamper"  ->  2 results
+---
+  arXiv:2511.12658v1 | pub 2025-11-16 | upd 2025-11-16 | cs.CV
+  T: Toward Real-world Text Image Forgery Localization: Structured and Interpretable Data Synthesis
+  A: Zeqin Yu, Haotao Xie, Jian Zhang, Jiangqun Ni, Wenkan Su, Jiwu Huang
+  ABS: Existing Text Image Forgery Localization (T-IFL) methods often suffer from poor generalization due to the limited scale of real-world datasets and the distribution gap caused by synthetic data that fails to capture the complexity of real-world tampering. To tackle this issue, we propose Fourier Series-based Tampering Synthesis (FSTS), a structured and interpretable framework for synthesizing tampered text images. FSTS first collects 16,750 real-world tampering instances from five representative tampering types, using a structured pipeline that records human-performed editing traces via multi-f
+---
+  arXiv:2608.21314v1 | pub 2026-08-21 | upd 2026-08-21 | cs.DB
+  T: VTRQ: Enabling Verifiable Trajectory Range Queries in Hybrid-Storage Blockchains
+  A: Zhongming Yao, Junchang Xin, Yumeng Song, Yusen Mao, Kristian Torp, Yuemin Ding
+  ABS: Due to their increasingly large volumes, outsourcing of trajectory storage and querying to third-party service providers has become attractive. However, in such outsourced environments, service providers may return incorrect, e.g., incomplete, tampered, or invalid query results, making verifiability of query results an important consideration. Existing hybrid-storage blockchains offer limited support for trajectory data, lacking authenticated data structures (ADS) that enable efficient verification. For example, ADSs designed for queries on one-dimensional data are unsuitable for queries on mu
+====================================================================================================
+QUERY: all:"trusted execution environment" AND all:"secure aggregation" AND all:"verification"  ->  1 results
+---
+  arXiv:2505.23792v1 | pub 2025-05-26 | upd 2025-05-26 | cs.CR,cs.AI
+  T: Zero-Trust Foundation Models: A New Paradigm for Secure and Collaborative Artificial Intelligence for Internet of Things
+  A: Kai Li, Conggai Li, Xin Yuan, Shenghong Li, Sai Zou, Syed Sohail Ahmed
+  ABS: This paper focuses on Zero-Trust Foundation Models (ZTFMs), a novel paradigm that embeds zero-trust security principles into the lifecycle of foundation models (FMs) for Internet of Things (IoT) systems. By integrating core tenets, such as continuous verification, least privilege access (LPA), data confidentiality, and behavioral analytics into the design, training, and deployment of FMs, ZTFMs can enable secure, privacy-preserving AI across distributed, heterogeneous, and potentially adversarial IoT environments. We present the first structured synthesis of ZTFMs, identifying their potential 
+DONE

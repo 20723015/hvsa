@@ -1,0 +1,42 @@
+QUERY: all:"outsourced verification"  ->  1 results
+    arXiv:1307.2991v2 | pub 2013-07-11 | upd 2013-07-12 | cs.DB
+    T: Integrity Verification for Outsourcing Uncertain Frequent Itemset Mining
+QUERY: all:"verify the aggregation"  ->  14 results
+    arXiv:1811.03727v1 | pub 2018-11-09 | upd 2018-11-09 | cs.CR
+    T: VDAS: Verifiable Data Aggregation Scheme for Internet of Things
+    arXiv:2505.13319v2 | pub 2025-05-19 | upd 2025-05-20 | cs.CR,cs.DC
+    T: SVAFD: A Secure and Verifiable Co-Aggregation Protocol for Federated Distillation
+    arXiv:2605.24054v2 | pub 2026-05-22 | upd 2026-08-22 | cs.CR
+    T: Verifiable Secure Aggregation via Dual Servers with Linear Tags in Federated Learning
+    arXiv:2312.13437v1 | pub 2023-12-20 | upd 2023-12-20 | cs.LG,cs.CL
+    T: A General Model for Aggregating Annotations Across Simple, Complex, and Multi-Object Annotation Tasks
+    arXiv:2304.03841v6 | pub 2023-04-07 | upd 2024-11-08 | cs.CR
+    T: Efficient Secure Aggregation for Privacy-Preserving Federated Machine Learning
+    arXiv:2601.03031v2 | pub 2026-01-06 | upd 2026-01-09 | cs.CR,cs.LO
+    T: FlexProofs: A Vector Commitment with Flexible Linear Time for Computing All Proofs
+    arXiv:2406.01080v1 | pub 2024-06-03 | upd 2024-06-03 | cs.CR,cs.DC,cs.LG
+    T: No Vandalism: Privacy-Preserving and Byzantine-Robust Federated Learning
+    arXiv:2511.00623v3 | pub 2025-11-01 | upd 2026-07-14 | eess.SY,math.OC
+    T: Adaptive Federated Learning to Optimize Integrated Flows in Cyber-Physical Data Centers
+    arXiv:2408.06885v1 | pub 2024-08-13 | upd 2024-08-13 | cs.CR
+    T: Voltran: Unlocking Trust and Confidentiality in Decentralized Federated Learning Aggregation
+    arXiv:2608.24658v1 | pub 2026-08-25 | upd 2026-08-25 | cs.AI
+    T: Parason: Revealing Subtask and Trial Parallelism in LLM Reasoning
+    arXiv:2311.15617v1 | pub 2023-11-27 | upd 2023-11-27 | cs.LG,cs.CR
+    T: VeryFL: A Verify Federated Learning Framework Embedded with Blockchain
+    arXiv:2008.08330v1 | pub 2020-08-19 | upd 2020-08-19 | cs.CR,cs.LG,cs.NI
+    T: Toward Smart Security Enhancement of Federated Learning Networks
+    arXiv:1810.01851v1 | pub 2018-10-03 | upd 2018-10-03 | cs.CR
+    T: EPIC: Efficient Privacy-Preserving Scheme with E2E Data Integrity and Authenticity for AMI Networks
+    arXiv:2608.13706v3 | pub 2026-08-13 | upd 2026-09-07 | cs.CL,cs.AI
+    T: CLAIR-Fin: An Adversarial Multi-Agent Framework for Claim-Level Verification and Adaptive Debate in Cross-Modal Financial QA
+QUERY: all:"two-tier" AND all:"secure aggregation"  ->  0 results
+QUERY: all:"edge servers" AND all:"secure aggregation" AND all:"verifiable"  ->  0 results
+QUERY: all:"hierarchical" AND all:"aggregation" AND all:"tamper"  ->  2 results
+    arXiv:2511.12658v1 | pub 2025-11-16 | upd 2025-11-16 | cs.CV
+    T: Toward Real-world Text Image Forgery Localization: Structured and Interpretable Data Synthesis
+    arXiv:2608.21314v1 | pub 2026-08-21 | upd 2026-08-21 | cs.DB
+    T: VTRQ: Enabling Verifiable Trajectory Range Queries in Hybrid-Storage Blockchains
+QUERY: all:"trusted execution environment" AND all:"secure aggregation" AND all:"verification"  ->  1 results
+    arXiv:2505.23792v1 | pub 2025-05-26 | upd 2025-05-26 | cs.CR,cs.AI
+    T: Zero-Trust Foundation Models: A New Paradigm for Secure and Collaborative Artificial Intelligence for Internet of Things

@@ -1,0 +1,26 @@
+====================================================================================================
+TITLE: VSAFL Verifiable and Secure Aggregation With Poly Logarithmic Overhead in Federated Learning
+====================================================================================================
+TITLE: PriVeriFL Privacy-Preserving and Aggregation-Verifiable Federated Learning
+====================================================================================================
+TITLE: ClusterGuard Secure Clustered Aggregation for Federated Learning With Robustness
+====================================================================================================
+TITLE: VCFL Verifiable and communication-efficient federated learning against collusion attack for secure aggregation
+====================================================================================================
+TITLE: SecHFed Achieving secure hierarchical federated learning against poisoning attacks without data assumptions
+  (no results)
+====================================================================================================
+TITLE: HFedM2ND secure hierarchical federated learning framework lightweight multi-layer malicious-node detection
+  (no results)
+====================================================================================================
+TITLE: RFLPA Robust Federated Learning Framework against Poisoning Attacks with Secure Aggregation
+  description: Federated learning (FL) allows multiple devices to train a model collaboratively without sharing their data. Despite its benefits, FL is vulnerable to privacy leakage and poisoning attacks. To address the privacy concern, secure aggregation (SecAgg) is often used to obtain the aggregation of gradients on sever without inspecting individual user updates. Unfortunately, existing defense strategies against poisoning attacks rely on the analysis of local updates in plaintext, making them incompatibl
+====================================================================================================
+TITLE: Secure group aggregation for privacy-protection federated learning
+  description: Abstract Federated Learning is a machine learning paradigm designed to address the issues of privacy protection, data security, and big data process. FedAvg, a widely used algorithm in federated learning, is vulnerable to gradient leakage, parameter exposure, and user data compromise. Existing works use differential privacy, homomorphic encryption, and secure multi-party computation to protect the gradients of FedAvg. However, these existing efforts lead to gradient polymerization errors of approximately 10–30% (applying differential privacy results in noisy gradients) in the server or have a high computational dimension. In this paper, we design a secure group aggregation approach for the gradient protection in federated learning. It realizes zero error in gradient aggregation, and the computational time under different number of users drops is almost the same, the time difference is a constant, and the time overhead is reduced by about 10–75% compared to traditional differential privacy, and 80% compared to homomorphic encryption methods. First, we use digital signature and authent
+  description: Abstract Federated Learning is a machine learning paradigm designed to address the issues of privacy protection, data security, and big data process. FedAvg, a widely used algorithm in federated learning, is vulnerable to gradient leakage, parameter exposure, and user data compromise. Existing works use differential privacy, homomorphic encryption, and secure multi-party computation to protect the gradients of FedAvg. Howeve
+====================================================================================================
+TITLE: Dual-Key Verifiable Secure Aggregation for Federated Learning via Blockchain
+====================================================================================================
+TITLE: Lightweight and Verifiable Secure Aggregation for Multi-dimensional Data in Edge-enhanced IoT
+DONE

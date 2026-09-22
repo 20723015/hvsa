@@ -1,0 +1,53 @@
+====================================================================================================
+TITLE: Practical Multi-Key Secure Aggregation With Homomorphic Hash Verification for Cross-Silo Federated Learning
+  title: Practical Multi-Key Secure Aggregation with Homomorphic Hash Verification for Cross-Silo Federated Learning
+====================================================================================================
+TITLE: A Homomorphic MAC-based verifiable secure aggregation for federated learning in cloud-edge AIoT
+  title: A Homomorphic MAC-based verifiable secure aggregation for federated learning in cloud-edge AIoT.
+  title: A Homomorphic MAC-based verifiable secure aggregation for federated learning in cloud–edge AIoT
+====================================================================================================
+TITLE: Privacy-Preserving Verification of Secure Aggregation for Hierarchical Peer-to-Peer Federated Learning
+  title: Privacy-Preserving Verification of Secure Aggregation for Hierarchical Peer-to-Peer Federated Learning
+====================================================================================================
+TITLE: SVTAgg Secure Verifiable and Traceable Model Aggregation for Edge-Assisted Federated Learning
+  title: SVTAgg: Secure, Verifiable, and Traceable Model Aggregation for Edge-Assisted Federated Learning
+====================================================================================================
+TITLE: SHIELD Secure Aggregation Against Poisoning in Hierarchical Federated Learning
+  description: Federated Learning (FL) is a privacy-preserving distributed Machine Learning (ML) technique. Hierarchical FL is a novel variant of FL applicable to networks with multiple layers. Instead of transmitting client models to the server, hierarchical FL performs aggregations in the layers between the devices and the server. This further reduces the traffic toward the higher layers, which helps efficient link utilization. An adversary can manipulate a set of clients and send malicious model updates toward upper layers to create a trained model with a malicious objective. These attacks, also known as poisoning attacks, disrupt the model training. Like FL, Hierarchical FL is also vulnerable to poisoning attacks since the aggregators do not possess raw data. The existing robust algorithms are designed for FL systems with n clients and a server. Therefore, they are not effective against poisoning a
+  title: Confidential Computing and Privacy-preserving Technologies for 6G
+  title: unidentified
+  title: CONNECT_Phase 2
+  title: SHIELD - Secure Aggregation Against Poisoning in Hierarchical Federated Learning
+  title: SHIELD - Secure Aggregation against Poisoning in Hierarchical Federated Learning
+  description: Federated Learning (FL) is a privacy-preserving distributed Machine Learning (ML) technique. Hierarchical FL is a novel variant of FL applicable to networks with multiple layers. Instead of transmitting client models to the server, hierarchical FL performs aggregations in the layers between the devices and the server. This further reduces the traffic toward the higher layers, which helps efficient link utilization. An adversary can manipulate a set of clients and send malicious model updates tow
+  title: SHIELD-Secure Aggregation against Poisoning in Hierarchical Federated Learning
+  title: SHIELD - Secure Aggregation Against Poisoning in Hierarchical Federated Learning.
+====================================================================================================
+TITLE: Privacy-preserving and Verifiable Federated Learning with weighted average aggregation in edge computing
+  title: Privacy-preserving and Verifiable Federated Learning with weighted average aggregation in edge computing
+  title: Privacy-preserving and Verifiable Federated Learning with weighted average aggregation in edge computing.
+  title: Privacy-Preserving and Verifiable Federated Learning with Weighted Average Aggregation in Edge Computing
+====================================================================================================
+TITLE: VDBFL Verifiable privacy-preserving federated learning with decentralized Byzantine-robust aggregation in edge computing
+  title: VDBFL: Verifiable privacy-preserving federated learning with decentralized Byzantine-robust aggregation in edge computing
+====================================================================================================
+TITLE: LVSA Lightweight and verifiable secure aggregation for federated learning
+  title: LVSA: Lightweight and verifiable secure aggregation for federated learning
+  title: LVSA: Lightweight and verifiable secure aggregation for federated learning.
+====================================================================================================
+TITLE: VeSAFL Verifiable Secure Aggregation for Privacy-Preserving Federated Learning
+  title: VeSAFL: Verifiable Secure Aggregation for Privacy-Preserving Federated Learning
+  title: VeSAFL: Verifiable Secure Aggregation for Privacy-Preserving Federated Learning.
+====================================================================================================
+TITLE: Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning
+  title: Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning
+  title: Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning.
+====================================================================================================
+TITLE: FedAggVerify Publicly Verifiable and Privacy-Preserving Aggregation With Ownership Protection for Federated Learning
+  title: FedAggVerify: Publicly Verifiable and Privacy-Preserving Aggregation With Ownership Protection for Federated Learning
+====================================================================================================
+TITLE: OPSA Efficient and Verifiable One-Pass Secure Aggregation With TEE for Federated Learning
+  title: OPSA: Efficient and Verifiable One-Pass Secure Aggregation With TEE for Federated Learning
+  title: OPSA: Efficient and Verifiable One-Pass Secure Aggregation with TEE for Federated Learning.
+  title: OPSA: Efficient and Verifiable One-Pass Secure Aggregation With TEE for Federated Learning.
+DONE

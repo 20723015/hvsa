@@ -82,3 +82,4 @@ exp*_log_*.txt
 exp*_supplementary_*.txt
 exp*_CIFAR10_*.txt
 exp*_data_*.txt
+.zcodeignore

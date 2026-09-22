@@ -1,0 +1,28 @@
+====================================================================================================
+OPENALEX: hierarchical federated learning secure aggregation -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: verifiable aggregation edge server federated learning -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: homomorphic hash verification federated learning aggregation -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: linear homomorphic hash aggregation integrity -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: verifiable secure aggregation constant verification overhead -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: hierarchical secure aggregation edge servers verification -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: cloud edge federated learning privacy preserving aggregation verification -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: threshold secure aggregation federated learning multiple aggregators -> 1
+ ERROR HTTP Error 429: Too Many Requests
+====================================================================================================
+OPENALEX: secure aggregation verification model dimension independent -> 1
+ ERROR HTTP Error 429: Too Many Requests
+DONE

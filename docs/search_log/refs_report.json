@@ -1,0 +1,254 @@
+[
+  {
+    "key": "4",
+    "title": "Decentralized Federated Learning: Fundamentals, State of the Art, Frameworks, Trends, and Challenges",
+    "status": "verified",
+    "doi": "10.1109/comst.2023.3315746",
+    "year": "2023"
+  },
+  {
+    "key": "2",
+    "title": "Federated Learning: Challenges, Methods, and Future Directions",
+    "status": "verified_arxiv",
+    "doi": "1908.07873v1",
+    "year": "2020"
+  },
+  {
+    "key": "fedavg",
+    "title": "Communication-Efficient Learning of Deep Networks from Decentralized Data",
+    "status": "verified_arxiv",
+    "doi": "1602.05629v4",
+    "year": "2016"
+  },
+  {
+    "key": "FLSurvey2026",
+    "title": "Federated Learning: A Survey of Core Challenges, Current Methods, and Opportunities",
+    "status": "verified",
+    "doi": "10.20944/preprints202601.0271.v1",
+    "year": "2026"
+  },
+  {
+    "key": "FDLUrban2026",
+    "title": "Federated Deep Learning in Intelligent Urban Ecosystems: A Systematic Review of Advancements and Applications in Smart Cities, Homes, Buildings, and Healthcare Systems",
+    "status": "verified",
+    "doi": "10.32604/cmes.2026.078672",
+    "year": "2026"
+  },
+  {
+    "key": "FLITS2026",
+    "title": "Federated Learning Frameworks for Intelligent Transportation Systems: A Comparative Adaptation Analysis",
+    "status": "verified",
+    "doi": "10.3390/smartcities9010012",
+    "year": "2026"
+  },
+  {
+    "key": "1",
+    "title": "Training Aggregation in Federated Learning",
+    "status": "verified",
+    "doi": "10.14711/thesis-991012994506603412",
+    "year": "2020"
+  },
+  {
+    "key": "fl",
+    "title": "Federated Learning: Strategies for Improving Communication Efficiency",
+    "status": "verified_arxiv",
+    "doi": "1610.05492v2",
+    "year": "2017"
+  },
+  {
+    "key": "10342702",
+    "title": "Federated Learning Empowered Recommendation Model for Financial Consumer Services",
+    "status": "verified",
+    "doi": "10.1109/tce.2023.3339702",
+    "year": "2024"
+  },
+  {
+    "key": "Long2020OpenBanking",
+    "title": "Federated Learning for Open Banking",
+    "status": "verified",
+    "doi": "10.1007/978-3-030-63076-8_17",
+    "year": "2020"
+  },
+  {
+    "key": "HFL1",
+    "title": "Enhancing Federated Learning Through Layer-Wise Aggregation Over Non-IID Data",
+    "status": "verified",
+    "doi": "10.1109/tsc.2025.3536309/mm1",
+    "year": "2025"
+  },
+  {
+    "key": "HFL2",
+    "title": "Accelerating Federated Learning With Cluster Construction and Hierarchical Aggregation",
+    "status": "verified",
+    "doi": "10.1109/tmc.2022.3147792",
+    "year": "2023"
+  },
+  {
+    "key": "CEC (Client-Edge-Cloud)",
+    "title": "Client-Edge-Cloud Hierarchical Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/icc40277.2020.9148862",
+    "year": "2020"
+  },
+  {
+    "key": "HFLDP",
+    "title": "Utility-Enhanced Personalized Privacy Preservation in Hierarchical Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tmc.2025.3531919",
+    "year": "2025"
+  },
+  {
+    "key": "DLG",
+    "title": "Deep Leakage from Gradients",
+    "status": "verified",
+    "doi": "10.1007/978-3-030-63076-8_2",
+    "year": "2019"
+  },
+  {
+    "key": "attack1 (Geiping)",
+    "title": "Inverting Gradients - How Easy Is It to Break Privacy in Federated Learning?",
+    "status": "verified_arxiv",
+    "doi": "2003.14053v2",
+    "year": "2020"
+  },
+  {
+    "key": "attack2 (Jeon)",
+    "title": "Gradient Inversion with Generative Image Prior",
+    "status": "verified_arxiv",
+    "doi": "2110.14962v1",
+    "year": "2021"
+  },
+  {
+    "key": "dp1 (Wei)",
+    "title": "Federated Learning With Differential Privacy: Algorithms and Performance Analysis",
+    "status": "verified_arxiv",
+    "doi": "1911.00222v2",
+    "year": "2020"
+  },
+  {
+    "key": "dp2 (Geyer)",
+    "title": "Differentially Private Federated Learning: A Client Level Perspective",
+    "status": "verified",
+    "doi": "10.70675/82339c66za139z4723z8c45zd658a821a36b",
+    "year": "2018"
+  },
+  {
+    "key": "dp3 (Yang)",
+    "title": "Federated Learning with Personalized Local Differential Privacy",
+    "status": "verified",
+    "doi": "10.1109/icccs52626.2021.9449232",
+    "year": "2021"
+  },
+  {
+    "key": "HE1 (PriVeriFL)",
+    "title": "PriVeriFL: Privacy-Preserving and Aggregation-Verifiable Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tsc.2024.3451183/mm1",
+    "year": "2025"
+  },
+  {
+    "key": "HE2 (Phong)",
+    "title": "Privacy-Preserving Deep Learning via Additively Homomorphic Encryption",
+    "status": "verified",
+    "doi": "10.1109/arith.2019.00047",
+    "year": "2018"
+  },
+  {
+    "key": "HE3 (Shi)",
+    "title": "A privacy preserving federated learning scheme using homomorphic encryption and secret sharing",
+    "status": "verified",
+    "doi": "10.1007/s11235-022-00982-3",
+    "year": "2023"
+  },
+  {
+    "key": "HE4 (Ren)",
+    "title": "VPFLI: Verifiable Privacy-Preserving Federated Learning With Irregular Users Based on Single Server",
+    "status": "verified",
+    "doi": "10.1109/tsc.2024.3520867",
+    "year": "2025"
+  },
+  {
+    "key": "mpc1 (Bonawitz SecAgg)",
+    "title": "Practical Secure Aggregation for Privacy-Preserving Machine Learning",
+    "status": "UNVERIFIED",
+    "doi": "",
+    "year": "2017"
+  },
+  {
+    "key": "mpc2 (Ren)",
+    "title": "Privacy-Enhanced and Verification-Traceable Aggregation for Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/jiot.2022.3194930",
+    "year": "2022"
+  },
+  {
+    "key": "mpc3 (LightSecAgg)",
+    "title": "LightSecAgg: Rethinking Secure Aggregation in Federated Learning",
+    "status": "UNVERIFIED",
+    "doi": "",
+    "year": "2021"
+  },
+  {
+    "key": "mpc4 (Zhang)",
+    "title": "Augmented Multi-Party Computation Against Gradient Leakage in Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tbdata.2022.3208736",
+    "year": "2024"
+  },
+  {
+    "key": "VerifyNet",
+    "title": "VerifyNet: Secure and Verifiable Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tifs.2019.2929409",
+    "year": "2020"
+  },
+  {
+    "key": "VeriFL",
+    "title": "VeriFL: Communication-Efficient and Fast Verifiable Aggregation for Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tifs.2020.3043139",
+    "year": "2021"
+  },
+  {
+    "key": "veriprotocol (Eltaras)",
+    "title": "Efficient Verifiable Protocol for Privacy-Preserving Aggregation in Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tifs.2023.3273914",
+    "year": "2023"
+  },
+  {
+    "key": "VLMRS",
+    "title": "Verifiable and Lightweight Multi-Round Secure Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tdsc.2025.3606413",
+    "year": "2026"
+  },
+  {
+    "key": "GPVO-FL",
+    "title": "GPVO-FL: Grouped Privacy-Preserving and Verification-Outsourced Federated Learning in Cloud-Edge Collaborative Environment",
+    "status": "verified",
+    "doi": "10.1109/tnsm.2025.3592122",
+    "year": "2025"
+  },
+  {
+    "key": "BLS (VOSA)",
+    "title": "VOSA: Verifiable and Oblivious Secure Aggregation for Privacy-Preserving Federated Learning",
+    "status": "verified",
+    "doi": "10.1109/tdsc.2022.3226508",
+    "year": "2023"
+  },
+  {
+    "key": "VPFL",
+    "title": "VPFL: A verifiable privacy-preserving federated learning scheme for edge computing systems",
+    "status": "verified",
+    "doi": "10.1016/j.dcan.2022.05.010",
+    "year": "2023"
+  },
+  {
+    "key": "vfl1 (Fu)",
+    "title": "VFL: A Verifiable Federated Learning With Privacy-Preserving for Big Data in Industrial IoT",
+    "status": "verified",
+    "doi": "10.1109/tii.2020.3036166",
+    "year": "2022"
+  }
+]

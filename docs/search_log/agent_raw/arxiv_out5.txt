@@ -1,0 +1,67 @@
+====================================================================================================
+QUERY: all:"peer-to-peer" AND all:"secure aggregation" AND all:"hierarchical"  ->  1 results
+---
+  arXiv:2502.18697v1 | pub 2025-02-25 | upd 2025-02-25 | cs.LG,cs.AI,cs.CR
+  T: H-FLTN: A Privacy-Preserving Hierarchical Framework for Electric Vehicle Spatio-Temporal Charge Prediction
+  A: Robert Marlin, Raja Jurdak, Alsharif Abuadbba
+  ABS: The widespread adoption of Electric Vehicles (EVs) poses critical challenges for energy providers, particularly in predicting charging time (temporal prediction), ensuring user privacy, and managing resources efficiently in mobility-driven networks. This paper introduces the Hierarchical Federated Learning Transformer Network (H-FLTN) framework to address these challenges. H-FLTN employs a three-tier hierarchical architecture comprising EVs, community Distributed Energy Resource Management Systems (DERMS), and the Energy Provider Data Centre (EPDC) to enable accurate spatio-temporal prediction
+====================================================================================================
+QUERY: all:"multi-key" AND all:"secure aggregation" AND all:"homomorphic"  ->  3 results
+---
+  arXiv:2208.07189v1 | pub 2022-08-15 | upd 2022-08-15 | cs.CR
+  T: DHSA: Efficient Doubly Homomorphic Secure Aggregation for Cross-silo Federated Learning
+  A: Zizhen Liu, Si Chen, Jing Ye, Junfeng Fan, Huawei Li, Xiaowei Li
+  ABS: Secure aggregation is widely used in horizontal Federated Learning (FL), to prevent leakage of training data when model updates from data owners are aggregated. Secure aggregation protocols based on Homomorphic Encryption (HE) have been utilized in industrial cross-silo FL systems, one of the settings involved with privacy-sensitive organizations such as financial or medical, presenting more stringent requirements on privacy security. However, existing HE-based solutions have limitations in efficiency and security guarantees against colluding adversaries without a Trust Third Party. This paper
+---
+  arXiv:2511.23252v1 | pub 2025-11-28 | upd 2025-11-28 | cs.CR,cs.AI
+  T: One-Shot Secure Aggregation: A Hybrid Cryptographic Protocol for Private Federated Learning in IoT
+  A: Imraul Emmaka, Tran Viet Xuan Phuong
+  ABS: Federated Learning (FL) offers a promising approach to collaboratively train machine learning models without centralizing raw data, yet its scalability is often throttled by excessive communication overhead. This challenge is magnified in Internet of Things (IoT) environments, where devices face stringent bandwidth, latency, and energy constraints. Conventional secure aggregation protocols, while essential for protecting model updates, frequently require multiple interaction rounds, large payload sizes, and per-client costs rendering them impractical for many edge deployments. In this work, we
+---
+  arXiv:2509.05162v2 | pub 2025-09-05 | upd 2025-10-01 | cs.CR
+  T: Verifiability and Privacy in Federated Learning through Context-Hiding Multi-Key Homomorphic Authenticators
+  A: Simone Bottoni, Giulio Zizzo, Stefano Braghin, Alberto Trombetta
+  ABS: Federated Learning has rapidly expanded from its original inception to now have a large body of research, several frameworks, and sold in a variety of commercial offerings. Thus, its security and robustness is of significant importance. There are many algorithms that provide robustness in the case of malicious clients. However, the aggregator itself may behave maliciously, for example, by biasing the model or tampering with the weights to weaken the models privacy. In this work, we introduce a verifiable federated learning protocol that enables clients to verify the correctness of the aggregat
+====================================================================================================
+QUERY: all:"vector commitment" AND all:"secure aggregation"  ->  2 results
+---
+  arXiv:2302.09913v4 | pub 2023-02-20 | upd 2025-06-06 | cs.CR,cs.DC,cs.IT,cs.LG
+  T: ByzSecAgg: A Byzantine-Resistant Secure Aggregation Scheme for Federated Learning Based on Coded Computing and Vector Commitment
+  A: Tayyebeh Jahani-Nezhad, Mohammad Ali Maddah-Ali, Giuseppe Caire
+  ABS: In this paper, we propose ByzSecAgg, an efficient secure aggregation scheme for federated learning that is resistant to Byzantine attacks and privacy leakages. Processing individual updates to manage adversarial behavior, while preserving the privacy of the data against colluding nodes, requires some sort of secure secret sharing. However, the communication load for secret sharing of long vectors of updates can be very high. In federated settings, where users are often edge devices with potential bandwidth constraints, excessive communication overhead is undesirable. ByzSecAgg solves this prob
+---
+  arXiv:2304.03841v6 | pub 2023-04-07 | upd 2024-11-08 | cs.CR
+  T: Efficient Secure Aggregation for Privacy-Preserving Federated Machine Learning
+  A: Rouzbeh Behnia, Arman Riasi, Reza Ebrahimi, Sherman S. M. Chow, Balaji Padmanabhan, Thang Hoang
+  ABS: Secure aggregation protocols ensure the privacy of users' data in federated learning by preventing the disclosure of local gradients. Many existing protocols impose significant communication and computational burdens on participants and may not efficiently handle the large update vectors typical of machine learning models. Correspondingly, we present e-SeaFL, an efficient verifiable secure aggregation protocol taking only one communication round during the aggregation phase. e-SeaFL allows the aggregation server to generate proof of honest aggregation to participants via authenticated homomorp
+====================================================================================================
+QUERY: all:"traceable" AND all:"model aggregation" AND all:"edge-assisted"  ->  0 results
+====================================================================================================
+QUERY: au:Siriwardhana AND all:"federated"  ->  0 results
+====================================================================================================
+QUERY: all:"SHIELD" AND all:"hierarchical federated learning"  ->  0 results
+====================================================================================================
+QUERY: all:"verifiable" AND all:"aggregation" AND all:"trusted third party"  ->  4 results
+---
+  arXiv:2603.10692v1 | pub 2026-03-11 | upd 2026-03-11 | cs.CR,cs.AI
+  T: Repurposing Backdoors for Good: Ephemeral Intrinsic Proofs for Verifiable Aggregation in Cross-silo Federated Learning
+  A: Xian Qin, Xue Yang, Xiaohu Tang
+  ABS: While Secure Aggregation (SA) protects update confidentiality in Cross-silo Federated Learning, it fails to guarantee aggregation integrity, allowing malicious servers to silently omit or tamper with updates. Existing verifiable aggregation schemes rely on heavyweight cryptography (e.g., ZKPs, HE), incurring computational costs that scale poorly with model size. In this paper, we propose a lightweight architecture that shifts from extrinsic cryptographic proofs to \textit{Intrinsic Proofs}. We repurpose backdoor injection to embed verification signals directly into model parameters. By harness
+---
+  arXiv:2308.00239v1 | pub 2023-08-01 | upd 2023-08-01 | cs.CR
+  T: Verifiable Data Sharing Scheme for Dynamic Multi-Owner Setting
+  A: Jing Zhao, Qianqian Su
+  ABS: One of scenarios in data-sharing applications is that files are managed by multiple owners, and the list of file owners may change dynamically. However, most existing solutions to this problem rely on trusted third parties and have complicated signature permission processes, resulting in additional overhead. Therefore, we propose a verifiable data-sharing scheme (VDS-DM) that can support dynamic multi-owner scenarios. We introduce a management entity that combines linear secret-sharing technology, multi-owner signature generation, and an aggregation technique to allow multi-owner file sharing.
+---
+  arXiv:2506.12846v10 | pub 2025-06-15 | upd 2026-04-13 | cs.CR,cs.AI
+  T: VFEFL: Privacy-Preserving Federated Learning against Malicious Clients via Verifiable Functional Encryption
+  A: Nina Cai, Jinguang Han, Weizhi Meng
+  ABS: Federated learning is a promising distributed learning paradigm that enables collaborative model training without exposing local client data, thereby protecting data privacy. However, it also brings new threats and challenges. The advancement of model inversion attacks has rendered the plaintext transmission of local models insecure, while the distributed nature of federated learning makes it particularly vulnerable to attacks raised by malicious clients. To protect data privacy and prevent malicious client attacks, this paper proposes a privacy-preserving Federated Learning framework based on
+---
+  arXiv:2505.11094v1 | pub 2025-05-16 | upd 2025-05-16 | cs.CR
+  T: Blockchain-Enabled Decentralized Privacy-Preserving Group Purchasing for Energy Plans
+  A: Sid Chi-Kin Chau, Yue Zhou
+  ABS: Retail energy markets are increasingly consumer-oriented, thanks to a growing number of energy plans offered by a plethora of energy suppliers, retailers and intermediaries. To maximize the benefits of competitive retail energy markets, group purchasing is an emerging paradigm that aggregates consumers' purchasing power by coordinating switch decisions to specific energy providers for discounted energy plans. Traditionally, group purchasing is mediated by a trusted third-party, which suffers from the lack of privacy and transparency. In this paper, we introduce a novel paradigm of decentralize
+====================================================================================================
+QUERY: all:"hierarchical federated learning" AND all:"secure aggregation" AND all:"edge servers"  ->  0 results
+DONE

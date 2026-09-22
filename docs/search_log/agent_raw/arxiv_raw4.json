@@ -1,0 +1,710 @@
+{
+ "all:\"verifiable aggregation\"": [
+  {
+   "arxiv": "2607.06612v1",
+   "title": "PRoVeFL: Private Robust and Verifiable Aggregation in Federated Learning",
+   "pub": "2026-07-07",
+   "upd": "2026-07-07",
+   "authors": [
+    "Harsh Kasyap",
+    "Anil Kumar Pradhan",
+    "Ugur Ilker Atmaca",
+    "Graham Cormode",
+    "Carsten Maple"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.AI"
+   ],
+   "abs": "Federated Learning (FL) enables multiple clients to collaboratively train machine learning models while retaining data locality, thereby enhancing user privacy. However, traditional FL frameworks rely on a centralized aggregation server and assume honest-but-curious clients, making them susceptible to both server-side inference and client-side poisoning attacks. Although recent work has explored secure and Byzantine-resilient FL protocols, they face a fundamental trade-off among privacy, integrity, and verifiability, and incur substantial computational and communication overhead due to the heavy use of cryptographic primitives. In this work, we propose PRoVeFL-a novel, modular FL framework that is Privacy-preserving, Byzantine-Robust, and ensures Verifiable aggregation. PRoVeFL employs multiple servers leveraging multi-key fully homomorphic encryption. Each client encrypts its local model updates and distributes encrypted shares to all servers. This design enables a hybrid computation model in which ciphertext operations are carefully offloaded to the plaintext domain under strict privacy constraints to efficiently evaluate complex statistical aggregation rules. PRoVeFL is compatible with a wide range of state-of-the-art Byzantine-robust aggregation algorithms (e.g., Krum, Trimmed Mean, FLTrust, norm clipping, MESAS, and more) and further enhances them with verifiability mechanisms that require minimal trust in at least one honest server. We evaluate it across different settings and demonstrate its scalability with varying numbers of parameters and participants. PRoVeFL improves runtime over the prior works, Prio and ELSA, based on distributed trust with comparable security guarantees, up to 100x and 10x, respectively."
+  },
+  {
+   "arxiv": "2603.10692v1",
+   "title": "Repurposing Backdoors for Good: Ephemeral Intrinsic Proofs for Verifiable Aggregation in Cross-silo Federated Learning",
+   "pub": "2026-03-11",
+   "upd": "2026-03-11",
+   "authors": [
+    "Xian Qin",
+    "Xue Yang",
+    "Xiaohu Tang"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.AI"
+   ],
+   "abs": "While Secure Aggregation (SA) protects update confidentiality in Cross-silo Federated Learning, it fails to guarantee aggregation integrity, allowing malicious servers to silently omit or tamper with updates. Existing verifiable aggregation schemes rely on heavyweight cryptography (e.g., ZKPs, HE), incurring computational costs that scale poorly with model size. In this paper, we propose a lightweight architecture that shifts from extrinsic cryptographic proofs to \\textit{Intrinsic Proofs}. We repurpose backdoor injection to embed verification signals directly into model parameters. By harnessing Catastrophic Forgetting, these signals are robust for immediate verification yet ephemeral, naturally decaying to preserve final model utility. We design a randomized, single-verifier auditing framework compatible with SA, ensuring client anonymity and preventing signal collision without trusted third parties. Experiments on SVHN, CIFAR-10, and CIFAR-100 demonstrate high detection probabilities against malicious servers. Notably, our approach achieves over $1000\\times$ speedup on ResNet-18 compared to cryptographic baselines, effectively scaling to large models."
+  },
+  {
+   "arxiv": "2007.09698v1",
+   "title": "Private, Fair, and Verifiable Aggregate Statistics for Mobile Crowdsensing in Blockchain Era",
+   "pub": "2020-07-19",
+   "upd": "2020-07-19",
+   "authors": [
+    "Miao He",
+    "Jianbing Ni",
+    "Dongxiao Liu",
+    "Haomiao Yang",
+    " Xuemin",
+    " Shen"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "In this paper, we propose FairCrowd, a private, fair, and verifiable framework for aggregate statistics in mobile crowdsensing based on the public blockchain. In specific, mobile users are incentivized to collect and share private data values (e.g., current locations) to fufill a commonly interested task released by a customer, and the crowdsensing server computes aggregate statistics over the values of mobile users (e.g., the most popular location) for the customer. By utilizing the ElGamal encryption, the server learns nearly nothing about the private data or the statistical result. The correctness of aggregate statistics can be publicly verified by using a new efficient and verifiable computation approach. Moreover, the fairness of incentive is guaranteed based on the public blockchain in the presence of greedy service provider, customers, and mobile users, who may launch payment-escaping, payment-reduction, free-riding, double-reporting, and Sybil attacks to corrupt reward distribution. Finally, FairCrowd is proved to achieve verifiable aggregate statistics with privacy preservation for mobile users. Extensive experiments are conducted to demonstrate the high efficiency of FairCrowd for aggregate statistics in mobile crowdsensing."
+  },
+  {
+   "arxiv": "2004.13115v1",
+   "title": "Obscure: Information-Theoretically Secure, Oblivious, and Verifiable Aggregation Queries on Secret-Shared Outsourced Data -- Full Version",
+   "pub": "2020-04-27",
+   "upd": "2020-04-27",
+   "authors": [
+    "Peeyush Gupta",
+    "Yin Li",
+    "Sharad Mehrotra",
+    "Nisha Panwar",
+    "Shantanu Sharma",
+    "Sumaya Almanee"
+   ],
+   "cats": [
+    "cs.DB",
+    "cs.CR",
+    "cs.IR",
+    "cs.IT"
+   ],
+   "abs": "Despite exciting progress on cryptography, secure and efficient query processing over outsourced data remains an open challenge. We develop a communication-efficient and information-theoretically secure system, entitled Obscure for aggregation queries with conjunctive or disjunctive predicates, using secret-sharing. Obscure is strongly secure (i.e., secure regardless of the computational-capabilities of an adversary) and prevents the network, as well as, the (adversarial) servers to learn the user's queries, results, or the database. In addition, Obscure provides additional security features, such as hiding access-patterns (i.e., hiding the identity of the tuple satisfying a query) and hiding query-patterns (i.e., hiding which two queries are identical). Also, Obscure does not require any communication between any two servers that store the secret-shared data before/during/after the query execution. Moreover, our techniques deal with the secret-shared data that is outsourced by a single or multiple database owners, as well as, allows a user, which may not be the database owner, to execute the query over secret-shared data. We further develop (non-mandatory) privacy-preserving result verification algorithms that detect malicious behaviors, and experimentally validate the efficiency of Obscure on large datasets, the size of which prior approaches of secret-sharing or multi-party computation systems have not scaled to."
+  },
+  {
+   "arxiv": "2605.24054v2",
+   "title": "Verifiable Secure Aggregation via Dual Servers with Linear Tags in Federated Learning",
+   "pub": "2026-05-22",
+   "upd": "2026-08-22",
+   "authors": [
+    "Yufei Zhou"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Federated learning (FL) enables collaborative model training by aggregating local updates without requiring raw data sharing. However, prior studies have shown that servers can exploit gradient inversion to compromise user privacy or manipulate aggregation results, undermining the utility of the global model. To address these concerns, we propose a secure and verifiable aggregation scheme with lightweight cryptographic primitives for FL. Our method leverages pseudo-random functions (PRFs) and a non-colluding dual-server architecture to achieve secure aggregation with mutual server verification, while maintaining communication overhead comparable to plaintext aggregation and a constant verification tag size. Crucially, it preserves user privacy and achieves end-to-end secure aggregation with verification. Moreover, our scheme significantly reduces both user computation and verification overhead, making it suitable for FL with a large number of participants. For instance, with an input dimension of 20K, user computation time is reduced to 18 ms, approximately 7$\\times$ faster than OPSA, while verification time decreases to 9.5 ms, approximately 2.4$\\times$ faster than OPSA."
+  },
+  {
+   "arxiv": "2601.07134v1",
+   "title": "Proof of Reasoning for Privacy Enhanced Federated Blockchain Learning at the Edge",
+   "pub": "2026-01-12",
+   "upd": "2026-01-12",
+   "authors": [
+    "James Calo",
+    "Benny Lo"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.CV",
+    "cs.LG"
+   ],
+   "abs": "Consensus mechanisms are the core of any blockchain system. However, the majority of these mechanisms do not target federated learning directly nor do they aid in the aggregation step. This paper introduces Proof of Reasoning (PoR), a novel consensus mechanism specifically designed for federated learning using blockchain, aimed at preserving data privacy, defending against malicious attacks, and enhancing the validation of participating networks. Unlike generic blockchain consensus mechanisms commonly found in the literature, PoR integrates three distinct processes tailored for federated learning. Firstly, a masked autoencoder (MAE) is trained to generate an encoder that functions as a feature map and obfuscates input data, rendering it resistant to human reconstruction and model inversion attacks. Secondly, a downstream classifier is trained at the edge, receiving input from the trained encoder. The downstream network's weights, a single encoded datapoint, the network's output and the ground truth are then added to a block for federated aggregation. Lastly, this data facilitates the aggregation of all participating networks, enabling more complex and verifiable aggregation methods than previously possible. This three-stage process results in more robust networks with significantly reduced computational complexity, maintaining high accuracy by training only the downstream classifier at the edge. PoR scales to large IoT networks with low latency and storage growth, and adapts to evolving data, regulations, and network conditions."
+  },
+  {
+   "arxiv": "2502.16406v2",
+   "title": "TrustChain: A Blockchain Framework for Auditing and Verifying Aggregators in Decentralized Federated Learning",
+   "pub": "2025-02-23",
+   "upd": "2025-11-08",
+   "authors": [
+    "Ehsan Hallaji",
+    "Roozbeh Razavi-Far",
+    "Mehrdad Saif"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.AI",
+    "cs.CR"
+   ],
+   "abs": "The server-less nature of Decentralized Federated Learning (DFL) requires allocating the aggregation role to specific participants in each federated round. Current DFL architectures ensure the trustworthiness of the aggregator node upon selection. However, most of these studies overlook the possibility that the aggregating node may turn rogue and act maliciously after being nominated. To address this problem, this paper proposes a DFL structure, called TrustChain, that scores the aggregators before selection based on their past behavior and additionally audits them after the aggregation. To do this, the statistical independence between the client updates and the aggregated model is continuously monitored using the Hilbert-Schmidt Independence Criterion (HSIC). The proposed method relies on several principles, including blockchain, anomaly detection, and concept drift analysis. The designed structure is evaluated on several federated datasets and attack scenarios with different numbers of Byzantine nodes."
+  },
+  {
+   "arxiv": "2505.13319v2",
+   "title": "SVAFD: A Secure and Verifiable Co-Aggregation Protocol for Federated Distillation",
+   "pub": "2025-05-19",
+   "upd": "2025-05-20",
+   "authors": [
+    "Tian Wen",
+    "Sheng Sun",
+    "Yuwei Wang",
+    "Peiyan Chen",
+    "Zhiyuan Wu",
+    "Min Liu"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.DC"
+   ],
+   "abs": "Secure Aggregation (SA) is an indispensable component of Federated Learning (FL) that concentrates on privacy preservation while allowing for robust aggregation. However, most SA designs rely heavily on the unrealistic assumption of homogeneous model architectures. Federated Distillation (FD), which aggregates locally computed logits instead of model parameters, introduces a promising alternative for cooperative training in heterogeneous model settings. Nevertheless, we recognize two major challenges in implementing SA for FD. (i) Prior SA designs encourage a dominant server, who is solely responsible for collecting, aggregating and distributing. Such central authority facilitates server to forge aggregation proofs or collude to bypass the claimed security guarantees; (ii) Existing SA, tailored for FL models, overlook the intrinsic properties of logits, making them unsuitable for FD. To address these challenges, we propose SVAFD, the first SA protocol that is specifically designed for FD. At a high level, SVAFD incorporates two innovations: (i) a multilateral co-aggregation method tha redefines the responsibilities of clients and server. Clients autonomously evaluate and aggregate logits shares locally with a lightweight coding scheme, while the server handles ciphertext decoding and performs the task of generating verification proofs; (ii) a quality-aware knowledge filtration method that facilitates biased logits exclusion against poisoning attacks. Moreover, SVAFD is resilient to stragglers and colluding clients, making it well-suited for dynamic networks in real-world applications. We have implemented the SVAFD prototype over four emerging FD architectures and evaluated it against poisoning and inference attacks. Results demonstrate that SVAFD improves model accuracy, making it a significant step forward in secure and verifiable aggregation for heterogeneous FL systems."
+  },
+  {
+   "arxiv": "2402.14317v1",
+   "title": "Oscillations between Grid-Forming Converters in Weakly Connected Offshore WPPs",
+   "pub": "2024-02-22",
+   "upd": "2024-02-22",
+   "authors": [
+    "Sulav Ghimire",
+    "Kanakesh V. Kkuni",
+    "Gabriel M. G. Guerreiro",
+    "Emerson D. Guest",
+    "Kim H. Jensen",
+    "Guangya Yang"
+   ],
+   "cats": [
+    "eess.SY"
+   ],
+   "abs": "This paper studies control interactions between grid-forming (GFM) converters exhibited by power and frequency oscillations in a weakly connected offshore wind power plant (WPP). Two GFM controls are considered, namely virtual synchronous machine (VSM) and virtual admittance (VAdm) based GFM. The GFM control methods are implemented in wind turbine generators (WTGs) of a verified aggregated model of a WPP and the control interaction between these GFM WTGs is studied for several cases: cases with the same GFM control methods, and cases with different GFM control methods. A sensitivity analysis is performed for the observed oscillations to understand which system parameter affects the oscillations the most. Several solution methods are proposed and the inapplicability of some of the conventional solution methods are elaborated in this paper."
+  },
+  {
+   "arxiv": "2511.12936v1",
+   "title": "Privacy-Preserving Federated Learning from Partial Decryption Verifiable Threshold Multi-Client Functional Encryption",
+   "pub": "2025-11-17",
+   "upd": "2025-11-17",
+   "authors": [
+    "Minjie Wang",
+    "Jinguang Han",
+    "Weizhi Meng"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.AI"
+   ],
+   "abs": "In federated learning, multiple parties can cooperate to train the model without directly exchanging their own private data, but the gradient leakage problem still threatens the privacy security and model integrity. Although the existing scheme uses threshold cryptography to mitigate the inference attack, it can not guarantee the verifiability of the aggregation results, making the system vulnerable to the threat of poisoning attack. We construct a partial decryption verifiable threshold multi client function encryption scheme, and apply it to Federated learning to implement the federated learning verifiable threshold security aggregation protocol (VTSAFL). VTSAFL empowers clients to verify aggregation results, concurrently minimizing both computational and communication overhead. The size of the functional key and partial decryption results of the scheme are constant, which provides efficiency guarantee for large-scale deployment. The experimental results on MNIST dataset show that vtsafl can achieve the same accuracy as the existing scheme, while reducing the total training time by more than 40%, and reducing the communication overhead by up to 50%. This efficiency is critical for overcoming the resource constraints inherent in Internet of Things (IoT) devices."
+  },
+  {
+   "arxiv": "2601.03926v2",
+   "title": "Doc-PP: Document Policy Preservation Benchmark for Large Vision-Language Models",
+   "pub": "2026-01-07",
+   "upd": "2026-04-13",
+   "authors": [
+    "Haeun Jang",
+    "Hwan Chang",
+    "Hwanhee Lee"
+   ],
+   "cats": [
+    "cs.CL"
+   ],
+   "abs": "The deployment of Large Vision-Language Models (LVLMs) for real-world document question answering is often constrained by dynamic, user-defined policies that dictate information disclosure based on context. While ensuring adherence to these explicit constraints is critical, existing safety research primarily focuses on implicit social norms or text-only settings, overlooking the complexities of multimodal documents. In this paper, we introduce Doc-PP (Document Policy Preservation Benchmark), a novel benchmark constructed from real-world reports requiring reasoning across heterogeneous visual and textual elements under strict non-disclosure policies. Our evaluation highlights a systemic Reasoning-Induced Safety Gap: models frequently leak sensitive information when answers must be inferred through complex synthesis or aggregated across modalities, effectively circumventing existing safety constraints. Furthermore, we identify that providing extracted text improves perception but inadvertently facilitates leakage. To address these vulnerabilities, we propose DVA (Decompose-Verify-Aggregation), a structural inference framework that decouples reasoning from policy verification. Experimental results demonstrate that DVA significantly outperforms standard prompting defenses, offering a robust baseline for policy-compliant document understanding"
+  }
+ ],
+ "all:\"aggregation verification\"": [
+  {
+   "arxiv": "2604.26808v3",
+   "title": "Information Requirements for Service Allocation and Aggregate Verification",
+   "pub": "2026-04-29",
+   "upd": "2026-09-14",
+   "authors": [
+    "Joss Armstrong"
+   ],
+   "cats": [
+    "cs.GT",
+    "cs.IT"
+   ],
+   "abs": "A service system may use the same categories to assign standard allocations and to check whether each service is fulfilled. Finer categories can match individual needs more closely, but they divide the observations available for monitoring. We study this conflict for a fixed menu from which participants select by declaring a category, with fulfilment assessed from each category's aggregate outcomes during a fixed period. We relate allocation loss to variation in preferred allocations within categories and identify conditions under which aggregate observations preserve the verification performance of individual records. For nested refinements under stated utility and observation assumptions, an allocation-loss tolerance and a per-category detection target define a feasibility band. Categories must be fine enough to provide suitable allocations but sufficiently populated to support verification. A source-dependent lower bound on declaration entropy and a minimum contributor requirement give necessary information and population constraints. For an explicit finite population with quadratic utility and binary service outcomes, we prove the exact feasible range across all categorical designs and exhibit designs attaining the information lower bound at specified tolerances. The results provide conditions for choosing categories jointly for allocation and verification."
+  },
+  {
+   "arxiv": "1811.03730v1",
+   "title": "MDBV: Monitoring Data Batch Verification for Survivability of Internet of Vehicles",
+   "pub": "2018-11-09",
+   "upd": "2018-11-09",
+   "authors": [
+    "Jingwei Liu",
+    "Qingqing Li",
+    "Huijuan Cao",
+    "Rong Sun",
+    "Xiaojiang Du",
+    "Mohsen Guizani"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Along with the development of vehicular sensors and wireless communication technology, Internet of Vehicles (IoV) is emerging that can improve traffic efficiency and provide a comfortable driving environment. However, there is still a challenge how to ensure the survivability of IoV. Fortunately, this goal can be achieved by quickly verifying real-time monitoring data to avoid network failure. Aggregate signature is an efficient approach to realize quick data verification quickly. In this paper, we propose a monitoring data batch verification scheme based on an improved certificateless aggregate signature for IoV, named MDBV. The size of aggregated verification message is remain roughly constant even as the increasing number of vehicles in MDBV. Additionally, MDBV is proved to be secure in the random oracle model assuming the intractability of the computational Diffie-Hellman problem. In consideration of the network survivability and performance, the proposed MDBV can decrease the computation overhead and is more suitable for IoV."
+  },
+  {
+   "arxiv": "2601.18492v1",
+   "title": "DV-VLN: Dual Verification for Reliable LLM-Based Vision-and-Language Navigation",
+   "pub": "2026-01-26",
+   "upd": "2026-01-26",
+   "authors": [
+    "Zijun Li",
+    "Shijie Li",
+    "Zhenxi Zhang",
+    "Bin Li",
+    "Shoujun Zhou"
+   ],
+   "cats": [
+    "cs.RO"
+   ],
+   "abs": "Vision-and-Language Navigation (VLN) requires an embodied agent to navigate in a complex 3D environment according to natural language instructions. Recent progress in large language models (LLMs) has enabled language-driven navigation with improved interpretability. However, most LLM-based agents still rely on single-shot action decisions, where the model must choose one option from noisy, textualized multi-perspective observations. Due to local mismatches and imperfect intermediate reasoning, such decisions can easily deviate from the correct path, leading to error accumulation and reduced reliability in unseen environments. In this paper, we propose DV-VLN, a new VLN framework that follows a generate-then-verify paradigm. DV-VLN first performs parameter-efficient in-domain adaptation of an open-source LLaMA-2 backbone to produce a structured navigational chain-of-thought, and then verifies candidate actions with two complementary channels: True-False Verification (TFV) and Masked-Entity Verification (MEV). DV-VLN selects actions by aggregating verification successes across multiple samples, yielding interpretable scores for reranking. Experiments on R2R, RxR (English subset), and REVERIE show that DV-VLN consistently improves over direct prediction and sampling-only baselines, achieving competitive performance among language-only VLN agents and promising results compared with several cross-modal systems.Code is available at https://github.com/PlumJun/DV-VLN."
+  },
+  {
+   "arxiv": "2606.11280v1",
+   "title": "Designed-Source Reductions and a Dual-Purpose Feasibility Band for Semantic Rate-Distortion",
+   "pub": "2026-06-09",
+   "upd": "2026-06-09",
+   "authors": [
+    "Joss Armstrong"
+   ],
+   "cats": [
+    "cs.IT",
+    "eess.SP"
+   ],
+   "abs": "The joint rate-distortion framework of Stavrou and Kountouris (IEEE Transactions on Communications 2023) characterises dual-fidelity tradeoffs for semantic communication on stochastic semantic sources. Many task-oriented communication systems instead use designed sources, where the semantic object is a deterministic oracle allocation $φ^(t)$ rather than a stochastic quantity given by nature. We isolate the subclass of designed sources under smooth concave utility with assumptions A1, A2 and Euclidean allocation codomain, and restrict the encoder class to deterministic common-category mappings. Within this subclass the SK exponential-tilting decoder and generalised Blahut--Arimoto iteration specialise to conditional-mean decoding and Lloyd--Max stationarity on $φ^(t)$. When the second fidelity is a monotone single-letter distortion, the joint problem stays inside the SK admissible class; the common-category SK rate is lower-bounded by the max of the corresponding Shannon rate-distortion functions, with equality only when the common-category reconstruction is compatible and RDF-optimal. When the second fidelity is aggregate verification, the joint problem leaves the SK single-letter class and admits a constrained-design feasibility band $R_{\\min}(\\varepsilon^) \\leq R \\leq R_{\\max}(β^)$ of width $\\log_2(K_{\\max}/K_{\\min})$ bits in partition cardinality. The reduction and the band are scope statements on the SK apparatus, not modifications to it. A smart-grid economic-dispatch example with a non-technical-loss-detection contrast illustrates the band."
+  },
+  {
+   "arxiv": "2104.11231v1",
+   "title": "VeriMedi: Pill Identification using Proxy-based Deep Metric Learning and Exact Solution",
+   "pub": "2021-04-22",
+   "upd": "2021-04-22",
+   "authors": [
+    "Tekin Evrim Ozmermer",
+    "Viktors Roze",
+    "Stanislavs Hilcuks",
+    "Alina Nescerecka"
+   ],
+   "cats": [
+    "cs.CV",
+    "cs.AI",
+    "cs.IT",
+    "cs.LG"
+   ],
+   "abs": "We present the system that we have developed for the identification and verification of pills using images that are taken by the VeriMedi device. The VeriMedi device is an Internet of Things device that takes pictures of a filled pill vial from the bottom of the vial and uses the solution that is presented in this research to identify the pills in the vials. The solution has two serially connected deep learning solutions which do segmentation and identification. The segmentation solution creates the masks for each pill in the vial image by using the Mask R-CNN model, then segments and crops the pills and blurs the background. After that, the segmented pill images are sent to the identification solution where a Deep Metric Learning model that is trained with Proxy Anchor Loss (PAL) function generates embedding vectors for each pill image. The generated embedding vectors are fed into a one-layer fully connected network that is trained with the exact solution to predict each single pill image. Then, the aggregation/verification function aggregates the multiple predictions coming from multiple single pill images and verifies the correctness of the final prediction with respect to predefined rules. Besides, we enhanced the PAL with a better proxy initialization that increased the performance of the models and let the model learn the new classes of images continually without retraining the model with the whole dataset. When the model that is trained with initial classes is retrained only with new classes, the accuracy of the model increases for both old and new classes. The identification solution that we have presented in this research can also be reused for other problem domains which require continual learning and/or Fine-Grained Visual Categorization."
+  }
+ ],
+ "all:\"hierarchical federated learning\" AND all:\"verification\"": [
+  {
+   "arxiv": "2004.11361v1",
+   "title": "Enhancing Privacy via Hierarchical Federated Learning",
+   "pub": "2020-04-23",
+   "upd": "2020-04-23",
+   "authors": [
+    "Aidmar Wainakh",
+    "Alejandro Sanchez Guinea",
+    "Tim Grube",
+    "Max Mühlhäuser"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Federated learning suffers from several privacy-related issues that expose the participants to various threats. A number of these issues are aggravated by the centralized architecture of federated learning. In this paper, we discuss applying federated learning on a hierarchical architecture as a potential solution. We introduce the opportunities for more flexible decentralized control over the training process and its impact on the participants' privacy. Furthermore, we investigate possibilities to enhance the efficiency and effectiveness of defense and verification methods."
+  }
+ ],
+ "all:\"secure aggregation\" AND all:\"cloud server\"": [
+  {
+   "arxiv": "2503.04564v6",
+   "title": "Fundamental Limits of Hierarchical Secure Aggregation with Cyclic User Association",
+   "pub": "2025-03-06",
+   "upd": "2026-01-26",
+   "authors": [
+    "Xiang Zhang",
+    "Zhou Li",
+    "Kai Wan",
+    "Hua Sun",
+    "Mingyue Ji",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.IT",
+    "cs.AI",
+    "cs.CR",
+    "cs.DC"
+   ],
+   "abs": "Secure aggregation is motivated by federated learning (FL) where a cloud server aims to compute an {aggregated} model (i.e., weights of deep neural networks) of the locally-trained models of numerous clients {through an iterative communication process}, while adhering to data security requirements. Hierarchical secure aggregation (HSA) extends this concept to a three-layer hierarchical network, where clustered users communicate with the server through an intermediate layer of relays. In HSA, beyond conventional server security, relay security is also enforced to ensure that the relays remain oblivious to the users' inputs (an abstraction of the local models in FL). {Existing studies on HSA that jointly consider communication and secret key generation efficiency typically assume that each user is associated with only one relay, limiting opportunities for coding across inter-cluster users to achieve efficient communication and key generation.} In this paper, we consider HSA with a cyclic association pattern where each user is connected to $B$ consecutive relays in a wrap-around manner. We propose an efficient aggregation scheme which includes a message design for the inputs inspired by gradient coding-a well-known technique for efficient communication in distributed computing-along with a highly non-trivial security key design."
+  },
+  {
+   "arxiv": "1911.02254v2",
+   "title": "Secure Federated Submodel Learning",
+   "pub": "2019-11-06",
+   "upd": "2019-11-11",
+   "authors": [
+    "Chaoyue Niu",
+    "Fan Wu",
+    "Shaojie Tang",
+    "Lifeng Hua",
+    "Rongfei Jia",
+    "Chengfei Lv"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.CR",
+    "cs.DC",
+    "stat.ML"
+   ],
+   "abs": "Federated learning was proposed with an intriguing vision of achieving collaborative machine learning among numerous clients without uploading their private data to a cloud server. However, the conventional framework requires each client to leverage the full model for learning, which can be prohibitively inefficient for resource-constrained clients and large-scale deep learning tasks. We thus propose a new framework, called federated submodel learning, where clients download only the needed parts of the full model, namely submodels, and then upload the submodel updates. Nevertheless, the \"position\" of a client's truly required submodel corresponds to her private data, and its disclosure to the cloud server during interactions inevitably breaks the tenet of federated learning. To integrate efficiency and privacy, we have designed a secure federated submodel learning scheme coupled with a private set union protocol as a cornerstone. Our secure scheme features the properties of randomized response, secure aggregation, and Bloom filter, and endows each client with a customized plausible deniability, in terms of local differential privacy, against the position of her desired submodel, thus protecting her private data. We further instantiated our scheme with the e-commerce recommendation scenario in Alibaba, implemented a prototype system, and extensively evaluated its performance over 30-day Taobao user data. The analysis and evaluation results demonstrate the feasibility and scalability of our scheme from model accuracy and convergency, practical communication, computation, and storage overheads, as well as manifest its remarkable advantages over the conventional federated learning framework."
+  },
+  {
+   "arxiv": "2209.07702v3",
+   "title": "Federated Coordinate Descent for Privacy-Preserving Multiparty Linear Regression",
+   "pub": "2022-09-16",
+   "upd": "2022-10-16",
+   "authors": [
+    "Xinlin Leng",
+    "Chenxu Li",
+    "Weifeng Xu",
+    "Yuyan Sun",
+    "Hongtao Wang"
+   ],
+   "cats": [
+    "cs.LG"
+   ],
+   "abs": "Distributed privacy-preserving regression schemes have been developed and extended in various fields, where multiparty collaboratively and privately run optimization algorithms, e.g., Gradient Descent, to learn a set of optimal parameters. However, traditional Gradient-Descent based methods fail to solve problems which contains objective functions with L1 regularization, such as Lasso regression. In this paper, we present Federated Coordinate Descent, a new distributed scheme called FCD, to address this issue securely under multiparty scenarios. Specifically, through secure aggregation and added perturbations, our scheme guarantees that: (1) no local information is leaked to other parties, and (2) global model parameters are not exposed to cloud servers. The added perturbations can eventually be eliminated by each party to derive a global model with high performance. We show that the FCD scheme fills the gap of multiparty secure Coordinate Descent methods and is applicable for general linear regressions, including linear, ridge and lasso regressions. Theoretical security analysis and experimental results demonstrate that FCD can be performed effectively and efficiently, and provide as low MAE measure as centralized methods under tasks of three types of linear regressions on real-world UCI datasets."
+  }
+ ],
+ "all:\"federated learning\" AND all:\"homomorphic hash\"": [
+  {
+   "arxiv": "2603.29688v1",
+   "title": "Client-Verifiable and Efficient Federated Unlearning in Low-Altitude Wireless Networks",
+   "pub": "2026-03-31",
+   "upd": "2026-03-31",
+   "authors": [
+    "Yuhua Xu",
+    "Mingtao Jiang",
+    "Chenfei Hu",
+    "Yinglong Wang",
+    "Chuan Zhang",
+    "Meng Li"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "In low-altitude wireless networks (LAWN), federated learning (FL) enables collaborative intelligence among unmanned aerial vehicles (UAVs) and integrated sensing and communication (ISAC) devices while keeping raw sensing data local. Due to the \"right to be forgotten\" requirements and the high mobility of ISAC devices that frequently enter or leave the coverage region of UAV-assisted servers, the influence of departing devices must be removed from trained models. This necessity motivates the adoption of federated unlearning (FUL) to eliminate historical device contributions from the global model in LAWN. However, existing FUL approaches implicitly assume that the UAV-assisted server executes unlearning operations honestly. Without client-verifiable guarantees, an untrusted server may retain residual device information, leading to potential privacy leakage and undermining trust. To address this issue, we propose VerFU, a privacy-preserving and client-verifiable federated unlearning framework designed for LAWN. It empowers ISAC devices to validate the server-side unlearning operations without relying on original data samples. By integrating linear homomorphic hash (LHH) with commitment schemes, VerFU constructs tamper-proof records of historical updates. ISAC devices ensure the integrity of unlearning results by verifying decommitment parameters and utilizing the linear composability of LHH to check whether the global model accurately removes their historical contributions. Furthermore, VerFU is capable of efficiently processing parallel unlearning requests and verification from multiple ISAC devices. Experimental results demonstrate that our framework efficiently preserves model utility post-unlearning while maintaining low communication and verification overhead."
+  }
+ ],
+ "all:\"verifiable\" AND all:\"model aggregation\" AND all:\"edge\"": [
+  {
+   "arxiv": "1905.06641v2",
+   "title": "Client-Edge-Cloud Hierarchical Federated Learning",
+   "pub": "2019-05-16",
+   "upd": "2019-10-31",
+   "authors": [
+    "Lumin Liu",
+    "Jun Zhang",
+    "S. H. Song",
+    "Khaled B. Letaief"
+   ],
+   "cats": [
+    "cs.NI",
+    "cs.LG"
+   ],
+   "abs": "Federated Learning is a collaborative machine learning framework to train a deep learning model without accessing clients' private data. Previous works assume one central parameter server either at the cloud or at the edge. The cloud server can access more data but with excessive communication overhead and long latency, while the edge server enjoys more efficient communications with the clients. To combine their advantages, we propose a client-edge-cloud hierarchical Federated Learning system, supported with a HierFAVG algorithm that allows multiple edge servers to perform partial model aggregation. In this way, the model can be trained faster and better communication-computation trade-offs can be achieved. Convergence analysis is provided for HierFAVG and the effects of key parameters are also investigated, which lead to qualitative design guidelines. Empirical experiments verify the analysis and demonstrate the benefits of this hierarchical architecture in different data distribution scenarios. Particularly, it is shown that by introducing the intermediate edge servers, the model training time and the energy consumption of the end devices can be simultaneously reduced compared to cloud-based Federated Learning."
+  },
+  {
+   "arxiv": "2303.10580v1",
+   "title": "Hierarchical Personalized Federated Learning Over Massive Mobile Edge Computing Networks",
+   "pub": "2023-03-19",
+   "upd": "2023-03-19",
+   "authors": [
+    "Chaoqun You",
+    "Kun Guo",
+    "Howard H. Yang",
+    "Tony Q. S. Quek"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.AI",
+    "cs.DC"
+   ],
+   "abs": "Personalized Federated Learning (PFL) is a new Federated Learning (FL) paradigm, particularly tackling the heterogeneity issues brought by various mobile user equipments (UEs) in mobile edge computing (MEC) networks. However, due to the ever-increasing number of UEs and the complicated administrative work it brings, it is desirable to switch the PFL algorithm from its conventional two-layer framework to a multiple-layer one. In this paper, we propose hierarchical PFL (HPFL), an algorithm for deploying PFL over massive MEC networks. The UEs in HPFL are divided into multiple clusters, and the UEs in each cluster forward their local updates to the edge server (ES) synchronously for edge model aggregation, while the ESs forward their edge models to the cloud server semi-asynchronously for global model aggregation. The above training manner leads to a tradeoff between the training loss in each round and the round latency. HPFL combines the objectives of training loss minimization and round latency minimization while jointly determining the optimal bandwidth allocation as well as the ES scheduling policy in the hierarchical learning framework. Extensive experiments verify that HPFL not only guarantees convergence in hierarchical aggregation frameworks but also has advantages in round training loss maximization and round latency minimization."
+  },
+  {
+   "arxiv": "2508.15185v1",
+   "title": "Integrated Sensing, Communication, and Computation for Over-the-Air Federated Edge Learning",
+   "pub": "2025-08-21",
+   "upd": "2025-08-21",
+   "authors": [
+    "Dingzhu Wen",
+    "Sijing Xie",
+    "Xiaowen Cao",
+    "Yuanhao Cui",
+    "Jie Xu",
+    "Yuanming Shi"
+   ],
+   "cats": [
+    "cs.IT",
+    "cs.LG"
+   ],
+   "abs": "This paper studies an over-the-air federated edge learning (Air-FEEL) system with integrated sensing, communication, and computation (ISCC), in which one edge server coordinates multiple edge devices to wirelessly sense the objects and use the sensing data to collaboratively train a machine learning model for recognition tasks. In this system, over-the-air computation (AirComp) is employed to enable one-shot model aggregation from edge devices. Under this setup, we analyze the convergence behavior of the ISCC-enabled Air-FEEL in terms of the loss function degradation, by particularly taking into account the wireless sensing noise during the training data acquisition and the AirComp distortions during the over-the-air model aggregation. The result theoretically shows that sensing, communication, and computation compete for network resources to jointly decide the convergence rate. Based on the analysis, we design the ISCC parameters under the target of maximizing the loss function degradation while ensuring the latency and energy budgets in each round. The challenge lies on the tightly coupled processes of sensing, communication, and computation among different devices. To tackle the challenge, we derive a low-complexity ISCC algorithm by alternately optimizing the batch size control and the network resource allocation. It is found that for each device, less sensing power should be consumed if a larger batch of data samples is obtained and vice versa. Besides, with a given batch size, the optimal computation speed of one device is the minimum one that satisfies the latency constraint. Numerical results based on a human motion recognition task verify the theoretical convergence analysis and show that the proposed ISCC algorithm well coordinates the batch size control and resource allocation among sensing, communication, and computation to enhance the learning performance."
+  },
+  {
+   "arxiv": "2212.06596v2",
+   "title": "Broadband Digital Over-the-Air Computation for Wireless Federated Edge Learning",
+   "pub": "2022-12-13",
+   "upd": "2023-07-05",
+   "authors": [
+    "Lizhao You",
+    "Xinbo Zhao",
+    "Rui Cao",
+    "Yulin Shao",
+    "Liqun Fu"
+   ],
+   "cats": [
+    "cs.IT",
+    "eess.SP"
+   ],
+   "abs": "This paper presents the first orthogonal frequency-division multiplexing(OFDM)-based digital over-the-air computation (AirComp) system for wireless federated edge learning, where multiple edge devices transmit model data simultaneously using non-orthogonal OFDM subcarriers, and the edge server aggregates data directly from the superimposed signal. Existing analog AirComp systems often assume perfect phase alignment via channel precoding and utilize uncoded analog transmission for model aggregation. In contrast, our digital AirComp system leverages digital modulation and channel codes to overcome phase asynchrony, thereby achieving accurate model aggregation for phase-asynchronous multi-user OFDM systems. To realize a digital AirComp system, we develop a medium access control (MAC) protocol that allows simultaneous transmissions from different users using non-orthogonal OFDM subcarriers, and put forth joint channel decoding and aggregation decoders tailored for convolutional and LDPC codes. To verify the proposed system design, we build a digital AirComp prototype on the USRP software-defined radio platform, and demonstrate a real-time LDPC-coded AirComp system with up to four users. Trace-driven simulation results on test accuracy versus SNR show that: 1) analog AirComp is sensitive to phase asynchrony in practical multi-user OFDM systems, and the test accuracy performance fails to improve even at high SNRs; 2) our digital AirComp system outperforms two analog AirComp systems at all SNRs, and approaches the optimal performance when SNR $\\geq$ 6 dB for two-user LDPC-coded AirComp, demonstrating the advantage of digital AirComp in phase-asynchronous multi-user OFDM systems."
+  },
+  {
+   "arxiv": "2506.00416v2",
+   "title": "Blockchain-Enabled Privacy-Preserving Second-Order Federated Edge Learning in Personalized Healthcare",
+   "pub": "2025-05-31",
+   "upd": "2026-01-08",
+   "authors": [
+    "Anum Nawaz",
+    "Muhammad Irfan",
+    "Xianjia Yu",
+    "Hamad Aldawsari",
+    "Rayan Hamza Alsisi",
+    "Zhuo Zou"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.CR",
+    "stat.ML"
+   ],
+   "abs": "Federated learning (FL) is increasingly recognised for addressing security and privacy concerns in traditional cloud-centric machine learning (ML), particularly within personalised health monitoring such as wearable devices. By enabling global model training through localised policies, FL allows resource-constrained wearables to operate independently. However, conventional first-order FL approaches face several challenges in personalised model training due to the heterogeneous non-independent and identically distributed (non-iid) data by each individual's unique physiology and usage patterns. Recently, second-order FL approaches maintain the stability and consistency of non-iid datasets while improving personalised model training. This study proposes and develops a verifiable and auditable optimised second-order FL framework BFEL (blockchain enhanced federated edge learning) based on optimised FedCurv for personalised healthcare systems. FedCurv incorporates information about the importance of each parameter to each client's task (through fisher information matrix) which helps to preserve client-specific knowledge and reduce model drift during aggregation. Moreover, it minimizes communication rounds required to achieve a target precision convergence for each client device while effectively managing personalised training on non-iid and heterogeneous data. The incorporation of ethereum-based model aggregation ensures trust, verifiability, and auditability while public key encryption enhances privacy and security. Experimental results of federated CNNs and MLPs utilizing mnist, cifar-10, and PathMnist demonstrate framework's high efficiency, scalability, suitability for edge deployment on wearables, and significant reduction in communication cost."
+  },
+  {
+   "arxiv": "2310.10089v1",
+   "title": "Over-the-Air Federated Learning and Optimization",
+   "pub": "2023-10-16",
+   "upd": "2023-10-16",
+   "authors": [
+    "Jingyang Zhu",
+    "Yuanming Shi",
+    "Yong Zhou",
+    "Chunxiao Jiang",
+    "Wei Chen",
+    "Khaled B. Letaief"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.IT",
+    "eess.SP"
+   ],
+   "abs": "Federated learning (FL), as an emerging distributed machine learning paradigm, allows a mass of edge devices to collaboratively train a global model while preserving privacy. In this tutorial, we focus on FL via over-the-air computation (AirComp), which is proposed to reduce the communication overhead for FL over wireless networks at the cost of compromising in the learning performance due to model aggregation error arising from channel fading and noise. We first provide a comprehensive study on the convergence of AirComp-based FedAvg (AirFedAvg) algorithms under both strongly convex and non-convex settings with constant and diminishing learning rates in the presence of data heterogeneity. Through convergence and asymptotic analysis, we characterize the impact of aggregation error on the convergence bound and provide insights for system design with convergence guarantees. Then we derive convergence rates for AirFedAvg algorithms for strongly convex and non-convex objectives. For different types of local updates that can be transmitted by edge devices (i.e., local model, gradient, and model difference), we reveal that transmitting local model in AirFedAvg may cause divergence in the training procedure. In addition, we consider more practical signal processing schemes to improve the communication efficiency and further extend the convergence analysis to different forms of model aggregation error caused by these signal processing schemes. Extensive simulation results under different settings of objective functions, transmitted local information, and communication schemes verify the theoretical conclusions."
+  },
+  {
+   "arxiv": "2310.17890v2",
+   "title": "Federated Learning over Hierarchical Wireless Networks: Training Latency Minimization via Submodel Partitioning",
+   "pub": "2023-10-27",
+   "upd": "2025-01-27",
+   "authors": [
+    "Wenzhi Fang",
+    "Dong-Jun Han",
+    "Christopher G. Brinton"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.IT",
+    "eess.SP"
+   ],
+   "abs": "Hierarchical federated learning (HFL) has demonstrated promising scalability advantages over the traditional \"star-topology\" architecture-based federated learning (FL). However, HFL still imposes significant computation, communication, and storage burdens on the edge, especially when training a large-scale model over resource-constrained wireless devices. In this paper, we propose hierarchical independent submodel training (HIST), a new FL methodology that aims to address these issues in hierarchical cloud-edge-client networks. The key idea behind HIST is to divide the global model into disjoint partitions (or submodels) per round so that each group of clients (i.e., cells) is responsible for training only one partition of the model. We characterize the convergence behavior of HIST under mild assumptions, showing the impacts of several key attributes (e.g., submodel sizes, number of cells, edge and global aggregation frequencies) on the rate and stationarity gap. Building upon the theoretical results, we propose a submodel partitioning strategy to minimize the training latency depending on network resource availability and a target learning performance guarantee. We then demonstrate how HIST can be augmented with over-the-air computation (AirComp) to further enhance the efficiency of the model aggregation over the edge cells. Through numerical evaluations, we verify that HIST is able to save training time and communication costs by wide margins while achieving comparable accuracy as conventional HFL. Moreover, our experiments demonstrate that AirComp-assisted HIST provides further improvements in training latency."
+  },
+  {
+   "arxiv": "2504.17528v1",
+   "title": "TACO: Tackling Over-correction in Federated Learning with Tailored Adaptive Correction",
+   "pub": "2025-04-24",
+   "upd": "2025-04-24",
+   "authors": [
+    "Weijie Liu",
+    "Ziwei Zhan",
+    "Carlee Joe-Wong",
+    "Edith Ngai",
+    "Jingpu Duan",
+    "Deke Guo"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.AI"
+   ],
+   "abs": "Non-independent and identically distributed (Non-IID) data across edge clients have long posed significant challenges to federated learning (FL) training in edge computing environments. Prior works have proposed various methods to mitigate this statistical heterogeneity. While these works can achieve good theoretical performance, in this work we provide the first investigation into a hidden over-correction phenomenon brought by the uniform model correction coefficients across clients adopted by existing methods. Such over-correction could degrade model performance and even cause failures in model convergence. To address this, we propose TACO, a novel algorithm that addresses the non-IID nature of clients' data by implementing fine-grained, client-specific gradient correction and model aggregation, steering local models towards a more accurate global optimum. Moreover, we verify that leading FL algorithms generally have better model accuracy in terms of communication rounds rather than wall-clock time, resulting from their extra computation overhead imposed on clients. To enhance the training efficiency, TACO deploys a lightweight model correction and tailored aggregation approach that requires minimum computation overhead and no extra information beyond the synchronized model parameters. To validate TACO's effectiveness, we present the first FL convergence analysis that reveals the root cause of over-correction. Extensive experiments across various datasets confirm TACO's superior and stable performance in practice."
+  },
+  {
+   "arxiv": "2307.00974v1",
+   "title": "Over-The-Air Federated Learning: Status Quo, Open Challenges, and Future Directions",
+   "pub": "2023-07-03",
+   "upd": "2023-07-03",
+   "authors": [
+    "Bingnan Xiao",
+    "Xichen Yu",
+    "Wei Ni",
+    "Xin Wang",
+    "H. Vincent Poor"
+   ],
+   "cats": [
+    "eess.SP",
+    "cs.DC",
+    "cs.LG",
+    "cs.NI"
+   ],
+   "abs": "The development of applications based on artificial intelligence and implemented over wireless networks is increasingly rapidly and is expected to grow dramatically in the future. The resulting demand for the aggregation of large amounts of data has caused serious communication bottlenecks in wireless networks and particularly at the network edge. Over-the-air federated learning (OTA-FL), leveraging the superposition feature of multi-access channels (MACs), enables users at the network edge to share spectrum resources and achieves efficient and low-latency global model aggregation. This paper provides a holistic review of progress in OTA-FL and points to potential future research directions. Specifically, we classify OTA-FL from the perspective of system settings, including single-antenna OTA-FL, multi-antenna OTA-FL, and OTA-FL with the aid of the emerging reconfigurable intelligent surface (RIS) technology, and the contributions of existing works in these areas are summarized. Moreover, we discuss the trust, security and privacy aspects of OTA-FL, and highlight concerns arising from security and privacy. Finally, challenges and potential research directions are discussed to promote the future development of OTA-FL in terms of improving system performance, reliability, and trustworthiness. Specifical challenges to be addressed include model distortion under channel fading, the ineffective OTA aggregation of local models trained on substantially unbalanced data, and the limited accessibility and verifiability of individual local models."
+  },
+  {
+   "arxiv": "2207.12884v3",
+   "title": "CFLIT: Coexisting Federated Learning and Information Transfer",
+   "pub": "2022-07-26",
+   "upd": "2023-04-05",
+   "authors": [
+    "Zehong Lin",
+    "Hang Liu",
+    "Ying-Jun Angela Zhang"
+   ],
+   "cats": [
+    "cs.IT",
+    "cs.LG",
+    "cs.NI"
+   ],
+   "abs": "Future wireless networks are expected to support diverse mobile services, including artificial intelligence (AI) services and ubiquitous data transmissions. Federated learning (FL), as a revolutionary learning approach, enables collaborative AI model training across distributed mobile edge devices. By exploiting the superposition property of multiple-access channels, over-the-air computation allows concurrent model uploading from massive devices over the same radio resources, and thus significantly reduces the communication cost of FL. In this paper, we study the coexistence of over-the-air FL and traditional information transfer (IT) in a mobile edge network. We propose a coexisting federated learning and information transfer (CFLIT) communication framework, where the FL and IT devices share the wireless spectrum in an OFDM system. Under this framework, we aim to maximize the IT data rate and guarantee a given FL convergence performance by optimizing the long-term radio resource allocation. A key challenge that limits the spectrum efficiency of the coexisting system lies in the large overhead incurred by frequent communication between the server and edge devices for FL model aggregation. To address the challenge, we rigorously analyze the impact of the computation-to-communication ratio on the convergence of over-the-air FL in wireless fading channels. The analysis reveals the existence of an optimal computation-to-communication ratio that minimizes the amount of radio resources needed for over-the-air FL to converge to a given error tolerance. Based on the analysis, we propose a low-complexity online algorithm to jointly optimize the radio resource allocation for both the FL devices and IT devices. Extensive numerical simulations verify the superior performance of the proposed design for the coexistence of FL and IT devices in wireless cellular systems."
+  },
+  {
+   "arxiv": "2510.18152v1",
+   "title": "Efficient Multi-Worker Selection based Distributed Swarm Learning via Analog Aggregation",
+   "pub": "2025-10-20",
+   "upd": "2025-10-20",
+   "authors": [
+    "Zhuoyu Yao",
+    "Yue Wang",
+    "Songyang Zhang",
+    "Yingshu Li",
+    "Zhipeng Cai",
+    "Zhi Tian"
+   ],
+   "cats": [
+    "cs.DC"
+   ],
+   "abs": "Recent advances in distributed learning systems have introduced effective solutions for implementing collaborative artificial intelligence techniques in wireless communication networks. Federated learning approaches provide a model-aggregation mechanism among edge devices to achieve collaborative training, while ensuring data security, communication efficiency, and sharing computational overheads. On the other hand, limited transmission resources and complex communication environments remain significant bottlenecks to the efficient collaborations among edge devices, particularly within large-scale networks. To address such issues, this paper proposes an over-the-air (OTA) analog aggregation method designed for the distributed swarm learning (DSL), termed DSL-OTA, aiming to enhance communication efficiency, enable effective cooperation, and ensure privacy preserving. Incorporating multi-worker selection strategy with over-the-air aggregation not only makes the standard DSL based on single best worker contributing to global model update to become more federated, but also secures the aggregation from potential risks of data leakage. Our theoretical analyses verify the advantages of the proposed DSL-OTA algorithm in terms of fast convergence rate and low communication costs. Simulation results reveal that our DSL-OTA outperforms the other existing methods by achieving better learning performance under both homogeneous and heterogeneous dataset settings."
+  },
+  {
+   "arxiv": "2206.01366v5",
+   "title": "Supernet Training for Federated Image Classification under System Heterogeneity",
+   "pub": "2022-06-03",
+   "upd": "2022-10-06",
+   "authors": [
+    "Taehyeon Kim",
+    "Se-Young Yun"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.CV"
+   ],
+   "abs": "Efficient deployment of deep neural networks across many devices and resource constraints, particularly on edge devices, is one of the most challenging problems in the presence of data-privacy preservation issues. Conventional approaches have evolved to either improve a single global model while keeping each local heterogeneous training data decentralized (i.e. data heterogeneity; Federated Learning (FL)) or to train an overarching network that supports diverse architectural settings to address heterogeneous systems equipped with different computational capabilities (i.e. system heterogeneity; Neural Architecture Search). However, few studies have considered both directions simultaneously. This paper proposes the federation of supernet training (FedSup) framework to consider both scenarios simultaneously, i.e., where clients send and receive a supernet that contains all possible architectures sampled from itself. The approach is inspired by observing that averaging parameters during model aggregation for FL is similar to weight-sharing in supernet training. Thus, the proposed FedSup framework combines a weight-sharing approach widely used for training single shot models with FL averaging (FedAvg). Furthermore, we develop an efficient algorithm (E-FedSup) by sending the sub-model to clients on the broadcast stage to reduce communication costs and training overhead, including several strategies to enhance supernet training in the FL environment. We verify the proposed approach with extensive empirical evaluations. The resulting framework also ensures data and model heterogeneity robustness on several standard benchmarks."
+  },
+  {
+   "arxiv": "2102.02946v3",
+   "title": "Learning Rate Optimization for Federated Learning Exploiting Over-the-air Computation",
+   "pub": "2021-02-05",
+   "upd": "2021-04-04",
+   "authors": [
+    "Chunmei Xu",
+    "Shengheng Liu",
+    "Zhaohui Yang",
+    "Yongming Huang",
+    "Kai-Kit Wong"
+   ],
+   "cats": [
+    "cs.IT",
+    "eess.SP"
+   ],
+   "abs": "Federated learning (FL) as a promising edge-learning framework can effectively address the latency and privacy issues by featuring distributed learning at the devices and model aggregation in the central server. In order to enable efficient wireless data aggregation, over-the-air computation (AirComp) has recently been proposed and attracted immediate attention. However, fading of wireless channels can produce aggregate distortions in an AirComp-based FL scheme. To combat this effect, the concept of dynamic learning rate (DLR) is proposed in this work. We begin our discussion by considering multiple-input-single-output (MISO) scenario, since the underlying optimization problem is convex and has closed-form solution. We then extend our studies to more general multiple-input-multiple-output (MIMO) case and an iterative method is derived. Extensive simulation results demonstrate the effectiveness of the proposed scheme in reducing the aggregate distortion and guaranteeing the testing accuracy using the MNIST and CIFAR10 datasets. In addition, we present the asymptotic analysis and give a near-optimal receive beamforming design solution in closed form, which is verified by numerical simulations."
+  },
+  {
+   "arxiv": "2012.00661v2",
+   "title": "Fast-Convergent Federated Learning with Adaptive Weighting",
+   "pub": "2020-12-01",
+   "upd": "2021-04-06",
+   "authors": [
+    "Hongda Wu",
+    "Ping Wang"
+   ],
+   "cats": [
+    "cs.LG",
+    "cs.AI"
+   ],
+   "abs": "Federated learning (FL) enables resource-constrained edge nodes to collaboratively learn a global model under the orchestration of a central server while keeping privacy-sensitive data locally. The non-independent-and-identically-distributed (non-IID) data samples across participating nodes slow model training and impose additional communication rounds for FL to converge. In this paper, we propose Federated Adaptive Weighting (FedAdp) algorithm that aims to accelerate model convergence under the presence of nodes with non-IID dataset. We observe the implicit connection between the node contribution to the global model aggregation and data distribution on the local node through theoretical and empirical analysis. We then propose to assign different weights for updating the global model based on node contribution adaptively through each training round. The contribution of participating nodes is first measured by the angle between the local gradient vector and the global gradient vector, and then, weight is quantified by a designed non-linear mapping function subsequently. The simple yet effective strategy can reinforce positive (suppress negative) node contribution dynamically, resulting in communication round reduction drastically. Its superiority over the commonly adopted Federated Averaging (FedAvg) is verified both theoretically and experimentally. With extensive experiments performed in Pytorch and PySyft, we show that FL training with FedAdp can reduce the number of communication rounds by up to 54.1% on MNIST dataset and up to 45.4% on FashionMNIST dataset, as compared to FedAvg algorithm."
+  }
+ ],
+ "all:\"secure aggregation\" AND all:\"trusted authority\"": [],
+ "all:\"federated learning\" AND all:\"proof of correct\"": [
+  {
+   "arxiv": "2504.15717v2",
+   "title": "Trusted Compute Units: A Framework for Chained Verifiable Computations",
+   "pub": "2025-04-22",
+   "upd": "2025-04-28",
+   "authors": [
+    "Fernando Castillo",
+    "Jonathan Heiss",
+    "Sebastian Werner",
+    "Stefan Tai"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Blockchain and distributed ledger technologies (DLTs) facilitate decentralized computations across trust boundaries. However, ensuring complex computations with low gas fees and confidentiality remains challenging. Recent advances in Confidential Computing -- leveraging hardware-based Trusted Execution Environments (TEEs) -- and Proof-carrying Data -- employing cryptographic Zero-Knowledge Virtual Machines (zkVMs) -- hold promise for secure, privacy-preserving off-chain and layer-2 computations. On the other side, a homogeneous reliance on a single technology, such as TEEs or zkVMs, is impractical for decentralized environments with heterogeneous computational requirements. This paper introduces the Trusted Compute Unit (TCU), a unifying framework that enables composable and interoperable verifiable computations across heterogeneous technologies. Our approach allows decentralized applications (dApps) to flexibly offload complex computations to TCUs, obtaining proof of correctness. These proofs can be anchored on-chain for automated dApp interactions, while ensuring confidentiality of input data, and integrity of output data. We demonstrate how TCUs can support a prominent blockchain use case, such as federated learning. By enabling secure off-chain interactions without incurring on-chain confirmation delays or gas fees, TCUs significantly improve system performance and scalability. Experimental insights and performance evaluations confirm the feasibility and practicality of this unified approach, advancing the state of the art in verifiable off-chain services for the blockchain ecosystem."
+  }
+ ],
+ "all:\"secure aggregation\" AND all:\"communication overhead\" AND all:\"verification\"": [
+  {
+   "arxiv": "2605.24054v2",
+   "title": "Verifiable Secure Aggregation via Dual Servers with Linear Tags in Federated Learning",
+   "pub": "2026-05-22",
+   "upd": "2026-08-22",
+   "authors": [
+    "Yufei Zhou"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Federated learning (FL) enables collaborative model training by aggregating local updates without requiring raw data sharing. However, prior studies have shown that servers can exploit gradient inversion to compromise user privacy or manipulate aggregation results, undermining the utility of the global model. To address these concerns, we propose a secure and verifiable aggregation scheme with lightweight cryptographic primitives for FL. Our method leverages pseudo-random functions (PRFs) and a non-colluding dual-server architecture to achieve secure aggregation with mutual server verification, while maintaining communication overhead comparable to plaintext aggregation and a constant verification tag size. Crucially, it preserves user privacy and achieves end-to-end secure aggregation with verification. Moreover, our scheme significantly reduces both user computation and verification overhead, making it suitable for FL with a large number of participants. For instance, with an input dimension of 20K, user computation time is reduced to 18 ms, approximately 7$\\times$ faster than OPSA, while verification time decreases to 9.5 ms, approximately 2.4$\\times$ faster than OPSA."
+  },
+  {
+   "arxiv": "2311.10237v2",
+   "title": "PINE: Efficient Norm-Bound Verification for Secret-Shared Vectors",
+   "pub": "2023-11-16",
+   "upd": "2024-05-29",
+   "authors": [
+    "Guy N. Rothblum",
+    "Eran Omri",
+    "Junye Chen",
+    "Kunal Talwar"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Secure aggregation of high-dimensional vectors is a fundamental primitive in federated statistics and learning. A two-server system such as PRIO allows for scalable aggregation of secret-shared vectors. Adversarial clients might try to manipulate the aggregate, so it is important to ensure that each (secret-shared) contribution is well-formed. In this work, we focus on the important and well-studied goal of ensuring that each contribution vector has bounded Euclidean norm. Existing protocols for ensuring bounded-norm contributions either incur a large communication overhead, or only allow for approximate verification of the norm bound. We propose Private Inexpensive Norm Enforcement (PINE): a new protocol that allows exact norm verification with little communication overhead. For high-dimensional vectors, our approach has a communication overhead of a few percent, compared to the 16-32x overhead of previous approaches."
+  },
+  {
+   "arxiv": "2302.09913v4",
+   "title": "ByzSecAgg: A Byzantine-Resistant Secure Aggregation Scheme for Federated Learning Based on Coded Computing and Vector Commitment",
+   "pub": "2023-02-20",
+   "upd": "2025-06-06",
+   "authors": [
+    "Tayyebeh Jahani-Nezhad",
+    "Mohammad Ali Maddah-Ali",
+    "Giuseppe Caire"
+   ],
+   "cats": [
+    "cs.CR",
+    "cs.DC",
+    "cs.IT",
+    "cs.LG"
+   ],
+   "abs": "In this paper, we propose ByzSecAgg, an efficient secure aggregation scheme for federated learning that is resistant to Byzantine attacks and privacy leakages. Processing individual updates to manage adversarial behavior, while preserving the privacy of the data against colluding nodes, requires some sort of secure secret sharing. However, the communication load for secret sharing of long vectors of updates can be very high. In federated settings, where users are often edge devices with potential bandwidth constraints, excessive communication overhead is undesirable. ByzSecAgg solves this problem by partitioning local updates into smaller sub-vectors and sharing them using ramp secret sharing. However, this sharing method does not admit bilinear computations, such as pairwise distances calculations, which are needed for distance-based outlier-detection algorithms, and effective methods for mitigating Byzantine attacks. To overcome this issue, each user runs another round of ramp sharing, with a different embedding of the data in the sharing polynomial. This technique, motivated by ideas from coded computing, enables secure computation of pairwise distance. In addition, to maintain the integrity and privacy of the local update, ByzSecAgg also uses a vector commitment method, in which the commitment size remains constant (i.e., does not increase with the length of the local update), while simultaneously allowing verification of the secret sharing process. In terms of communication load, ByzSecAgg significantly outperforms the related baseline scheme, known as BREA."
+  },
+  {
+   "arxiv": "1212.2451v1",
+   "title": "RSAED: Robust and Secure Aggregation of Encrypted Data in Wireless Sensor Networks",
+   "pub": "2012-12-11",
+   "upd": "2012-12-11",
+   "authors": [
+    "Omar Rafik Merad Boudia",
+    "Mohamed Feham"
+   ],
+   "cats": [
+    "cs.CR"
+   ],
+   "abs": "Recently, secure in-network aggregation in wireless sensor networks becomes a challenge issue, there is an extensive research on this area due to the large number of applications where the sensors are deployed and the security needs. In the last few years, aggregation of encrypted data has been proposed in order to maintain secrecy between the sensors and the sink, so the end-to-end data confidentiality is provided. However, the data integrity was not addressed. In this paper, we propose RSAED that allows integrity verification at intermediate nodes, ensures the base station to receive ciphertexts which come only from legitimate nodes and also improves the efficiency. Through implementation results, we evaluate our scheme using computation and communication overhead."
+  }
+ ],
+ "all:\"privacy-preserving federated learning\" AND all:\"bilinear pairing\"": []
+}

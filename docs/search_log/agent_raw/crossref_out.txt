@@ -1,0 +1,1309 @@
+====================================================================================================
+CROSSREF QUERY: hierarchical federated learning secure aggregation  ->  30
+---
+  DOI:10.1109/flta63145.2024.10839609 | 2024 | proceedings-article | cites=1
+  T: MC-PPHFL: Privacy-Preserving Hierarchical Federated Learning with a Secure Multi-Chain Aggregation
+  A: Fallatah, Grasso, Lisitsa
+  V: 2024 2nd International Conference on Federated Learning Technologies and Applications (FLTA)
+---
+  DOI:10.1109/icc59461.2026.11587757 | 2026 | proceedings-article | cites=0
+  T: Coding-Enforced Resilient and Secure Aggregation for Hierarchical Federated Learning
+  A: Weng, Xiao, Skoglund
+  V: ICC 2026 - IEEE International Conference on Communications
+---
+  DOI:10.1145/3803630.3809169 | 2026 | proceedings-article | cites=0
+  T: CQSA: Byzantine-robust Clustered Quantum Secure Aggregation in Federated Learning
+  A: Nath, Kasyap
+  V: Proceedings of the International Workshop on Secure and Efficient Federated Learning
+---
+  DOI:10.36227/techrxiv.19428755 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;div&gt;Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SV
+---
+  DOI:10.36227/techrxiv.20004140.v1 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.
+---
+  DOI:10.36227/techrxiv.20004140 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.&lt;/p&gt;
+---
+  DOI:10.36227/techrxiv.19428755.v1 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SVFL achieves
+---
+  DOI:10.1109/tdsc.2024.3472869 | 2025 | journal-article | cites=18
+  T: SHIELD - Secure Aggregation Against Poisoning in Hierarchical Federated Learning
+  A: Siriwardhana, Porambage, Liyanage, Marchal
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.2139/ssrn.5805004 | 2025 | posted-content | cites=3
+  T: Secure Cluster-Based Hierarchical Federated Learning in Vehicular Networks
+  A: HaghighiFard, Coleri
+  V: 
+---
+  DOI:10.1109/icc59461.2026.11587871 | 2026 | proceedings-article | cites=0
+  T: Privacy-Preserving Verification of Secure Aggregation for Hierarchical Peer-to-Peer Federated Learning
+  A: Liao, Chang, Chiu, Chen
+  V: ICC 2026 - IEEE International Conference on Communications
+---
+  DOI:10.1109/jiot.2026.3714526 | 2026 | journal-article | cites=0
+  T: Hi-SAFE: Hierarchical Secure Aggregation for Lightweight Federated Learning
+  A: Joo, Hong, Lee, Shin
+  V: IEEE Internet of Things Journal
+---
+  DOI:10.36227/techrxiv.21699644.v1 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was proposed. In 202
+---
+  DOI:10.36227/techrxiv.21699644 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was propose
+---
+  DOI:10.2139/ssrn.7388938 | 2026 | posted-content | cites=0
+  T: SATP-FL: Lightweight Secure Aggregation via Trajectory Prediction in Vehicular Federated Learning
+  A: Xiong, Ding
+  V: 
+  ABS: Federated learning in vehicular networks faces critical challenges from high mobility, key agreement latency, and frequent secure aggregation failures. Existing protocols cannot effectively accommodate frequent vehicle departures, leading to severely constrained communication windows and degraded aggregation efficiency, which limits both privacy protection and practical deployment. To address these issues, we propose a trajectory-predicted key pre-distribution mechanism (TPKD) that shifts the key agreement process from real-time negotiation to predictive pre-deployment, thereby eliminating handshake delays in highly dynamic environments. A Spatial-Temporal Graph Attention Network (ST-GAT) is
+---
+  DOI:10.1109/icnc59896.2024.10556276 | 2024 | proceedings-article | cites=0
+  T: A Cluster-based Privacy-Enhanced Hierarchical Federated Learning Framework with Secure Aggregation
+  A: Lin, Han, Yin, Kuo
+  V: 2024 International Conference on Computing, Networking and Communications (ICNC)
+---
+  DOI:10.1186/s42400-025-00443-9 | 2026 | journal-article | cites=1
+  T: Secure group aggregation for privacy-protection federated learning
+  A: Yan, Yang
+  V: Cybersecurity
+  ABS: Abstract Federated Learning is a machine learning paradigm designed to address the issues of privacy protection, data security, and big data process. FedAvg, a widely used algorithm in federated learning, is vulnerable to gradient leakage, parameter exposure, and user data compromise. Existing works use differential privacy, homomorphic encryption, and secure multi-party computation to protect the gradients of FedAvg. However, these existing efforts lead to gradient polymerization errors of approximately 10–30% (applying differential privacy results in noisy gradients) in the server or have a high computational dimension. In this paper, we design a secure group aggregation approach for the g
+---
+  DOI:10.2139/ssrn.5375992 | 2025 | posted-content | cites=0
+  T: Dha-Fl: Dynamic Hierarchical Attention Aggregation Framework for Heterogeneous Edge Federated Learning
+  A: zhou, Rong
+  V: 
+---
+  DOI:10.2139/ssrn.5935003 | 2025 | posted-content | cites=0
+  T: Comment on “Secure and efficient multi-key aggregation for federated learning”
+  A: Guan, Cao, Xie
+  V: 
+---
+  DOI:10.14293/pr2199.003337.v1 | 2026 | posted-content | cites=0
+  T: Secure Aggregation Techniques in Federated Learning for Vehicle Data Analytics
+  A: Brown, Jones, Miller, Elvis
+  V: 
+  ABS: The rapid evolution of Intelligent Transportation Systems (ITS) and Autonomous Vehicles (AVs) has generated a massive influx of vehicular data. While this data is pivotal for enhancing traffic safety and predictive maintenance, privacy concerns regarding location history and driving patterns remain a significant barrier. Federated Learning (FL) offers a decentralized alternative to traditional machine learning by training models locally on vehicles; however, FL is still susceptible to poisoning attacks and inference-based privacy leaks. This study investigates the efficacy of secure aggregation techniques—specifically Homomorphic Encryption (HE) and Multi-Party Computation (MPC)—in maintaini
+---
+  DOI:10.7717/peerj-cs.3215 | 2025 | journal-article | cites=3
+  T: Mitigating adversarial attacks in federated learning based network traffic classification applications using secure hierarchical remote attestation and adaptive aggregation framework
+  A: Ariffin, Zaki, Hanif, Anuar
+  V: PeerJ Computer Science
+  ABS: Background Federated learning (FL) enhances network traffic classification (NTC) with significant benefits in privacy, performance, and efficiency. However, the distributed nature of FL exposes NTC models to critical adversarial attacks from byzantine clients. These attacks, such as label flipping (LF) and model poisoning, can severely degrade overall model performance, while backdoor and generative adversarial network (GAN) based attacks can force the model to misclassify specific traffic classes. Securing FL-based NTC is paramount, as these vulnerabilities pose substantial threats to its vital role in network management, quality of service, and threat identification. Methods While various 
+---
+  DOI:10.1109/jiot.2023.3277553 | 2023 | journal-article | cites=16
+  T: DRL-Based Secure Aggregation and Resource Orchestration in MEC-Enabled Hierarchical Federated Learning
+  A: Zhao, Li, He
+  V: IEEE Internet of Things Journal
+---
+  DOI:10.1007/978-981-19-8692-5_7 | 2022 | book-chapter | cites=2
+  T: Secure Data Aggregation in Federated Learning
+  A: Yu, Cui
+  V: Digital Privacy and Security
+---
+  DOI:10.1109/icce-taiwan58799.2023.10226768 | 2023 | proceedings-article | cites=2
+  T: CHFDS: Clustered-based Hierarchical Federated Learning Framework with Differential Privacy and Secure Aggregation
+  A: Han, Yin, Lin, Kuo
+  V: 2023 International Conference on Consumer Electronics - Taiwan (ICCE-Taiwan)
+---
+  DOI:10.2139/ssrn.7498278 | 2026 | posted-content | cites=0
+  T: Enhancing Secure Aggregation with Element-wise Functionality in Federated Learning
+  A: Suimon, Koizumi, Takemasa, Hasegawa
+  V: 
+  ABS: Federated learning (FL) enables collaborative training without sharing raw data, yet individual model updates can still leak sensitive information.Secure aggregation (SecAgg) mitigates this risk by ensuring that the server learns only the sum of client updates, thereby hiding individual contributions.However, when updates are sparse, an element with non-zero values from only a few clients can be exposed directly through the aggregate.Recent work has highlighted this vulnerability and demonstrated data reconstruction attacks that bypass SecAgg.To counter these attacks, we propose an enhancement to SecAgg that releases aggregated values only for elements to which at least $\SAthreshold$ client
+---
+  DOI:10.21203/rs.3.rs-6827986/v1 | 2025 | posted-content | cites=0
+  T: Enhanced Security Verifiable Secure Aggregation Scheme in Federated Learning
+  A: Yao, Han, Zhou, Wang
+  V: 
+  ABS: Abstract Federated Learning(FL) enables multiple participants to build a loosely coupled distributed machine learning system under the coordination of a central server. Existing FL models typically assume that the server aggregating data is semi-honest, but this assumption does not align with the complexities of real-world application environments, where the server may carry out collusion attacks or replay attacks. VerifyNet is a representative federated learning protocol for verifiable secure aggregation. In this paper, we analyze the security of VerifyNet, identify two shortcomings: low tolerance to collusion attacks and inability to resist combinatorial replay attacks. Furthermore, we hav
+---
+  DOI:10.2139/ssrn.4872729 | 2024 | posted-content | cites=0
+  T: Secure Fair Aggregation Based on Category Grouping in Federated Learning
+  A: Zhou, Hu, Xue, Zeng
+  V: 
+---
+  DOI:10.21203/rs.3.rs-6090375/v1 | 2025 | posted-content | cites=0
+  T: Verifiable Secure Aggregation Scheme for Privacy Protection in Federated Learning
+  A: Yao, Zhou, Han, Wang
+  V: 
+  ABS: Abstract Federated learning enables multiple participants to construct a distributed machine learning system coordinated by server. Most existing solutions assume a semi-honest system, considering each participant to be honest but curious, which does not align with the complex real-world environment. In reality, servers might be malicious, potentially tampering with or forging aggregation results. To verify the integrity of server aggregation computations while protecting the privacy of clients, this paper introduces a privacy-preserving verifiable secure aggregation scheme for federated learning networks. Initially, we construct a functional reuse private key ring generation algorithm, enab
+---
+  DOI:10.1201/9781003384854-4 | 2023 | book-chapter | cites=6
+  T: Secure and Private Federated Learning through Encrypted Parameter Aggregation
+  A: Vijayalakshmi, Sitharselvam, Thamarai, Ashok
+  V: Handbook on Federated Learning
+---
+  DOI:10.5220/0013529100003979 | 2025 | proceedings-article | cites=2
+  T: Privacy-Preserving EEG Data Generation: A Federated Split Learning Approach Using Privacy-Adaptive Autoencoders and Secure Aggregation with GFlowNet
+  A: Paul, Bajwa
+  V: Proceedings of the 22nd International Conference on Security and Cryptography
+---
+  DOI:10.1109/wccis70285.2026.11650937 | 2026 | proceedings-article | cites=0
+  T: Decentralized and Secure Aggregation in Federated Learning
+  A: Fang
+  V: 2026 3rd World Conference on Computer and Information Security (WCCIS)
+====================================================================================================
+CROSSREF QUERY: verifiable aggregation edge servers federated learning  ->  30
+---
+  DOI:10.2139/ssrn.5018523 | 2024 | posted-content | cites=1
+  T: Privacy-Preserving and Verifiable Federated Learning with Weighted Average Aggregation in Edge Computing
+  A: Niu, Kong, Chen, Zhou
+  V: 
+---
+  DOI:10.1016/j.comcom.2026.108575 | 2026 | journal-article | cites=0
+  T: VDBFL: Verifiable privacy-preserving federated learning with decentralized Byzantine-robust aggregation in edge computing
+  A: Liu, Li, Shen, Tan
+  V: Computer Communications
+---
+  DOI:10.36227/techrxiv.21699644.v1 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was proposed. In 202
+---
+  DOI:10.36227/techrxiv.21699644 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was propose
+---
+  DOI:10.1016/j.comcom.2025.108271 | 2025 | journal-article | cites=3
+  T: A Homomorphic MAC-based verifiable secure aggregation for federated learning in cloud–edge AIoT
+  A: Niu, Kong, Chen, Zhou
+  V: Computer Communications
+---
+  DOI:10.21203/rs.3.rs-6827986/v1 | 2025 | posted-content | cites=0
+  T: Enhanced Security Verifiable Secure Aggregation Scheme in Federated Learning
+  A: Yao, Han, Zhou, Wang
+  V: 
+  ABS: Abstract Federated Learning(FL) enables multiple participants to build a loosely coupled distributed machine learning system under the coordination of a central server. Existing FL models typically assume that the server aggregating data is semi-honest, but this assumption does not align with the complexities of real-world application environments, where the server may carry out collusion attacks or replay attacks. VerifyNet is a representative federated learning protocol for verifiable secure aggregation. In this paper, we analyze the security of VerifyNet, identify two shortcomings: low tolerance to collusion attacks and inability to resist combinatorial replay attacks. Furthermore, we hav
+---
+  DOI:10.21203/rs.3.rs-6090375/v1 | 2025 | posted-content | cites=0
+  T: Verifiable Secure Aggregation Scheme for Privacy Protection in Federated Learning
+  A: Yao, Zhou, Han, Wang
+  V: 
+  ABS: Abstract Federated learning enables multiple participants to construct a distributed machine learning system coordinated by server. Most existing solutions assume a semi-honest system, considering each participant to be honest but curious, which does not align with the complex real-world environment. In reality, servers might be malicious, potentially tampering with or forging aggregation results. To verify the integrity of server aggregation computations while protecting the privacy of clients, this paper introduces a privacy-preserving verifiable secure aggregation scheme for federated learning networks. Initially, we construct a functional reuse private key ring generation algorithm, enab
+---
+  DOI:10.2139/ssrn.5450717 | 2025 | posted-content | cites=0
+  T: BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for Federated Learning
+  A: Li, Li, Cui, Liu
+  V: 
+---
+  DOI:10.1016/j.neucom.2025.130712 | 2025 | journal-article | cites=5
+  T: LVSA: Lightweight and verifiable secure aggregation for federated learning
+  A: Li, Zhang, Du
+  V: Neurocomputing
+---
+  DOI:10.1016/j.jnca.2025.104201 | 2025 | journal-article | cites=6
+  T: Privacy-preserving and Verifiable Federated Learning with weighted average aggregation in edge computing
+  A: Niu, Kong, Chen, Zhou
+  V: Journal of Network and Computer Applications
+---
+  DOI:10.2139/ssrn.4836339 | 2024 | posted-content | cites=0
+  T: Towards Efficient and Verifiable Secure Aggregation for Federated Learning
+  A: Ming, Wang, Wang, Liu
+  V: 
+---
+  DOI:10.1109/iccc62609.2024.10942200 | 2024 | proceedings-article | cites=0
+  T: An Efficient Verifiable Aggregation Scheme with Privacy-Enhanced in Federated Learning
+  A: Li
+  V: 2024 10th International Conference on Computer and Communications (ICCC)
+---
+  DOI:10.54691/p3f71f02 | 2024 | journal-article | cites=0
+  T: Enhanced Privacy-Preserving Federated Learning with Exit Tolerance and Verifiable Aggregation
+  A: Lin
+  V: Scientific Journal of Intelligent Systems Research
+  ABS: With the escalating importance of data privacy, Federated Learning (FL) has drawn significant attention as a machine learning framework that facilitates collaborative model training among multiple users without the need for direct data sharing. This paper presents an enhanced Federated Learning scheme designed to bolster user privacy protection while maintaining the efficiency and performance of model training. Our approach integrates the use of random seeds and One-Time Password (OTP) technology to reinforce data encryption, and employs an advanced masking mechanism coupled with bilinear pairing for verification, thereby enhancing the security of the aggregation process. Additionally, our d
+---
+  DOI:10.1109/tdsc.2026.3707153 | 2026 | journal-article | cites=0
+  T: SVTAgg: Secure, Verifiable, and Traceable Model Aggregation for Edge-Assisted Federated Learning
+  A: Liu, Li, Qin, Ni
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.2139/ssrn.5375992 | 2025 | posted-content | cites=0
+  T: Dha-Fl: Dynamic Hierarchical Attention Aggregation Framework for Heterogeneous Edge Federated Learning
+  A: zhou, Rong
+  V: 
+---
+  DOI:10.1007/s10791-025-09676-1 | 2025 | journal-article | cites=8
+  T: Verifiable secure aggregation scheme for privacy protection in federated learning networks
+  A: Yao, Zhou, Han, Wang
+  V: Discover Computing
+---
+  DOI:10.2139/ssrn.5859192 | 2025 | posted-content | cites=0
+  T: EPRA-VFL: A Privacy-Preserving and Efficient Verifiable Federated Learning Scheme with Robust Aggregation
+  A: Li, Sun, Guo, Zhou
+  V: 
+---
+  DOI:10.3390/e25081125 | 2023 | journal-article | cites=10
+  T: Communication-Efficient and Privacy-Preserving Verifiable Aggregation for Federated Learning
+  A: Peng, Shen, Gao, Wang
+  V: Entropy
+  ABS: Federated learning is a distributed machine learning framework, which allows users to save data locally for training without sharing data. Users send the trained local model to the server for aggregation. However, untrusted servers may infer users’ private information from the provided data and mistakenly execute aggregation protocols to forge aggregation results. In order to ensure the reliability of the federated learning scheme, we must protect the privacy of users’ information and ensure the integrity of the aggregation results. This paper proposes an effective secure aggregation verifiable federated learning scheme, which has both high communication efficiency and privacy protection fun
+---
+  DOI:10.3390/math13223687 | 2025 | journal-article | cites=1
+  T: V-MHESA: A Verifiable Masking and Homomorphic Encryption-Combined Secure Aggregation Strategy for Privacy-Preserving Federated Learning
+  A: Park, Chi
+  V: Mathematics
+  ABS: In federated learning, secure aggregation is essential to protect the confidentiality of local model updates, ensuring that the server can access only the aggregated result without exposing individual contributions. However, conventional secure aggregation schemes lack mechanisms that allow participating nodes to verify whether the aggregation has been performed correctly, thereby raising concerns about the integrity of the global model. To address this limitation, we propose V-MHESA (Verifiable Masking-and-Homomorphic Encryption–combined Secure Aggregation), an enhanced protocol extending our previous MHESA scheme. V-MHESA incorporates verification tokens and shared-key management to simult
+---
+  DOI:10.1109/fmec65595.2025.11119376 | 2025 | proceedings-article | cites=0
+  T: Fair Allocation of Bandwidth at Edge Servers for Concurrent Federated Learning Processes
+  A: Hossen, Siddika, Zhang
+  V: 2025 10th International Conference on Fog and Mobile Edge Computing (FMEC)
+---
+  DOI:10.52783/cana.v32.6507 | 2025 | journal-article | cites=0
+  T: Byzantine-Robust Federated Learning with Verifiable Secure Aggregation for Multi-Party Healthcare Collaborations
+  A: Mayank Bhatt, Shweta Rai
+  V: Communications on Applied Nonlinear Analysis
+  ABS: Federated learning (FL) has become a potential way for computer scientists from different healthcare institutions to work together on machine learning projects while keeping data private. But the fact that there are "Byzantine" participants—those who might do bad things or send tainted updates—makes it hard for shared healthcare models to be honest and work together. This paper presents a novel Byzantine-robust federated learning framework with verifiable secure aggregation specifically designed for multi-party healthcare collaborations. Our approach combines differential privacy mechanisms, cryptographic secure aggregation protocols, and robust aggregation algorithms to ensure both privacy 
+---
+  DOI:10.1016/j.comnet.2026.112421 | 2026 | journal-article | cites=0
+  T: BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for federated learning
+  A: Li, Li, Cui, Liu
+  V: Computer Networks
+---
+  DOI:10.66280/ijair.v1i2.140 | 2026 | journal-article | cites=0
+  T: Mitigating Data Poisoning Risks in Federated Learning through Blockchain Integrated Verifiable Model Aggregation Protocols
+  A: Aaron Whitaker
+  V: International Journal of Artificial Intelligence Research
+  ABS: The rapid expansion of decentralized machine learning has positioned Federated Learning (FL) as a cornerstone for privacy-preserving artificial intelligence, enabling model training across distributed datasets without centralized data collection. Despite its promise, the architecture remains fundamentally vulnerable to data poisoning attacks, where malicious participants introduce corrupted gradients to degrade model performance or install backdoors. This research explores the integration of blockchain technology and verifiable model aggregation protocols as a systemic defense mechanism against such adversarial threats. We analyze the structural trade-offs between computational overhead and 
+---
+  DOI:10.3390/app14135361 | 2024 | journal-article | cites=9
+  T: More Efficient and Verifiable Privacy-Preserving Aggregation Scheme for Internet of Things-Based Federated Learning
+  A: Shi, Wei, Zhang
+  V: Applied Sciences
+  ABS: As Internet of Things (IoT) technology continues to advance at a rapid pace, smart devices have permeated daily life. Service providers are actively collecting copious numbers of user data, with the aim of refining machine learning models to elevate service quality and accuracy. However, this practice has sparked apprehensions amongst users concerning the privacy and safety of their personal data. Federated learning emerges as an evolution of centralized machine learning, enabling a collective training of machine learning models by multiple users on their respective devices. Crucially, this is achieved without the direct submission of data to a central server, thereby significantly mitigatin
+---
+  DOI:10.3390/fi18090455 | 2026 | journal-article | cites=0
+  T: FairAI: A Blockchain- and IPFS-Enabled Framework for Verifiable Ethical Federated Learning with Proof-Based Approval-Gated Aggregation
+  A: Alkhodair
+  V: Future Internet
+  ABS: Federated learning (FL) enables collaborative model training without centralizing raw training records, but it does not inherently provide verifiable model provenance, enforceable fairness policies, or auditable control over aggregation. This paper presents FairAI, a blockchain- and IPFS-enabled framework that treats each local model as a governed artifact linked to performance and group-fairness metrics, content identifiers, manifests, Groth16 evidence, and smart-contract decisions. Only models approved on-chain and subsequently retrieved and validated through their registered CIDs are eligible for aggregation. The primary real-data evaluation used the Adult and COMPAS datasets under IID an
+---
+  DOI:10.1109/ants59832.2023.10469165 | 2023 | proceedings-article | cites=7
+  T: A blockchain-based Verifiable Aggregation for Federated Learning and Secure Sharing in Healthcare
+  A: Roy, Bera
+  V: 2023 IEEE International Conference on Advanced Networks and Telecommunications Systems (ANTS)
+---
+  DOI:10.1109/edge55608.2022.00015 | 2022 | proceedings-article | cites=10
+  T: Computationally Efficient Auto-Weighted Aggregation for Heterogeneous Federated Learning
+  A: Talukder, Islam
+  V: 2022 IEEE International Conference on Edge Computing and Communications (EDGE)
+---
+  DOI:10.1109/globecom52923.2024.10900977 | 2024 | proceedings-article | cites=1
+  T: PVWA: Privacy-preserving and Verifiable Weighted Aggregation for Federated Learning
+  A: Li, Wang, Yuan, Guan
+  V: GLOBECOM 2024 - 2024 IEEE Global Communications Conference
+---
+  DOI:10.1117/12.2659133 | 2022 | proceedings-article | cites=0
+  T: NIPVS-FL: a non-interactive publicly verifiable secure federated-learning scheme against malicious servers
+  A: Wang, Cao, Dong, Shen
+  V: Third International Conference on Computer Communication and Network Security (CCNS 2022)
+---
+  DOI:10.1109/blockchain67634.2025.00032 | 2025 | proceedings-article | cites=0
+  T: Dual-Key Verifiable Secure Aggregation for Federated Learning via Blockchain
+  A: Zhang, Ma, Liu, Pang
+  V: 2025 IEEE International Conference on Blockchain (Blockchain)
+====================================================================================================
+CROSSREF QUERY: homomorphic hash federated learning verification  ->  30
+---
+  DOI:10.1109/tmc.2026.3679423 | 2026 | journal-article | cites=0
+  T: Practical Multi-Key Secure Aggregation With Homomorphic Hash Verification for Cross-Silo Federated Learning
+  A: Fan, Chen, Jiang, Yu
+  V: IEEE Transactions on Mobile Computing
+---
+  DOI:10.36227/techrxiv.24003795 | 2023 | posted-content | cites=2
+  T: Advancing Privacy and Accuracy with Federated Learning and Homomorphic Encryption
+  A: Nguyen
+  V: 
+  ABS: &lt;p&gt;In this paper, we present an integrated framework that combines Federated Learning (FL) with Homomorphic Encryption (HE) using the Artificial Intelligence (AI) models and the Cheon-Kim-Kim-Song (CKKS) algorithm to address the challenges of privacy and accuracy. FL facilitates collaborative training of Convolutional Neural Network (CNN) and Multi-Layer Perceptron (MLP) models across decentralized devices, allowing for data privacy preservation without sharing raw data. The integration of the CKKS algorithm for HE ensures secure computation on encrypted data during the FL process. Our experimental results on three diverse datasets demonstrate the efficacy of this approach, achieving a
+---
+  DOI:10.36227/techrxiv.24003795.v1 | 2023 | posted-content | cites=2
+  T: Advancing Privacy and Accuracy with Federated Learning and Homomorphic Encryption
+  A: Nguyen
+  V: 
+  ABS: In this paper, we present an integrated framework that combines Federated Learning (FL) with Homomorphic Encryption (HE) using the Artificial Intelligence (AI) models and the Cheon-Kim-Kim-Song (CKKS) algorithm to address the challenges of privacy and accuracy. FL facilitates collaborative training of Convolutional Neural Network (CNN) and Multi-Layer Perceptron (MLP) models across decentralized devices, allowing for data privacy preservation without sharing raw data. The integration of the CKKS algorithm for HE ensures secure computation on encrypted data during the FL process. Our experimental results on three diverse datasets demonstrate the efficacy of this approach, achieving an impress
+---
+  DOI:10.2139/ssrn.7434643 | 2026 | posted-content | cites=0
+  T: Deploying Homomorphic Federated Learning on Resource-Constrained Branch Servers
+  A: Kumar
+  V: 
+  ABS: The convergence of federated learning (FL) and homomorphic encryption (HE) presents a compelling architectural paradigm for privacy-preserving distributed intelligence, yet its practical realization on resource constrained branch servers introduces a formidable tripartite challenge encompassing computational overhead, communication efficiency, and statistical heterogeneity. This abstract critically examines the deployment viability of homomorphic federated learning (HFL) within distributed network topologies where peripheral nodes—branch servers—possess markedly inferior processing capabilities, memory capacity, and energy budgets relative to central aggregation infrastructures. The core ten
+---
+  DOI:10.1017/qut.2025.2.pr2 | 2025 | peer-review | cites=0
+  T: Decision: Quantum delegated and federated learning via quantum homomorphic encryption — R0/PR2
+  A: 
+  V: 
+---
+  DOI:10.36227/techrxiv.177204922.22235830/v1 | 2026 | posted-content | cites=0
+  T: Blockchain based Homomorphic Encryption in Federated Learning for Alzheimer Detection
+  A: Ranjan, N
+  V: 
+  ABS: Alzheimer disease is a progressive neuro degenerative condition that slowly damages the brain and affects memory and thinking. Early treatment is important to slow its progression and improve the patient's quality of life. Currently millions of people are suffering from Alzheimer and the number is increasing rapidly. Recent advances in centralized machine learning with CNN sharpened accuracy by studying MRI patterns, but centralizing sensitive medical data raises privacy and security risks amid strict laws like GDPR and HIPPA.Federated learning provides decentralized approach for collaborative training of models without exposure to raw data. Federated Learning is widely used, but is still fr
+---
+  DOI:10.1017/qut.2025.2.pr1 | 2024 | peer-review | cites=3
+  T: Author Comment: Quantum delegated and federated learning via quantum homomorphic encryption — R0/PR1
+  A: Li
+  V: 
+---
+  DOI:10.36227/techrxiv.174120692.21508793/v1 | 2025 | posted-content | cites=5
+  T: A Selective Homomorphic Encryption Approach for Faster Privacy-Preserving Federated Learning
+  A: Korkmaz, Rao
+  V: 
+  ABS: Federated learning is a machine learning method that supports training models on decentralized devices or servers, where each holds its local data, removing the need for data exchange. This approach is especially useful in healthcare, as it enables training on sensitive data without needing to share them. The nature of federated learning necessitates robust security precautions due to data leakage concerns during communication. To address this issue, we propose a new approach that employs selective encryption, homomorphic encryption, differential privacy, and bit-wise scrambling to minimize data leakage while achieving good execution performance. Our technique FAS (fast and secure federated 
+---
+  DOI:10.61951/sciencepaperonline.202505.0035 | 2025 | posted-content | cites=0
+  T: A Federated Learning Scheme based on Fully Homomorphic Encryption
+  A: GUO, LI
+  V: 
+---
+  DOI:10.2139/ssrn.6326358 | 2026 | posted-content | cites=0
+  T: A Hybrid Homomorphic Federated Learning Framework with Adaptive Aggregation for Image Classification
+  A: Shi
+  V: 
+  ABS: Federated learning enables collaborative machine learning while preserving data privacy, yet existing approaches struggle to simultaneously achieve privacy protection, computational efficiency, and model accuracy. We propose HHFL-AA (Hybrid Homomorphic Federated Learning with Adaptive Aggregation), a novel framework that strategically integrates homomorphic encryption, differential privacy, and blockchain technology. HHFL-AA employs a two-stage training methodology: FedAvg on encrypted data subsets for rapid global model initialization, followed by FedSGD with gradient encryption for enhanced convergence. The framework incorporates adaptive weighting mechanisms and blockchain infrastructure 
+---
+  DOI:10.1109/flta67013.2025.11336594 | 2025 | proceedings-article | cites=0
+  T: A Privacy-Preserving Federated Learning Framework with Multiparty Threshold Homomorphic Encryption
+  A: Boudko, Grønvold
+  V: 2025 3rd International Conference on Federated Learning Technologies and Applications (FLTA)
+---
+  DOI:10.1016/j.jisa.2026.104561 | 2026 | journal-article | cites=0
+  T: Federated learning ownership verification with fixed length watermarks using hash-based message authentication code
+  A: Zhu, Lou, Sun
+  V: Journal of Information Security and Applications
+---
+  DOI:10.2139/ssrn.5577153 | 2025 | posted-content | cites=0
+  T: Homomorphic Encryption: the Missing Piece in Federated Learning
+  A: Colombo, Falcetta, Roveri
+  V: 
+---
+  DOI:10.21203/rs.3.rs-3648036/v1 | 2023 | posted-content | cites=0
+  T: BatchEncryption: Localized Federated Learning in Preserving-privacy with Efficient Integer Vector Homomorphic Encryption
+  A: Xie
+  V: 
+  ABS: Abstract Deep Learning as a Service (DLaaS) provides an efficient way to facilitate deep neural networks (DNNs) in various applications. Despite the accuracy of deep learning models, there is a paramount need for robust protocols to protect the privacy and security of data, particularly sensitive information. Currently, It is not a good way to permit cloud models to process such data without proper safeguards, leading to potential privacy breaches. Especially in the training phase of the model, most models are trained by plaintext rather than ciphertext, which will pose potential privacy leakage of data owners. While some researchers have begun to use homomorphically encrypted data for train
+---
+  DOI:10.1109/icstw64639.2025.10962468 | 2025 | proceedings-article | cites=7
+  T: Privacy-Preserving in Federated Learning: A Comparison between Differential Privacy and Homomorphic Encryption across Different Scenarios
+  A: Catalfamo, Fazio, Celesti, Villari
+  V: 2025 IEEE International Conference on Software Testing, Verification and Validation Workshops (ICSTW)
+---
+  DOI:10.5220/0012764300003767 | 2024 | proceedings-article | cites=5
+  T: A White-Box Watermarking Modulation for Encrypted DNN in Homomorphic Federated Learning
+  A: Lansari, Bellafqira, Kapusta, Thouvenot
+  V: Proceedings of the 21st International Conference on Security and Cryptography
+---
+  DOI:10.2139/ssrn.5334301 | 2025 | posted-content | cites=0
+  T: Privacy-Preserving Federated Learning with Fully Homomorphic Encryption for Breast Cancer Diagnosis
+  A: Naresh, Varma, Ayyappa
+  V: 
+---
+  DOI:10.2139/ssrn.5358246 | 2025 | posted-content | cites=1
+  T: Homomorphic Encryption in Federated Learning: A Systematic Review of Current Methods and Open Challenges
+  A: Li, Li
+  V: 
+  ABS: Federated learning (FL) enables collaborative training across different devices or institutions. However, this model also raises concerns about data privacy. For addressing this problem, there are some privacy-preserving technologies being used, such as differential privacy, homomorphic encryption, locality-sensitive hashing, secure multi-party computation. Noticeably, homomorphic encryption (HE) is an encryption mechanism that can encrypt raw data before doing any operation and perform the equivalent result as the one yielded by operating unencrypted data. However, this technology suffers from high computational overhead. Compared to existing surveys, this article conducts a comprehensive r
+---
+  DOI:10.21203/rs.3.rs-10799357/v1 | 2026 | posted-content | cites=0
+  T: Privacy Preserving Disease Prediction Across Multiple Hospitals Using CKKS Based Homomorphic Federated Learning
+  A: Nikam, Kulkarni
+  V: 
+  ABS: Abstract Machine learning is increasingly used in healthcare for risk prediction and clinical decision support, yet legal, ethical, and organisational constraints frequently prevent direct pooling of electronic health record (EHR) data. Federated learning (FL) addresses this limitation by retaining records within participating institutions. However, plaintext model updates may still disclose information to an honest-but-curious aggregation server or to an adversary observing the communication channel. This paper presents a CKKS-based homomorphic federated learning (HE-FL) framework for privacy-preserving prediction across multiple simulated hospitals. Ten clients train locally on non-identic
+---
+  DOI:10.3390/app12020734 | 2022 | journal-article | cites=219
+  T: Privacy-Preserving Federated Learning Using Homomorphic Encryption
+  A: Park, Lim
+  V: Applied Sciences
+  ABS: Federated learning (FL) is a machine learning technique that enables distributed devices to train a learning model collaboratively without sharing their local data. FL-based systems can achieve much stronger privacy preservation since the distributed devices deliver only local model parameters trained with local data to a centralized server. However, there exists a possibility that a centralized server or attackers infer/extract sensitive private information using the structure and parameters of local learning models. We propose employing homomorphic encryption (HE) scheme that can directly perform arithmetic operations on ciphertexts without decryption to protect the model parameters. Using
+---
+  DOI:10.21203/rs.3.rs-10018675/v1 | 2026 | posted-content | cites=0
+  T: HashGuard-FL: Learnable Hash-Based GAN Discriminator with Post-Quantum Audit Trail for Federated Learning Integrity
+  A: Dongre
+  V: 
+  ABS: Abstract Federated learning (FL) deployments in safety-critical domains face two entangled integrity problems: (i) detecting adversarial model updates at runtime, and (ii) producing a long-lived, tamper-evident audit trail whose authenticity must survive post-quantum cryptanalysis. Existing Byzantine-robust aggregation rules, gradient anomaly detectors, and cryptographic provenance schemes each address one dimension but none provides an integrated solution that achieves fine-grained multi-class detection, non-IID robustness, and quantum-resistant auditability simultaneously. We propose HashGuard-FL, a framework that couples a learnable hash-based GAN discriminator with a post-quantum audit l
+---
+  DOI:10.1142/9789811292552_0010 | 2024 | book-chapter | cites=0
+  T: Faster Secure Data Mining Framework via Homomorphic Encryption
+  A: 
+  V: Federated Learning
+---
+  DOI:10.2139/ssrn.5319620 | 2025 | posted-content | cites=0
+  T: Practical Privacy-Preserving Federated Learning Based on Multiparty Homomorphic Encryption for Large-Scale Models
+  A: Qin, Yang, Tang
+  V: 
+---
+  DOI:10.3390/e24111545 | 2022 | journal-article | cites=32
+  T: Homomorphic Encryption-Based Federated Privacy Preservation for Deep Active Learning
+  A: Kurniawan, Mambo
+  V: Entropy
+  ABS: Active learning is a technique for maximizing performance of machine learning with minimal labeling effort and letting the machine automatically and adaptively select the most informative data for labeling. Since the labels on records may contain sensitive information, privacy-preserving mechanisms should be integrated into active learning. We propose a privacy-preservation scheme for active learning using homomorphic encryption-based federated learning. Federated learning provides distributed computation from multiple clients, and homomorphic encryption enhances the privacy preservation of user data with a strong security level. The experimental result shows that the proposed homomorphic en
+---
+  DOI:10.2139/ssrn.5131469 | 2025 | posted-content | cites=1
+  T: Practical Privacy-Preserving Federated Learning Based on Multiparty Homomorphic Encryption for Large-Scale Models
+  A: Qin, Yang, Tang
+  V: 
+---
+  DOI:10.21203/rs.3.rs-10801503/v1 | 2026 | posted-content | cites=0
+  T: Federated Learning Framework with Differential Privacy over Homomorphic Vector Encryption for Data-Sensitive Applications
+  A: Narula, Meena, Vishwakarma
+  V: 
+  ABS: Abstract Federated Learning (FL) has become a popular paradigm in recent years, attributed to its concept of insight sharing for ensuring data privacy. It has been found to be of extensive utility in applications that regularly deal with confiden-tial data and has been widely used in the fields of healthcare and the Internet of Medical Things (IoMT). However, an equal amount of research is conducted to reverse-engineer the used datasets from the shared insights, and a native FL implementation alone is not suitable for these sensitive applications. We pro-pose a lightweight secure FL framework incorporating both Differential Privacy and Homomorphic Encryption at the vector level to minimize t
+---
+  DOI:10.52783/fhi.54 | 2024 | journal-article | cites=0
+  T: Design of an Integrated Method for Blockchain-Based Secure Healthcare Cloud IoT Using Federated Learning and Homomorphic Operations
+  A: 
+  V: Frontiers in Health Informatics
+---
+  DOI:10.36227/techrxiv.19428755 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;div&gt;Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SV
+---
+  DOI:10.36227/techrxiv.19428755.v1 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SVFL achieves
+---
+  DOI:10.54097/hset.v39i.6596 | 2023 | journal-article | cites=0
+  T: Federated Learning based on Homomorphic Encryption and Digital Signatures
+  A: Chen
+  V: Highlights in Science, Engineering and Technology
+  ABS: Federated learning aims to train a centralized federated model using decentralized data sources and to ensure the security and privacy of user data during system training process. Federal learning still faces four challenges: high communication costs, system heterogeneity, data heterogeneity, and data security, The primary attacks facing federal learning include confidentiality, integrity, and usability attacks. Attackers mainly target confidential attacks, while malicious attackers target integrity attacks and usability attacks. Homomorphism encryption refers to the encryption algorithm that satisfies the nature of the homomorphism operation, that is, to the ciphertext of the data after the
+====================================================================================================
+CROSSREF QUERY: client-edge-cloud federated learning privacy preserving aggregation  ->  30
+---
+  DOI:10.2139/ssrn.7363818 | 2026 | posted-content | cites=0
+  T: Privacy-Preserving Multimodal Federated Learning with Reliability-aware Client Selection for Heterogeneous Edge Devices
+  A: Kothapalli
+  V: 
+  ABS: Federated learning is rapidly becoming a key paradigm for deploying machine learning models across distributed edge devices without aggregating raw data to a central server to satisfy emerging regulatory and ethical demands for data privacy. The extension to multimodal settings adds challenges though: modality imbalance, partial trust of the client/limited ability to trust the data/client, limited and variable devices, high privacy risk due to richer data representations. In this article, a structured overview of privacy-preserving multimodal federated learning is shown which focuses on reliable client selection for the settings of heterogeneous edge devices. The review is based on over 50 p
+---
+  DOI:10.21275/ms241022095645 | 2024 | journal-article | cites=1
+  T: Federated Learning: Privacy-Preserving Machine Learning in Cloud Environments
+  A: Raju Cherukuri
+  V: International Journal of Science and Research (IJSR)
+---
+  DOI:10.2139/ssrn.5018523 | 2024 | posted-content | cites=1
+  T: Privacy-Preserving and Verifiable Federated Learning with Weighted Average Aggregation in Edge Computing
+  A: Niu, Kong, Chen, Zhou
+  V: 
+---
+  DOI:10.36227/techrxiv.20004140 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.&lt;/p&gt;
+---
+  DOI:10.36227/techrxiv.20004140.v1 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.
+---
+  DOI:10.2139/ssrn.6220958 | 2026 | posted-content | cites=0
+  T: Privacy-Preserving Data Processing and Federated Learning in Cloud Systems
+  A: Robert
+  V: 
+  ABS: Cloud computing has transformed the way organizations store, process, and analyze data. However, the widespread adoption of cloud systems raises significant concerns regarding privacy, security, and compliance. This research investigates privacy-preserving data processing in cloud environments, with a particular focus on federated learning, which enables decentralized machine learning without transferring sensitive data to a central server. The study examines the integration of privacy-preserving mechanisms such as differential privacy, homomorphic encryption, and secure multiparty computation, and evaluates their impact on model accuracy, computational cost, and system efficiency. Key findi
+---
+  DOI:10.5220/0014197800004932 | 2025 | proceedings-article | cites=0
+  T: Real-Time Federated Learning Architecture for Privacy-Preserving Edge Intelligence
+  A: Vij, Nandy
+  V: Proceedings of the 1st International Conference on Intelligent Methods and Advanced Computer Scientific Innovations
+---
+  DOI:10.1109/iciip68302.2025.11346355 | 2025 | proceedings-article | cites=2
+  T: Privacy-Preserving Adaptive IDS via Federated Reinforcement Learning in Distributed Edge-Cloud Environments
+  A: Arora
+  V: 2025 Eighth International Conference on Image Information Processing (ICIIP)
+---
+  DOI:10.1007/s10791-026-10081-5 | 2026 | journal-article | cites=0
+  T: Privacy preserving hierarchical graph federated learning for intelligent task scheduling in edge cloud networks
+  A: Neerukonda, Hariharan
+  V: Discover Computing
+---
+  DOI:10.2139/ssrn.5750022 | 2025 | posted-content | cites=0
+  T: Privacy-Preserving Intelligence at the Edge: New Horizons in Federated Learning
+  A: Mandava
+  V: 
+---
+  DOI:10.2139/ssrn.5045545 | 2025 | posted-content | cites=0
+  T: Federated Learning for Cross-Cloud System Migrations: A Privacy-Preserving Approach
+  A: Gangapatnam
+  V: 
+  ABS: This article presents an innovative approach to SAP ERP system migrations using federated learning frameworks, addressing the critical challenges of data privacy and system availability in cross-cloud migrations. The proposed article integrates
+---
+  DOI:10.20474/japs-11.2.7 | 2025 | journal-article | cites=0
+  T: Privacy‑Preserving Multidimensional Data Sharing via Federated Learning and Differential Privacy in Cloud‑ Edge Environments
+  A: Iqbal
+  V: Journal of Applied and Physical Sciences
+---
+  DOI:10.5220/0013529100003979 | 2025 | proceedings-article | cites=2
+  T: Privacy-Preserving EEG Data Generation: A Federated Split Learning Approach Using Privacy-Adaptive Autoencoders and Secure Aggregation with GFlowNet
+  A: Paul, Bajwa
+  V: Proceedings of the 22nd International Conference on Security and Cryptography
+---
+  DOI:10.5220/0014392700004084 | 2026 | proceedings-article | cites=0
+  T: Decentralized Privacy-Preserving Federated Learning of Computer Vision Models on Edge Devices
+  A: Harenčák, Gajdošech, Madaras
+  V: Proceedings of the 21st International Conference on Computer Vision Theory and Applications
+---
+  DOI:10.36227/techrxiv.176704338.87080458/v1 | 2025 | posted-content | cites=0
+  T: FedQuantum-SkinX: Quantum-Inspired Federated Multimodal Framework for Early Privacy-Preserving Skin Cancer Diagnosis in Edge-Cloud Environments
+  A: Tashakkori
+  V: 
+  ABS: Early and accurate detection of skin cancer remains a significant challenge in clinical practice due to the heterogeneity of lesion morphology, scarcity of labeled datasets, and privacy concerns in distributed medical environments. Traditional machine learning and deep learning approaches often suffer from limited generalization, high computational costs, and dependency on centralized data, which restrict their practical deployment in real-time edge-cloud systems. To address these limitations, this paper proposes Quantum-Inspired Federated Multimodal Framework for Early Skin Cancer Diagnosis (FedQuantum-SkinX), a novel quantum-inspired federated multimodal framework that integrates Morpholog
+---
+  DOI:10.1186/s13677-023-00435-5 | 2023 | journal-article | cites=24
+  T: A split-federated learning and edge-cloud based efficient and privacy-preserving large-scale item recommendation model
+  A: Qin, Zhang, Liu, Qian
+  V: Journal of Cloud Computing
+  ABS: Abstract The combination of federated learning and recommender system aims to solve the privacy problems of recommendation through keeping user data locally at the client device during the model training session. However, most existing approaches rely on user devices to fully compute the deep model designed for the large-scale item recommendation; therefore, imposing high calculation and communication overheads on resource-constrained user devices. Consequently, achieving efficient federated recommendations across ubiquitous mobile devices remains an open research problem. To this end, in this paper we propose an efficient and privacy-preserving federated learning framework which is based on
+---
+  DOI:10.30574/wjarr.2025.26.2.1892 | 2025 | journal-article | cites=0
+  T: Federated learning for cross-cloud observability: Privacy-preserving model aggregation across distributed cloud platforms
+  A: Nishant Nisan Jha
+  V: World Journal of Advanced Research and Reviews
+  ABS: This article presents a comprehensive framework for implementing privacy-preserving cross-cloud monitoring using federated learning techniques. As organizations increasingly adopt multi-cloud strategies, maintaining unified observability without violating data sovereignty or regulatory requirements becomes challenging. The innovative system employs federated learning architecture to develop detection models across decentralized, encrypted transaction records, exchanging only model parameter updates between segregated cloud environments while preserving data locality and privacy. The architecture incorporates federated graph neural networks to discover hidden dependencies across cloud boundar
+---
+  DOI:10.1109/tcc.2026.3723542 | 2026 | journal-article | cites=0
+  T: PPVFL-LWA: Privacy-Preserving and Verifiable Federated Learning with Lossless Weighted Aggregation
+  A: Wei, Huang, Liu, Yan
+  V: IEEE Transactions on Cloud Computing
+---
+  DOI:10.1016/j.comcom.2026.108575 | 2026 | journal-article | cites=0
+  T: VDBFL: Verifiable privacy-preserving federated learning with decentralized Byzantine-robust aggregation in edge computing
+  A: Liu, Li, Shen, Tan
+  V: Computer Communications
+---
+  DOI:10.2139/ssrn.5987348 | 2026 | posted-content | cites=0
+  T: FedQuantum-SkinX: Quantum-Inspired Federated Multimodal Framework for Early Privacy-Preserving Skin Cancer Diagnosis in Edge-Cloud Environments
+  A: Tashakkori
+  V: 
+---
+  DOI:10.1016/j.comnet.2026.112498 | 2026 | journal-article | cites=0
+  T: BRPPFL: A Byzantine-Robust and Privacy-Preserving Framework for Cloud–Edge Federated Learning
+  A: Zhang, Ye, Yang, He
+  V: Computer Networks
+---
+  DOI:10.64797/ijcs.v1i1.94 | 2026 | journal-article | cites=0
+  T: Federated Learning-Driven Privacy-Preserving and Security Defense for Cloud-Edge Computing: A Hierarchical Collaborative Framework
+  A: Anna Kowalska
+  V: International Journal of Cyberspace Security
+  ABS: Cloud-edge computing integrates the advantages of cloud computing‘s powerful computing capacity and edge computing‘s low-latency response, which has become the core support for data-intensive applications such as smart cities and industrial Internet of Things. However, the massive distributed data generated at the edge contains a large amount of sensitive information, and the direct transmission of data to the cloud for centralized processing faces severe privacy leakage risks. Meanwhile, the open access characteristics of edge nodes make cloud-edge systems vulnerable to various malicious attacks, which seriously threatens the security and reliability of the system. Federated Learning (FL) e
+---
+  DOI:10.5220/0014714900005024 | 2025 | proceedings-article | cites=0
+  T: Federated Edge Intelligence: A Privacy-Preserved Framework for Collaborative Cloud–Edge Learning in 6G Networks
+  A: Seeni, Murugesan, Gopalan
+  V: Proceedings of the 1st International Conference on Computational and Cognitive Systems Science
+---
+  DOI:10.1007/s10791-026-10385-6 | 2026 | journal-article | cites=0
+  T: Hierarchical federated edge learning with criticality-aware aggregation for privacy-preserving fetal health classification
+  A: Rajani, Agrawal, Khare, Haripriya
+  V: Discover Computing
+---
+  DOI:10.1109/flta67013.2025.11336672 | 2025 | proceedings-article | cites=0
+  T: Privacy-Preserving Intrusion Detection in Cloud-Edge Environments Using Federated Learning and Docker-Based Simulation
+  A: Polisetty, Rayala, Lingamallu, Mishra
+  V: 2025 3rd International Conference on Federated Learning Technologies and Applications (FLTA)
+---
+  DOI:10.1016/j.comcom.2026.108611 | 2026 | journal-article | cites=0
+  T: Intent-based agentic AI framework for privacy-preserving cross-cloud federated learning and green big data analytics in edge-cloud networks
+  A: Guo, Yang, Wang
+  V: Computer Communications
+---
+  DOI:10.1109/icmlas67792.2026.11483669 | 2026 | proceedings-article | cites=0
+  T: Federated Edge-Cloud Hybrid Deep Learning Architecture for Privacy-Preserving Fault Prediction in Industrial IoT Systems
+  A: S, T, Deepa
+  V: 2026 International Conference on Machine Learning and Autonomous Systems (ICMLAS)
+---
+  DOI:10.3390/app14051743 | 2024 | journal-article | cites=15
+  T: Blockchain and Access Control Encryption-Empowered IoT Knowledge Sharing for Cloud-Edge Orchestrated Personalized Privacy-Preserving Federated Learning
+  A: Wang, Li
+  V: Applied Sciences
+  ABS: Federated learning (FL) is emerging as a powerful paradigm for distributed data mining in the context of Internet of Things (IoT) big data. It addresses privacy concerns associated with data outsourcing by enabling local data training and knowledge (i.e., model) sharing. However, simplistic local knowledge sharing can inadvertently expose user privacy to advanced attacks, such as model inversion or gradient leakage. Furthermore, achieving fine-grained and personalized privacy protection for IoT users remains a challenge. In this paper, we propose a novel solution called hierarchical blockchain-empowered cloud-edge orchestrated federated learning (HBCE-FL) to address these challenges. HBCE-FL
+---
+  DOI:10.1016/j.comnet.2026.112284 | 2026 | journal-article | cites=2
+  T: Smart privacy-preserving patient monitoring (SP3M) using IoMT enabled edge-cloud federated learning with blockchain and GNN-autoencoders
+  A: Abubaker, Nazir
+  V: Computer Networks
+---
+  DOI:10.1007/s10791-026-10514-1 | 2026 | journal-article | cites=0
+  T: Correction: Hierarchical federated edge learning with criticality-aware aggregation for privacy-preserving fetal health classification
+  A: Rajani, Agrawal, Khare, Haripriya
+  V: Discover Computing
+====================================================================================================
+CROSSREF QUERY: verifiable secure aggregation constant size proof  ->  30
+---
+  DOI:10.1016/j.jisa.2024.103778 | 2024 | journal-article | cites=0
+  T: An anonymous verifiable random function with unbiasability and constant size proof
+  A: Yao, Zhang
+  V: Journal of Information Security and Applications
+---
+  DOI:10.36227/techrxiv.21699644.v1 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was proposed. In 202
+---
+  DOI:10.36227/techrxiv.21699644 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was propose
+---
+  DOI:10.21203/rs.3.rs-6827986/v1 | 2025 | posted-content | cites=0
+  T: Enhanced Security Verifiable Secure Aggregation Scheme in Federated Learning
+  A: Yao, Han, Zhou, Wang
+  V: 
+  ABS: Abstract Federated Learning(FL) enables multiple participants to build a loosely coupled distributed machine learning system under the coordination of a central server. Existing FL models typically assume that the server aggregating data is semi-honest, but this assumption does not align with the complexities of real-world application environments, where the server may carry out collusion attacks or replay attacks. VerifyNet is a representative federated learning protocol for verifiable secure aggregation. In this paper, we analyze the security of VerifyNet, identify two shortcomings: low tolerance to collusion attacks and inability to resist combinatorial replay attacks. Furthermore, we hav
+---
+  DOI:10.21203/rs.3.rs-6090375/v1 | 2025 | posted-content | cites=0
+  T: Verifiable Secure Aggregation Scheme for Privacy Protection in Federated Learning
+  A: Yao, Zhou, Han, Wang
+  V: 
+  ABS: Abstract Federated learning enables multiple participants to construct a distributed machine learning system coordinated by server. Most existing solutions assume a semi-honest system, considering each participant to be honest but curious, which does not align with the complex real-world environment. In reality, servers might be malicious, potentially tampering with or forging aggregation results. To verify the integrity of server aggregation computations while protecting the privacy of clients, this paper introduces a privacy-preserving verifiable secure aggregation scheme for federated learning networks. Initially, we construct a functional reuse private key ring generation algorithm, enab
+---
+  DOI:10.2139/ssrn.5450717 | 2025 | posted-content | cites=0
+  T: BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for Federated Learning
+  A: Li, Li, Cui, Liu
+  V: 
+---
+  DOI:10.1016/j.neucom.2025.130712 | 2025 | journal-article | cites=5
+  T: LVSA: Lightweight and verifiable secure aggregation for federated learning
+  A: Li, Zhang, Du
+  V: Neurocomputing
+---
+  DOI:10.2139/ssrn.4836339 | 2024 | posted-content | cites=0
+  T: Towards Efficient and Verifiable Secure Aggregation for Federated Learning
+  A: Ming, Wang, Wang, Liu
+  V: 
+---
+  DOI:10.1109/tdsc.2025.3589160 | 2025 | journal-article | cites=8
+  T: VeSAFL: Verifiable Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Bouamama, Benkaouz, Ouzzif
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2021.3126323 | 2023 | journal-article | cites=116
+  T: VerSA: Verifiable Secure Aggregation for Cross-Device Federated Learning
+  A: Hahn, Kim, Kim, Hur
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2023.3253082 | 2024 | journal-article | cites=15
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2022.3226508 | 2023 | journal-article | cites=59
+  T: VOSA: Verifiable and Oblivious Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Wang, Zhang, Wu, Yu
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2024.3352170 | 2024 | journal-article | cites=9
+  T: On the Security of Verifiable and Oblivious Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Wu, Zhang
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1016/j.comcom.2024.108012 | 2025 | journal-article | cites=2
+  T: SMKA: Secure multi-key aggregation with verifiable search for IoMT
+  A: Nie, Zhang, Wang, Wang
+  V: Computer Communications
+---
+  DOI:10.1007/s10791-025-09676-1 | 2025 | journal-article | cites=8
+  T: Verifiable secure aggregation scheme for privacy protection in federated learning networks
+  A: Yao, Zhou, Han, Wang
+  V: Discover Computing
+---
+  DOI:10.3390/math13223687 | 2025 | journal-article | cites=1
+  T: V-MHESA: A Verifiable Masking and Homomorphic Encryption-Combined Secure Aggregation Strategy for Privacy-Preserving Federated Learning
+  A: Park, Chi
+  V: Mathematics
+  ABS: In federated learning, secure aggregation is essential to protect the confidentiality of local model updates, ensuring that the server can access only the aggregated result without exposing individual contributions. However, conventional secure aggregation schemes lack mechanisms that allow participating nodes to verify whether the aggregation has been performed correctly, thereby raising concerns about the integrity of the global model. To address this limitation, we propose V-MHESA (Verifiable Masking-and-Homomorphic Encryption–combined Secure Aggregation), an enhanced protocol extending our previous MHESA scheme. V-MHESA incorporates verification tokens and shared-key management to simult
+---
+  DOI:10.1109/tdsc.2025.3565640 | 2025 | journal-article | cites=10
+  T: OPSA: Efficient and Verifiable One-Pass Secure Aggregation With TEE for Federated Learning
+  A: Guan, Zhao, Wan, Han
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2026.3707153 | 2026 | journal-article | cites=0
+  T: SVTAgg: Secure, Verifiable, and Traceable Model Aggregation for Edge-Assisted Federated Learning
+  A: Liu, Li, Qin, Ni
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/tdsc.2026.3706744 | 2026 | journal-article | cites=0
+  T: Secure and Verifiable Optional-Dimension Data Aggregation for Efficient WBAN Deployment
+  A: Lin, Wang, Zhao, Wang
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.52783/cana.v32.6507 | 2025 | journal-article | cites=0
+  T: Byzantine-Robust Federated Learning with Verifiable Secure Aggregation for Multi-Party Healthcare Collaborations
+  A: Mayank Bhatt, Shweta Rai
+  V: Communications on Applied Nonlinear Analysis
+  ABS: Federated learning (FL) has become a potential way for computer scientists from different healthcare institutions to work together on machine learning projects while keeping data private. But the fact that there are "Byzantine" participants—those who might do bad things or send tainted updates—makes it hard for shared healthcare models to be honest and work together. This paper presents a novel Byzantine-robust federated learning framework with verifiable secure aggregation specifically designed for multi-party healthcare collaborations. Our approach combines differential privacy mechanisms, cryptographic secure aggregation protocols, and robust aggregation algorithms to ensure both privacy 
+---
+  DOI:10.1016/j.comnet.2026.112421 | 2026 | journal-article | cites=0
+  T: BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for federated learning
+  A: Li, Li, Cui, Liu
+  V: Computer Networks
+---
+  DOI:10.3390/fi18090455 | 2026 | journal-article | cites=0
+  T: FairAI: A Blockchain- and IPFS-Enabled Framework for Verifiable Ethical Federated Learning with Proof-Based Approval-Gated Aggregation
+  A: Alkhodair
+  V: Future Internet
+  ABS: Federated learning (FL) enables collaborative model training without centralizing raw training records, but it does not inherently provide verifiable model provenance, enforceable fairness policies, or auditable control over aggregation. This paper presents FairAI, a blockchain- and IPFS-enabled framework that treats each local model as a governed artifact linked to performance and group-fairness metrics, content identifiers, manifests, Groth16 evidence, and smart-contract decisions. Only models approved on-chain and subsequently retrieved and validated through their registered CIDs are eligible for aggregation. The primary real-data evaluation used the Adult and COMPAS datasets under IID an
+---
+  DOI:10.1109/tdsc.2026.3717223 | 2026 | journal-article | cites=0
+  T: FedAggVerify: Publicly Verifiable and Privacy-Preserving Aggregation With Ownership Protection for Federated Learning
+  A: Kanakri, King
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.5121/csit.2023.132104 | 2023 | proceedings-article | cites=2
+  T: Private and Secure Post-quantum Verifiable Random Function with NIZK Proof and Ring-LWE Encryption in Blockchain
+  A: Kim, Wong, Yang
+  V: Cryptography and Blockchain
+  ABS: We present a secure and private blockchain-based Verifiable Random Function (VRF) scheme addressing some limitations of classical VRF constructions. Given the imminent quantum computing adversarial scenario, conventional cryptographic methods face vulnerabilities. To enhance our VRF’s secure randomness, we adopt post-quantum RingLWE encryption for synthesizing pseudo-random sequences. Considering computational costs and resultant on-chain gas costs, we suggest a bifurcated architecture for VRF design, optimizing interactions between on-chain and off-chain. Our approach employs a secure ring signature supported by NIZK proof and a delegated key generation method, inspired by the Chaum-Pederse
+---
+  DOI:10.1109/tdsc.2024.3380669 | 2024 | journal-article | cites=10
+  T: Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning
+  A: Zhu, Gong, Zhang, Qian
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1016/j.comnet.2023.110079 | 2023 | journal-article | cites=11
+  T: Lightweight and Verifiable Secure Aggregation for Multi-dimensional Data in Edge-enhanced IoT
+  A: Wu, Zhou, Xu, Feng
+  V: Computer Networks
+---
+  DOI:10.1109/ants59832.2023.10469165 | 2023 | proceedings-article | cites=7
+  T: A blockchain-based Verifiable Aggregation for Federated Learning and Secure Sharing in Healthcare
+  A: Roy, Bera
+  V: 2023 IEEE International Conference on Advanced Networks and Telecommunications Systems (ANTS)
+---
+  DOI:10.1109/tdsc.2023.3272338 | 2024 | journal-article | cites=3
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Xu, Zhang, Zhao, Zhang
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1016/j.jisa.2025.104161 | 2025 | journal-article | cites=1
+  T: Efficient verifiable secure aggregation protocols for federated learning
+  A: Xu, Wang, Tian
+  V: Journal of Information Security and Applications
+---
+  DOI:10.1109/blockchain67634.2025.00032 | 2025 | proceedings-article | cites=0
+  T: Dual-Key Verifiable Secure Aggregation for Federated Learning via Blockchain
+  A: Zhang, Ma, Liu, Pang
+  V: 2025 IEEE International Conference on Blockchain (Blockchain)
+====================================================================================================
+CROSSREF QUERY: threshold secure aggregation multiple aggregators federated learning  ->  30
+---
+  DOI:10.1145/3803630.3809169 | 2026 | proceedings-article | cites=0
+  T: CQSA: Byzantine-robust Clustered Quantum Secure Aggregation in Federated Learning
+  A: Nath, Kasyap
+  V: Proceedings of the International Workshop on Secure and Efficient Federated Learning
+---
+  DOI:10.36227/techrxiv.19428755 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;div&gt;Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SV
+---
+  DOI:10.36227/techrxiv.20004140.v1 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.
+---
+  DOI:10.36227/techrxiv.20004140 | 2022 | posted-content | cites=0
+  T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Luo
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of clients to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. This paper proposes a 3-round secure aggregation protocol, that is effificient in terms of computation and communication, and resilient to client dropouts.&lt;/p&gt;
+---
+  DOI:10.36227/techrxiv.19428755.v1 | 2022 | posted-content | cites=0
+  T: SVFL: Efficient Secure Aggregation and Verification for Cross-Silo Federated Learning
+  A: Luo
+  V: 
+  ABS: Cross-silo federated learning (FL) allows organizations to collaboratively train machine learning (ML) models by sending their local gradients to a server for aggregation, without having to disclose their data. This paper proposes SVFL, an efficient protocol for cross-silo FL, that supports both secure gradient aggregation and verification. We evaluate the performance of SVFL and show, by complexity analysis and experimental evaluations, that its computation and communication overhead remain low even on large datasets, with a negligible accuracy loss (less than $1\%$). Furthermore, we conduct an experimental comparison between SVFL and other existing FL protocols, and show that SVFL achieves
+---
+  DOI:10.1109/tdsc.2024.3350206 | 2024 | journal-article | cites=68
+  T: TAPFed: Threshold Secure Aggregation for Privacy-Preserving Federated Learning
+  A: Xu, Li, Li, Joshi
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.36227/techrxiv.21699644.v1 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was proposed. In 202
+---
+  DOI:10.36227/techrxiv.21699644 | 2022 | posted-content | cites=0
+  T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+  A: Luo, Wang, Yan
+  V: 
+  ABS: &lt;p&gt;Federated learning (FL) allows a large number of users to collaboratively train machine learning (ML) models by sending only their local gradients to a central server for aggregation in each training iteration, without sending their raw training data. The main security issues of FL, that is, the privacy of the gradient vector and the correctness verification of the aggregated gradient, are gaining increasing attention from industry and academia. To protect the privacy of the gradient, a secure aggregation was proposed; to verify the correctness of the aggregated gradient, a verifiable secure aggregation that requires the server to provide a verifiable aggregated gradient was propose
+---
+  DOI:10.2139/ssrn.7388938 | 2026 | posted-content | cites=0
+  T: SATP-FL: Lightweight Secure Aggregation via Trajectory Prediction in Vehicular Federated Learning
+  A: Xiong, Ding
+  V: 
+  ABS: Federated learning in vehicular networks faces critical challenges from high mobility, key agreement latency, and frequent secure aggregation failures. Existing protocols cannot effectively accommodate frequent vehicle departures, leading to severely constrained communication windows and degraded aggregation efficiency, which limits both privacy protection and practical deployment. To address these issues, we propose a trajectory-predicted key pre-distribution mechanism (TPKD) that shifts the key agreement process from real-time negotiation to predictive pre-deployment, thereby eliminating handshake delays in highly dynamic environments. A Spatial-Temporal Graph Attention Network (ST-GAT) is
+---
+  DOI:10.1186/s42400-025-00443-9 | 2026 | journal-article | cites=1
+  T: Secure group aggregation for privacy-protection federated learning
+  A: Yan, Yang
+  V: Cybersecurity
+  ABS: Abstract Federated Learning is a machine learning paradigm designed to address the issues of privacy protection, data security, and big data process. FedAvg, a widely used algorithm in federated learning, is vulnerable to gradient leakage, parameter exposure, and user data compromise. Existing works use differential privacy, homomorphic encryption, and secure multi-party computation to protect the gradients of FedAvg. However, these existing efforts lead to gradient polymerization errors of approximately 10–30% (applying differential privacy results in noisy gradients) in the server or have a high computational dimension. In this paper, we design a secure group aggregation approach for the g
+---
+  DOI:10.2139/ssrn.5935003 | 2025 | posted-content | cites=0
+  T: Comment on “Secure and efficient multi-key aggregation for federated learning”
+  A: Guan, Cao, Xie
+  V: 
+---
+  DOI:10.14293/pr2199.003337.v1 | 2026 | posted-content | cites=0
+  T: Secure Aggregation Techniques in Federated Learning for Vehicle Data Analytics
+  A: Brown, Jones, Miller, Elvis
+  V: 
+  ABS: The rapid evolution of Intelligent Transportation Systems (ITS) and Autonomous Vehicles (AVs) has generated a massive influx of vehicular data. While this data is pivotal for enhancing traffic safety and predictive maintenance, privacy concerns regarding location history and driving patterns remain a significant barrier. Federated Learning (FL) offers a decentralized alternative to traditional machine learning by training models locally on vehicles; however, FL is still susceptible to poisoning attacks and inference-based privacy leaks. This study investigates the efficacy of secure aggregation techniques—specifically Homomorphic Encryption (HE) and Multi-Party Computation (MPC)—in maintaini
+---
+  DOI:10.1007/978-981-19-8692-5_7 | 2022 | book-chapter | cites=2
+  T: Secure Data Aggregation in Federated Learning
+  A: Yu, Cui
+  V: Digital Privacy and Security
+---
+  DOI:10.21203/rs.3.rs-6827986/v1 | 2025 | posted-content | cites=0
+  T: Enhanced Security Verifiable Secure Aggregation Scheme in Federated Learning
+  A: Yao, Han, Zhou, Wang
+  V: 
+  ABS: Abstract Federated Learning(FL) enables multiple participants to build a loosely coupled distributed machine learning system under the coordination of a central server. Existing FL models typically assume that the server aggregating data is semi-honest, but this assumption does not align with the complexities of real-world application environments, where the server may carry out collusion attacks or replay attacks. VerifyNet is a representative federated learning protocol for verifiable secure aggregation. In this paper, we analyze the security of VerifyNet, identify two shortcomings: low tolerance to collusion attacks and inability to resist combinatorial replay attacks. Furthermore, we hav
+---
+  DOI:10.2139/ssrn.7498278 | 2026 | posted-content | cites=0
+  T: Enhancing Secure Aggregation with Element-wise Functionality in Federated Learning
+  A: Suimon, Koizumi, Takemasa, Hasegawa
+  V: 
+  ABS: Federated learning (FL) enables collaborative training without sharing raw data, yet individual model updates can still leak sensitive information.Secure aggregation (SecAgg) mitigates this risk by ensuring that the server learns only the sum of client updates, thereby hiding individual contributions.However, when updates are sparse, an element with non-zero values from only a few clients can be exposed directly through the aggregate.Recent work has highlighted this vulnerability and demonstrated data reconstruction attacks that bypass SecAgg.To counter these attacks, we propose an enhancement to SecAgg that releases aggregated values only for elements to which at least $\SAthreshold$ client
+---
+  DOI:10.2139/ssrn.4872729 | 2024 | posted-content | cites=0
+  T: Secure Fair Aggregation Based on Category Grouping in Federated Learning
+  A: Zhou, Hu, Xue, Zeng
+  V: 
+---
+  DOI:10.21203/rs.3.rs-6090375/v1 | 2025 | posted-content | cites=0
+  T: Verifiable Secure Aggregation Scheme for Privacy Protection in Federated Learning
+  A: Yao, Zhou, Han, Wang
+  V: 
+  ABS: Abstract Federated learning enables multiple participants to construct a distributed machine learning system coordinated by server. Most existing solutions assume a semi-honest system, considering each participant to be honest but curious, which does not align with the complex real-world environment. In reality, servers might be malicious, potentially tampering with or forging aggregation results. To verify the integrity of server aggregation computations while protecting the privacy of clients, this paper introduces a privacy-preserving verifiable secure aggregation scheme for federated learning networks. Initially, we construct a functional reuse private key ring generation algorithm, enab
+---
+  DOI:10.1109/tdsc.2025.3602908 | 2025 | journal-article | cites=0
+  T: SAMK: Secure Aggregation for Federated Learning Under Multiple Keys With Low Communication Rounds
+  A: Guo, Li, Liu, Choo
+  V: IEEE Transactions on Dependable and Secure Computing
+---
+  DOI:10.1109/flta63145.2024.10839609 | 2024 | proceedings-article | cites=1
+  T: MC-PPHFL: Privacy-Preserving Hierarchical Federated Learning with a Secure Multi-Chain Aggregation
+  A: Fallatah, Grasso, Lisitsa
+  V: 2024 2nd International Conference on Federated Learning Technologies and Applications (FLTA)
+---
+  DOI:10.1201/9781003384854-4 | 2023 | book-chapter | cites=6
+  T: Secure and Private Federated Learning through Encrypted Parameter Aggregation
+  A: Vijayalakshmi, Sitharselvam, Thamarai, Ashok
+  V: Handbook on Federated Learning
+---
+  DOI:10.5220/0013529100003979 | 2025 | proceedings-article | cites=2
+  T: Privacy-Preserving EEG Data Generation: A Federated Split Learning Approach Using Privacy-Adaptive Autoencoders and Secure Aggregation with GFlowNet
+  A: Paul, Bajwa
+  V: Proceedings of the 22nd International Conference on Security and Cryptography
+---
+  DOI:10.2139/ssrn.5450717 | 2025 | posted-content | cites=0
+  T: BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for Federated Learning
+  A: Li, Li, Cui, Liu
+  V: 
+---
+  DOI:10.1109/wccis70285.2026.11650937 | 2026 | proceedings-article | cites=0
+  T: Decentralized and Secure Aggregation in Federated Learning
+  A: Fang
+  V: 2026 3rd World Conference on Computer and Information Security (WCCIS)
+---
+  DOI:10.1109/isit54713.2023.10206964 | 2023 | proceedings-article | cites=13
+  T: Secure Aggregation for Clustered Federated Learning
+  A: Sami, Güler
+  V: 2023 IEEE International Symposium on Information Theory (ISIT)
+---
+  DOI:10.22541/au.169028986.64063960/v1 | 2023 | posted-content | cites=0
+  T: Fed-SAD:A secure aggregation federated learning method for distributed load forecasting
+  A: Li, Li, Wang, Guo
+  V: 
+  ABS: The distributed and privacy-preserving characteristics of fine-grained smart grid data hinder data sharing, making federated learning an attractive approach for collaborative training among data owners with similar load patterns. However, malicious models can interfere with training in the federated learning aggregation process, making it difficult to ensure the accuracy and safety of the central model in load forecasting. Therefore, we propose a secure aggregation federated learning method for distributed load forecasting based on similarity and distance (Fed-SAD), which effectively eliminates the interference of malicious models by securely aggregating models, thereby ensuring accurate and
+---
+  DOI:10.2139/ssrn.4793556 | 2024 | posted-content | cites=0
+  T: Privacy-Preserving Federated Learning Compatible with Robust Aggregators
+  A: Alebouyeh, Jalaly Bidgoly
+  V: 
+---
+  DOI:10.2139/ssrn.4882102 | 2024 | posted-content | cites=0
+  T: Privacy-Preserving Federated Learning Compatible with Robust Aggregators
+  A: Alebouyeh, Jalaly Bidgoly
+  V: 
+---
+  DOI:10.3390/electronics12040870 | 2023 | journal-article | cites=12
+  T: Cluster-Based Secure Aggregation for Federated Learning
+  A: Kim, Park, Kim, Park
+  V: Electronics
+  ABS: In order to protect each node’s local learning parameters from model inversion attacks, secure aggregation has become the essential technique for federated learning so that the federated learning server knows only the combined result of all local parameters. In this paper, we introduced a novel cluster-based secure aggregation model that effectively deals with dropout nodes while reducing communicational and computational overheads. Specifically, we considered a federated learning environment with heterogeneous devices deployed across the country. The computing power of each node and the amount of training data can be heterogeneous. Because of this, each node had a different local processing
+---
+  DOI:10.1016/j.neucom.2025.130712 | 2025 | journal-article | cites=5
+  T: LVSA: Lightweight and verifiable secure aggregation for federated learning
+  A: Li, Zhang, Du
+  V: Neurocomputing
+---
+  DOI:10.1109/aectsd65988.2025.11411408 | 2025 | proceedings-article | cites=0
+  T: Adaptive Federated Learning with Dual Random Masking and Threshold-Based Secure Aggregation for Enhanced Privacy
+  A: W, V, E, S
+  V: 2025 First International Conference of Advances in Engineering and Computing Technologies for Sustainable Development (AECTSD)
+====================================================================================================
+CROSSREF QUERY: aggregation result verification cloud edge collaborative  ->  30
+---
+  DOI:10.1109/tiv.2025.3599909 | 2026 | journal-article | cites=5
+  T: SAEV-FL: Lightweight Secure Aggregation and Efficient Verification Scheme for Federated Learning in Cloud-Edge Collaborative Environment
+  A: Zhang, Ren, Liang, Li
+  V: IEEE Transactions on Intelligent Vehicles
+---
+  DOI:10.32604/cmc.2024.051530 | 2024 | journal-article | cites=0
+  T: Cloud-Edge Collaborative Federated GAN Based Data Processing for IoT-Empowered Multi-Flow Integrated Energy Aggregation Dispatch
+  A: Shi
+  V: Computers, Materials &amp; Continua
+---
+  DOI:10.3390/en19133154 | 2026 | journal-article | cites=0
+  T: Research on Cloud–Edge Collaborative Optimization Scheduling Strategy of Distribution Network Based on Resource Aggregation
+  A: You, Yan, Shi, Hu
+  V: Energies
+  ABS: Against the background of the dual carbon goals and the high proportion of distributed energy access, the distribution network presents the characteristics of source–network–load–storage two-way interaction. Traditional centralized control struggles to cope with voltage fluctuation, new-energy consumption difficulties and control dimension explosion. This paper focuses on the study of flexible resource aggregation modeling and cloud-side collaborative control, constructs the control constraint model of distributed Photovoltaic, energy storage, electric vehicle and flexible load constraints, proposes a resource aggregation method based on weight-improved K-means clustering, and includes volta
+---
+  DOI:10.1109/ei268505.2025.11425286 | 2025 | proceedings-article | cites=0
+  T: Distributed Resource Aggregation and Cloud-Edge Collaborative Operation Optimization Method
+  A: He, Wang, Li, Li
+  V: 2025 IEEE 9th Conference on Energy Internet and Energy System Integration (EI2)
+---
+  DOI:10.1109/icdcece68961.2026.11645666 | 2026 | proceedings-article | cites=0
+  T: FS-TLP: A Forward-Secure Data Aggregation and Sharing Scheme for Cloud-Edge Collaborative Smart Grids
+  A: Ma, Ye
+  V: 2026 5th International Conference on Distributed Computing and Electrical Circuits and Electronics (ICDCECE)
+---
+  DOI:10.5220/0014714900005024 | 2025 | proceedings-article | cites=0
+  T: Federated Edge Intelligence: A Privacy-Preserved Framework for Collaborative Cloud–Edge Learning in 6G Networks
+  A: Seeni, Murugesan, Gopalan
+  V: Proceedings of the 1st International Conference on Computational and Cognitive Systems Science
+---
+  DOI:10.1109/scecs69812.2026.11566016 | 2026 | proceedings-article | cites=0
+  T: Load-Aware Cloud-Edge Collaborative Inference Scheduling Strategy
+  A: Yang, Hu, Xiang
+  V: 2026 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+---
+  DOI:10.1109/ei268505.2025.11425127 | 2025 | proceedings-article | cites=0
+  T: Cloud-Edge Collaborative Optimization Model of Multi-Energy System for Energy Storage Aggregation Agent
+  A: He, Xia, Zhao, Zheng
+  V: 2025 IEEE 9th Conference on Energy Internet and Energy System Integration (EI2)
+---
+  DOI:10.36227/techrxiv.174586666.63812881/v1 | 2025 | posted-content | cites=0
+  T: Edge-Cloud Collaborative Calibration of Industrial Digital Twin Models
+  A: Wu, Lu
+  V: 
+  ABS: Digital twins are increasingly utilized to optimize industrial production processes, with the accuracy of these models being crucial for their successful implementation, particularly in predicting key process indices that are otherwise difficult to measure online. To maintain prediction accuracy, it is essential to calibrate the digital twin's computational model online using the most recent process data. However, traditional calibration methods, such as Kennedy and O'Hagan's approach, often lack scalability and are challenging to apply for the online calibration of large industrial models. To address this issue, we propose an edge-cloud collaborative model calibration framework. This framew
+---
+  DOI:10.2139/ssrn.4682363 | 2024 | posted-content | cites=0
+  T: From Cloud Manufacturing to Cloud–Edge Collaborative Manufacturing
+  A: Guo, He, Wan, Li
+  V: 
+---
+  DOI:10.1145/3769696.3771217 | 2025 | proceedings-article | cites=0
+  T: Cloud-Edge Collaborative Semantic Segmentation with Complexity-Aware Inference
+  A: Song, Fu
+  V: Proceedings of the 2025 ACM CoNEXT Workshop Edge-Cloud Collaboration for AI
+---
+  DOI:10.1109/scecs65243.2025.11065748 | 2025 | proceedings-article | cites=0
+  T: Research on Cloud-Edge Collaborative Fall Detection Methods for Personalized Applications
+  A: Li, Yuan
+  V: 2025 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+---
+  DOI:10.2139/ssrn.5816063 | 2026 | posted-content | cites=0
+  T: Edge-Cloud Collaborative Microservices Architecture for Scalable AI-Driven IoT Systems
+  A: Tammy
+  V: 
+---
+  DOI:10.2139/ssrn.5812063 | 2026 | posted-content | cites=0
+  T: Edge–Cloud Collaborative Microservices Architecture for Scalable AI-Driven IoT Systems
+  A: Tammy
+  V: 
+---
+  DOI:10.1016/j.future.2024.02.001 | 2024 | journal-article | cites=1
+  T: Efficient and precise visual location estimation by effective priority matching-based pose verification in edge-cloud collaborative IoT
+  A: Li, Ren, Castiglione, Liu
+  V: Future Generation Computer Systems
+---
+  DOI:10.1109/ecnct70535.2026.11661482 | 2026 | proceedings-article | cites=0
+  T: Cloud-edge-end collaborative service architecture and smart contract verification model for full-link trust
+  A: Wang, Qin, Guo, Wang
+  V: 2026 8th International Conference on Electronics and Communication, Network and Computer Technology (ECNCT)
+---
+  DOI:10.5220/0015047300004039 | 2026 | proceedings-article | cites=0
+  T: EES-CND: Collaborative Neural Decision-Making for Drift-Aware Fault-Tolerant Edge-Cloud Service Placement
+  A: Herabad, Taheri, Ahmed, Curescu
+  V: Proceedings of the 16th International Conference on Cloud Computing and Services Science
+---
+  DOI:10.3390/app16147302 | 2026 | journal-article | cites=0
+  T: Lightweight Edge Detection and High-Precision Cloud Classification: A Cloud-Edge Collaborative Two-Stage NIDS Architecture
+  A: Shi, Lin
+  V: Applied Sciences
+  ABS: Network Intrusion Detection Systems (NIDS) face a trade-off between detection accuracy and computing efficiency, particularly in the edge environment with strict real-time requirements and limited resources. Current approaches rely on complicated models, which are computationally demanding, or simple ones, which sacrifice detection performance. To deal with this issue, we propose a lightweight cloud-edge cooperative two-stage NIDS architecture, which separates the real-time detection and detailed classification. At the edge, a decision tree based on feature selection is used for rapid binary classification by using only the top 10 most informative features, thus efficiently screening out abn
+---
+  DOI:10.1186/s13677-022-00377-4 | 2022 | journal-article | cites=118
+  T: Federated learning in cloud-edge collaborative architecture: key technologies, applications and challenges
+  A: Bao, Guo
+  V: Journal of Cloud Computing
+  ABS: Abstract In recent years, with the rapid growth of edge data, the novel cloud-edge collaborative architecture has been proposed to compensate for the lack of data processing power of traditional cloud computing. On the other hand, on account of the increasing demand of the public for data privacy, federated learning has been proposed to compensate for the lack of security of traditional centralized machine learning. Deploying federated learning in cloud-edge collaborative architecture is widely considered to be a promising cyber infrastructure in the future. Although each cloud-edge collaboration and federated learning is hot research topic respectively at present, the discussion of deployin
+---
+  DOI:10.1109/scecs69812.2026.11566008 | 2026 | proceedings-article | cites=0
+  T: Diana: Edge-Cloud Collaborative Long Video Understanding via CoT-Driven Iterative Retrieval
+  A: Qian, Ye, Ouyang, Chen
+  V: 2026 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+---
+  DOI:10.1186/s13677-023-00394-x | 2023 | journal-article | cites=11
+  T: Privacy-preserving cloud-edge collaborative learning without trusted third-party coordinator
+  A: Yu, Tang, Zhao
+  V: Journal of Cloud Computing
+  ABS: Abstract Cloud-edge collaborative learning has received considerable attention recently, which is an emerging distributed machine learning (ML) architecture for improving the performance of model training among cloud center and edge nodes. However, existing cloud-edge collaborative learning schemes cannot efficiently train high-performance models on large-scale sparse samples, and have the potential risk of revealing the privacy of sensitive data. In this paper, adopting homomorphic encryption (HE) cryptographic technique, we present a privacy-preserving cloud-edge collaborative learning over vertically partitioned data, which allows cloud center and edge node to securely train a shared mode
+---
+  DOI:10.1109/jiot.2026.3718900 | 2026 | journal-article | cites=0
+  T: Hierarchical Hybrid Aggregation for Secrecy-Constrained Federated Task Offloading in End-Edge-Cloud Collaborative Networks
+  A: Chen, Cheng, Zhang, Han
+  V: IEEE Internet of Things Journal
+---
+  DOI:10.1016/j.ijepes.2024.110270 | 2024 | journal-article | cites=6
+  T: A secure and efficient data aggregation scheme for cloud–edge collaborative smart meters
+  A: Kang, Zhang, Hu, Xia
+  V: International Journal of Electrical Power &amp; Energy Systems
+---
+  DOI:10.1109/icdsec67721.2025.11439690 | 2025 | proceedings-article | cites=0
+  T: Cloud-Edge Collaborative Early Warning System for Distribution Network Damage
+  A: Chen
+  V: 2025 International Conference on Data Science and Edge Computing (ICDSEC)
+---
+  DOI:10.20944/preprints202505.2357.v1 | 2025 | posted-content | cites=0
+  T: Adaptive QoS‐Aware Cloud–Edge Collaborative Architecture for Real‐Time Smart Water Service Management
+  A: Fang
+  V: 
+  ABS: As urban water network being more and more intelligent, it becomes an urgent problem to solve how to execute resource scheduling and data process in an efficient and adaptable way and not affect real time and service quality. In this paper, we present an Adaptive QoS-Aware Cloud–Edge Collaborative Architecture (A-QCEA) empowered by a combined edge computing), cloud infrastructure, IoT perception network, AI-enhegrated optimization mechanism, and network security strategy to facilitate real-time smart water service management system of next generation. It is highly extended based on the cloud-edge-device three-layer IoT model which exists, and a multi-layer dynamic QoS-aware scheduling scheme
+---
+  DOI:10.1109/scecs69812.2026.11566019 | 2026 | proceedings-article | cites=0
+  T: A Method for Cloud-Edge Collaborative Dependent Task Offloading Based on Trust Awareness
+  A: Zhao, Xie, Li, Chen
+  V: 2026 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+---
+  DOI:10.1109/scecs69812.2026.11565941 | 2026 | proceedings-article | cites=0
+  T: Dynamic Dual-Attention Graph Clustering Network for Streaming Sensing Data in Cloud-Edge Collaborative Systems
+  A: Wang, Cui, Wen
+  V: 2026 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+---
+  DOI:10.1109/cbdcom68404.2025.00027 | 2025 | proceedings-article | cites=0
+  T: Cloud-Edge Computational Offloading Techniques and Verification Methods: A Survey
+  A: Moghaddam, Leed
+  V: 2025 IEEE Conference on Cloud and Big Data Computing (CBDCom)
+---
+  DOI:10.1109/aiotc71250.2026.11688751 | 2026 | proceedings-article | cites=0
+  T: Cloud-Edge Collaborative Learning for Edge Multimodal Large Language Models
+  A: Chen, Li, Li, Wu
+  V: 2026 5th International Conference on Artificial Intelligence, Internet of Things and Cloud Computing Technology (AIoTC)
+---
+  DOI:10.1109/scecs69812.2026.11566062 | 2026 | proceedings-article | cites=0
+  T: An Edge–Cloud Collaborative Framework for Latency Optimization in Prompt Injection Defense
+  A: Shen, Fan, Zou, Wang
+  V: 2026 International Conference on Sensor-Cloud and Edge Computing System (SCECS)
+====================================================================================================
+CROSSREF QUERY: linear homomorphic hash aggregation integrity verification  ->  30
+---
+  DOI:10.54254/2755-2721/2026.gu34026 | 2026 | journal-article | cites=0
+  T: Secure Data Aggregation for Digital Cousin Systems with Homomorphic Encryption and Integrity Verification
+  A: Hu
+  V: Applied and Computational Engineering
+  ABS: We're seeing more and more heterogeneous IoT devices being deployed acrossdifferent networks these days, and they're generating massive amounts of distributed data,this creates new challenges for secure multi-source aggregation in edge intelligenceenvironments. Most conventional approaches built for Digital Twin (DT) add way too muchmodeling complexity. They may not keep up when IoT environments shift quickly andunpredictably. Also, many existing homomorphic encryption solutions focus at privacyprotection, but they don't handle integrity verification during data aggregation processproperly. So to fix these issues, we developed a secure data aggregation framework for DigitalCousin (DC) system
+---
+  DOI:10.1109/tmc.2026.3679423 | 2026 | journal-article | cites=0
+  T: Practical Multi-Key Secure Aggregation With Homomorphic Hash Verification for Cross-Silo Federated Learning
+  A: Fan, Chen, Jiang, Yu
+  V: IEEE Transactions on Mobile Computing
+---
+  DOI:10.20944/preprints202512.0870.v1 | 2025 | posted-content | cites=1
+  T: Homomorphic Encryption-Based Data Integrity Verification and Anti-Tampering Mechanism in Cloud Storage Environment
+  A: Deng
+  V: 
+  ABS: To enhance the integrity assurance of encrypted data in cloud storage environments, a homomorphic encryption-based data remote verification and anti-tampering mechanism is proposed. The design incorporates a homomorphic verification protocol to enable consistency checks of data blocks in the encrypted domain, and combines a lightweight tag structure with a Merkle Hash Tree to support dynamic data operations, including insertion, modification, and deletion. Corrective codes and tag version control are employed to enable rapid data recovery following tampering detection. Additionally, attribute-encryption-based access control and a blockchain auditing mechanism are integrated to strengthen the
+---
+  DOI:10.2139/ssrn.7045819 | 2026 | posted-content | cites=0
+  T: A Hash-based Trust Framework for Multi-agent AI Systems: Ensuring Instruction Integrity through Cryptographic Verification
+  A: Kothari
+  V: 
+  ABS: Multi-agent AI systems, in which a central orchestrator delegates tasks to specialised subagents, are increasingly deployed in enterprise environments to automate complex workflows. However, a critical and largely unaddressed vulnerability exists in the communication layer between orchestrators and subagents: the absence of cryptographic verification means that subagents have no reliable mechanism to confirm that instructions they receive originate from a legitimate orchestrator and have not been tampered with in transit. This paper proposes a lightweight trust verification framework using SHA-256 cryptographic hashing combined with asymmetric digital signatures to address this vulnerability
+---
+  DOI:10.1504/ijitm.2022.10051756 | 2022 | journal-article | cites=0
+  T: A data integrity detection method for accounting informatization based on homomorphic hash function
+  A: Li, Guang
+  V: International Journal of Information Technology and Management
+---
+  DOI:10.1504/ijitm.2025.144108 | 2025 | journal-article | cites=0
+  T: A data integrity detection method for accounting informatisation based on homomorphic hash function
+  A: Zhao, Li
+  V: International Journal of Information Technology and Management
+---
+  DOI:10.1063/5.0319546 | 2026 | journal-article | cites=0
+  T: Tamper detection and integrity verification of images using deep learning and decentralized hash-based ledger
+  A: Guttavelli, Gorle
+  V: AIP Advances
+  ABS: Ensuring the authenticity and integrity of digital images has become increasingly important due to the widespread availability of advanced image manipulation tools. This paper presents a hybrid framework for image tamper detection and authentication by integrating deep learning-based analysis with blockchain-enabled integrity verification. Error level analysis is employed as a preprocessing step to amplify compression inconsistencies introduced during image manipulation, and the resulting images are classified using a convolutional neural network trained to distinguish between authentic and tampered content. For secure and verifiable authentication, the framework extracts the most significan
+---
+  DOI:10.1109/icecer65523.2025.11401372 | 2025 | proceedings-article | cites=0
+  T: Permanent Data Backup System Using Matrix Switching and Hash-Based Integrity Verification
+  A: Seo
+  V: 2025 International Conference on Electrical and Computer Engineering Researches (ICECER)
+---
+  DOI:10.63665/ijird.v1.i2.1 | 2025 | journal-article | cites=0
+  T: Integrity Verification Protocol Based on Privacy Homomorphic Data Fusion
+  A: Kumaar
+  V: International Journal of Integrated Research and Development
+  ABS: Ensuring data integrity while preserving privacy remains a critical challenge in modern distributed and Internet of Things (IoT) environments. This research presents an Integrity Verification Protocol based on Privacy Homomorphic Data Fusion (IVP-PHDF) designed to provide secure, efficient, and scalable verification of aggregated data without exposing sensitive information. The proposed framework employs homomorphic encryption to allow intermediate nodes and fusion centres to perform mathematical operations on encrypted data, enabling privacy-preserving data aggregation. To guarantee integrity, a combination of lightweight authentication codes, hash-based consistency checks, and multi-node c
+---
+  DOI:10.2174/0126662558347808250612075636 | 2026 | journal-article | cites=0
+  T: Hash-based Content Authentication and Integrity Verification: A Secure Framework for Video Watermarking
+  A: Saini, Ahuja, Gupta
+  V: Recent Advances in Computer Science and Communications
+  ABS: Introduction: The growing demand for digital multimedia content is driving up the requirement for video data. Forensics, digital rights management, surveillance, and other uses where accuracy and integrity are critical depending on this data. Objective: To design and implement a hash-based watermarking technique for video authentication, and to assess its robustness and imperceptibility through comprehensive evaluation and comparison with current state-of-the-art methods for confirming the authenticity and integrity of video content. Methods: The suggested technique is evaluated using a dataset of thirty input videos, each with different features such as bitrates, frame rates, resolutions, f
+---
+  DOI:10.1038/s41598-026-48705-x | 2026 | journal-article | cites=2
+  T: A privacy-preserving cloud storage framework with hybrid encryption, homomorphic keyword search, and blockchain-based integrity verification
+  A: Ahmed, Zubair, Tawfik
+  V: Scientific Reports
+---
+  DOI:10.30871/jaic.v10i2.12432 | 2026 | journal-article | cites=0
+  T: Comparative Analysis of MD5 and SHA-256 Hash Algorithms for Fingerprint File Integrity Verification
+  A: Nurdin, Habbal, Fajriana
+  V: Journal of Applied Informatics and Computing
+  ABS: Fingerprint file integrity verification in driver license systems requires reliable cryptographic hash algorithms. MD5, currently widely deployed, has been deprecated by NIST (2008) due to demonstrated collision vulnerabilities, while SHA-256 offers enhanced security with potentially higher computational overhead. This study comprehensively compares MD5 and SHA-256 performance and security characteristics to provide evidence-based recommendations for biometric data integrity verification. We conducted empirical benchmarking using 1,000 real operational fingerprint files (BMP 8-bit grayscale, 512×512 pixels, 257 KB uniform) from Regional Police Traffic Directorate. Each file underwent 30 repe
+---
+  DOI:10.1145/3819836.3819850 | 2026 | proceedings-article | cites=0
+  T: Homomorphic Encryption-based Data Integrity Verification and Anti-tampering Mechanism in Cloud Storage Environment
+  A: Deng
+  V: Proceedings of the 2026 5th International Conference on Cyber Security, Artificial Intelligence and Digital Economy
+---
+  DOI:10.31449/inf.v49i36.10475 | 2025 | journal-article | cites=0
+  T: A Multi-Level Hash-Based Data Integrity Verification and Traceability Scheme for Digital Transformation in Power IoT Networks
+  A: Zhang, Xu, Sun, Hu
+  V: Informatica
+  ABS: This paper addresses the unique data security and real-time monitoring requirements in the digital transformation of electric power enterprises, and combines the development characteristics of smart grids to solve the challenges of data integrity verification and anomaly tracing in the electric power Internet of Things (IoT). It proposes a topology-integrated multi-level hash verification and tracing scheme. This method utilizes asymmetric encryption (RSA key generation algorithm KeyGen) and digital signature technology to design a tree-like network architecture (including terminal devices TD, relay devices RD, IoT gateways IoTG, and data servers DS). It employs a multi-level aggregated hash
+---
+  DOI:10.1186/s42400-024-00204-0 | 2024 | journal-article | cites=2
+  T: Improved homomorphic evaluation for hash function based on TFHE
+  A: Wei, Lu
+  V: Cybersecurity
+  ABS: Abstract Homomorphic evaluation of hash functions offers a solution to the challenge of data integrity authentication in the context of homomorphic encryption. The earliest attempt to achieve homomorphic evaluation of SHA-256 hash function was proposed by Mella and Susella (in: Cryptography and coding—14th IMA international conference, IMACC 2013. Lecture notes in computer science, vol 8308. Springer, Heidelberg, pp 28–44, 2013. https://doi.org/10.1007/978-3-642-45239-0_3 .) based on the BGV scheme. Unfortunately, their implementation faced significant limitations due to the exceedingly high multiplicative depth, rendering it impractical. Recently, a homomorphic implementation of SHA-256 bas
+---
+  DOI:10.26483/ijarcs.v17i4.7557 | 2026 | journal-article | cites=0
+  T: A SECURE AND EFFICIENT BLOCKCHAIN-BASED ACADEMIC RECORD VERIFICATION SYSTEM FOR PREVENTING CREDENTIAL FRAUD USING HASH-BASED INTEGRITY MECHANISMS
+  A: Bansal
+  V: international journal of advanced research in computer science
+  ABS: Credential fraud in academic institutions has emerged as a serious global concern, undermining the integrity of educational qualifications and professional trust. Traditional paper-based and centralised digital verification systems are susceptible to forgery, data tampering, and administrative delays. This paper proposes a Secure and Efficient Blockchain-Based Academic Record Verification System (SEBARVS) that leverages a private blockchain architecture combined with SHA-256 hash-based integrity mechanisms to prevent credential fraud. Rather than storing complete academic records on the blockchain, the proposed system stores only the cryptographic hash of each record, ensuring both data priv
+---
+  DOI:10.1145/3644713.3644724 | 2023 | proceedings-article | cites=7
+  T: One Digit Checksum for Data Integrity Verification of Cloud-executed Homomorphic Encryption Operations
+  A: Chait, Kara, Laouid, Hammoudeh
+  V: Proceedings of the 7th International Conference on Future Networks and Distributed Systems
+---
+  DOI:10.23919/jcc.fa.2024-0119.202510 | 2025 | journal-article | cites=1
+  T: Homomorphic integrity and confidentiality protection for data aggregation in the digital twin environment with high efficiency
+  A: Xincheng, Changsheng, Zhenjie, Pei
+  V: China Communications
+---
+  DOI:10.1117/12.3032985 | 2024 | proceedings-article | cites=0
+  T: Dynamic verification of data integrity on cloud based on chameleon hash algorithm
+  A: Han, Li, Wang, Meng
+  V: Third International Conference on Electronic Information Engineering and Data Processing (EIEDP 2024)
+---
+  DOI:10.1109/icscan66520.2026.11588495 | 2026 | proceedings-article | cites=0
+  T: A Secure Cloud-Based File Storage Framework Using Encryption and Hash-Based Integrity Verification
+  A: Akash, M, G, PraveenKumar
+  V: 2026 International Conference on System, Computation, Automation and Networking (ICSCAN)
+---
+  DOI:10.1088/1674-1056/acac0e | 2023 | journal-article | cites=5
+  T: Quantum homomorphic broadcast multi-signature based on homomorphic aggregation
+  A: Xu, Yin
+  V: Chinese Physics B
+  ABS: Quantum multi-signature has attracted extensive attention since it was put forward. Beside its own improvement, related research is often combined with other quantum signature. However, this type of quantum signature has one thing in common, that is, the generation and verification of signature depend heavily on the shared classical secret key. In order to increase the reliability of signature, the homomorphic aggregation technique is applied to quantum multi-signature, and then we propose a quantum homomorphic multi-signature protocol. Unlike previous quantum multi-signature protocols, this protocol utilizes homomorphic properties to complete signature generation and verification. In the si
+---
+  DOI:10.1109/aikiie60097.2023.10390507 | 2023 | proceedings-article | cites=0
+  T: Multi-Parameter Secure Data Aggregation in Data Centre with Integrity Verification
+  A: Manikandan, Srilakshmi
+  V: 2023 International Conference on Ambient Intelligence, Knowledge Informatics and Industrial Electronics (AIKIIE)
+---
+  DOI:10.1109/icscan66520.2026.11588506 | 2026 | proceedings-article | cites=0
+  T: Design of Integrity File Manager: Enhancing Secure Resource Handling with SHA-256-Based Merkle Hash Tree (MHT) Integrity Verification and User Activity Monitoring in a Collaborative Environment
+  A: N, P, S, L
+  V: 2026 International Conference on System, Computation, Automation and Networking (ICSCAN)
+---
+  DOI:10.1109/aiot66900.2025.00064 | 2025 | proceedings-article | cites=0
+  T: An Optimized Merkle Hash Tree Approach for Efficient Edge Data Integrity Verification
+  A: Islam, Xiang, Zhao, Uddin
+  V: 2025 IEEE Annual Congress on Artificial Intelligence of Things (AIoT)
+---
+  DOI:10.1109/iceconf65644.2025.11379415 | 2025 | proceedings-article | cites=1
+  T: Blockchain-Supported Adaptive Hash Verification for Resilient Healthcare Data Integrity
+  A: Gayathri, Kaur, S, Dhankhar
+  V: 2025 2nd International Conference on Artificial Intelligence and Knowledge Discovery in Concurrent Engineering (ICECONF)
+---
+  DOI:10.1109/icmnwc66779.2025.11354325 | 2025 | proceedings-article | cites=1
+  T: Secure IoT Data Aggregation using Lightweight Homomorphic Encryption and Trust Modeling with Fingerprint Verification
+  A: Shilpi, Sait, Harshitha, Mapari
+  V: 2025 5th International Conference on Mobile Networks and Wireless Communications (ICMNWC)
+---
+  DOI:10.1109/smart55829.2022.10046852 | 2022 | proceedings-article | cites=0
+  T: Using Trust-Based Data Integrity Verification and Energy-Aware Hierarchical Data Aggregation for WSN
+  A: Singh, Gaganpreet
+  V: 2022 11th International Conference on System Modeling &amp; Advancement in Research Trends (SMART)
+---
+  DOI:10.2139/ssrn.6326358 | 2026 | posted-content | cites=0
+  T: A Hybrid Homomorphic Federated Learning Framework with Adaptive Aggregation for Image Classification
+  A: Shi
+  V: 
+  ABS: Federated learning enables collaborative machine learning while preserving data privacy, yet existing approaches struggle to simultaneously achieve privacy protection, computational efficiency, and model accuracy. We propose HHFL-AA (Hybrid Homomorphic Federated Learning with Adaptive Aggregation), a novel framework that strategically integrates homomorphic encryption, differential privacy, and blockchain technology. HHFL-AA employs a two-stage training methodology: FedAvg on encrypted data subsets for rapid global model initialization, followed by FedSGD with gradient encryption for enhanced convergence. The framework incorporates adaptive weighting mechanisms and blockchain infrastructure 
+---
+  DOI:10.2139/ssrn.5036905 | 2025 | posted-content | cites=0
+  T: A novel scheme for enhanced content integrity, authentication, and privacy in information centric network using lightweight blockchain-based homomorphic integrity and authentication
+  A: Thejas Chandra
+  V: 
+  ABS: Information-centric networks (ICNs) face challenges in ensuring content integrity and authentication while preserving user privacy. Homomorphic encryption has been widely used to protect content privacy within ICNs. Blockchain technology is widely applied in ICNs to ensure content integrity. Conventional blockchain-based authentication schemes rely on computationally expensive homomorphic encryption to perform secure data transmission. Also, the existing cryptography methods comprise confidentiality, and integrity while sharing content in ICNs. This paper proposes a novel lightweight blockchain-based homomorphic integrity and authentication (Light-BHIA) scheme to increase the integrity and p
+---
+  DOI:10.59256/indjcst.20260502005 | 2026 | journal-article | cites=0
+  T: A Tamper-Proof Logging System Using eBPF, Cryptographic Hash Chains, Merkle Trees, and Cloud- Based Integrity Verification
+  A: J Veda, Dhiravathu, S, Bikkina
+  V: Indian Journal of Computer Science and Technology
+  ABS: System logs are essential for security monitoring and digital forensics, but they remain vulnerable to tampering when attackers gain elevated privileges. Existing logging systems often fail to guarantee integrity, allowing adversaries to alter or delete critical evidence. This paper presents a lightweight tamper-proof logging system that ensures log integrity using kernel-level event capture with eBPF, cryptographic hash chains, Merkle tree-based verification, and cloud-based integrity anchoring. The proposed system enables real-time log collection, efficient integrity validation, and reliable detection of unauthorized modifications without relying on blockchain or specialized hardware.
+DONE

@@ -1,0 +1,200 @@
+{
+ "10.1109/tmc.2026.3679423": {
+  "doi": "10.1109/tmc.2026.3679423",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "Practical Multi-Key Secure Aggregation With Homomorphic Hash Verification for Cross-Silo Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Mobile Computing"
+  }
+ },
+ "10.1016/j.comcom.2025.108271": {
+  "doi": "10.1016/j.comcom.2025.108271",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "A Homomorphic MAC-based verifiable secure aggregation for federated learning in cloud–edge AIoT",
+   "abs": "",
+   "src": "Computer Communications"
+  }
+ },
+ "10.1109/icc59461.2026.11587871": {
+  "doi": "10.1109/icc59461.2026.11587871",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "Privacy-Preserving Verification of Secure Aggregation for Hierarchical Peer-to-Peer Federated Learning",
+   "abs": "",
+   "src": "ICC 2026 - IEEE International Conference on Communications"
+  }
+ },
+ "10.1109/tdsc.2026.3707153": {
+  "doi": "10.1109/tdsc.2026.3707153",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "SVTAgg: Secure, Verifiable, and Traceable Model Aggregation for Edge-Assisted Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2024.3472869": {
+  "doi": "10.1109/tdsc.2024.3472869",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "SHIELD - Secure Aggregation Against Poisoning in Hierarchical Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2025.3589160": {
+  "doi": "10.1109/tdsc.2025.3589160",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "VeSAFL: Verifiable Secure Aggregation for Privacy-Preserving Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2021.3126323": {
+  "doi": "10.1109/tdsc.2021.3126323",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "VerSA: Verifiable Secure Aggregation for Cross-Device Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2022.3226508": {
+  "doi": "10.1109/tdsc.2022.3226508",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "VOSA: Verifiable and Oblivious Secure Aggregation for Privacy-Preserving Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2025.3565640": {
+  "doi": "10.1109/tdsc.2025.3565640",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "OPSA: Efficient and Verifiable One-Pass Secure Aggregation With TEE for Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2024.3380669": {
+  "doi": "10.1109/tdsc.2024.3380669",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tdsc.2026.3717223": {
+  "doi": "10.1109/tdsc.2026.3717223",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "FedAggVerify: Publicly Verifiable and Privacy-Preserving Aggregation With Ownership Protection for Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1016/j.comnet.2023.110079": {
+  "doi": "10.1016/j.comnet.2023.110079",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "Lightweight and Verifiable Secure Aggregation for Multi-dimensional Data in Edge-enhanced IoT",
+   "abs": "",
+   "src": "Computer Networks"
+  }
+ },
+ "10.1016/j.neucom.2025.130712": {
+  "doi": "10.1016/j.neucom.2025.130712",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "LVSA: Lightweight and verifiable secure aggregation for federated learning",
+   "abs": "",
+   "src": "Neurocomputing"
+  }
+ },
+ "10.1109/flta63145.2024.10839609": {
+  "doi": "10.1109/flta63145.2024.10839609",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "MC-PPHFL: Privacy-Preserving Hierarchical Federated Learning with a Secure Multi-Chain Aggregation",
+   "abs": "",
+   "src": "2024 2nd International Conference on Federated Learning Technologies and Applications (FLTA)"
+  }
+ },
+ "10.1109/jiot.2023.3277553": {
+  "doi": "10.1109/jiot.2023.3277553",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "DRL-Based Secure Aggregation and Resource Orchestration in MEC-Enabled Hierarchical Federated Learning",
+   "abs": "",
+   "src": "IEEE Internet of Things Journal"
+  }
+ },
+ "10.1109/tdsc.2024.3350206": {
+  "doi": "10.1109/tdsc.2024.3350206",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "TAPFed: Threshold Secure Aggregation for Privacy-Preserving Federated Learning",
+   "abs": "",
+   "src": "IEEE Transactions on Dependable and Secure Computing"
+  }
+ },
+ "10.1109/tcc.2026.3723542": {
+  "doi": "10.1109/tcc.2026.3723542",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "PPVFL-LWA: Privacy-Preserving and Verifiable Federated Learning with Lossless Weighted Aggregation",
+   "abs": "",
+   "src": "IEEE Transactions on Cloud Computing"
+  }
+ },
+ "10.1016/j.comnet.2026.112421": {
+  "doi": "10.1016/j.comnet.2026.112421",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "BVSAP: A Bidirectional Verifiable Secure Aggregation Protocol for federated learning",
+   "abs": "",
+   "src": "Computer Networks"
+  }
+ },
+ "10.1016/j.comnet.2026.112498": {
+  "doi": "10.1016/j.comnet.2026.112498",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "BRPPFL: A Byzantine-Robust and Privacy-Preserving Framework for Cloud–Edge Federated Learning",
+   "abs": "",
+   "src": "Computer Networks"
+  }
+ },
+ "10.3390/math13223687": {
+  "doi": "10.3390/math13223687",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "V-MHESA: A Verifiable Masking and Homomorphic Encryption-Combined Secure Aggregation Strategy for Privacy-Preserving Federated Learning",
+   "abs": "In federated learning, secure aggregation is essential to protect the confidentiality of local model updates, ensuring that the server can access only the aggregated result without exposing individual contributions. However, conventional secure aggregation schemes lack mechanisms that allow participating nodes to verify whether the aggregation has been performed correctly, thereby raising concerns about the integrity of the global model. To address this limitation, we propose V-MHESA (Verifiable Masking-and-Homomorphic Encryption–combined Secure Aggregation), an enhanced protocol extending our previous MHESA scheme. V-MHESA incorporates verification tokens and shared-key management to simultaneously ensure verifiability, confidentiality, and authentication. Each node generates masked updates using its own mask, the server’s secret, and a node-only shared random nonce, ensuring that only the server can compute a blinded global update while the actual global model remains accessible solely to the nodes. Verification tokens corresponding to randomly selected model parameters enable nodes to efficiently verify the correctness of the aggregated model with minimal communication overhead. Moreover, the protocol achieves inherent authentication of the server and legitimate nodes and remains robust under node dropout scenarios. The confidentiality of local updates and the unforgeability of verification tokens are analyzed under the honest-but-curious threat model, and experimental evaluations on the MNIST dataset demonstrate that V-MHESA achieves accuracy comparable to prior MHESA while introducing only negligible computational and communication overhead.",
+   "src": "Mathematics"
+  }
+ },
+ "10.3390/app14135361": {
+  "doi": "10.3390/app14135361",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "More Efficient and Verifiable Privacy-Preserving Aggregation Scheme for Internet of Things-Based Federated Learning",
+   "abs": "As Internet of Things (IoT) technology continues to advance at a rapid pace, smart devices have permeated daily life. Service providers are actively collecting copious numbers of user data, with the aim of refining machine learning models to elevate service quality and accuracy. However, this practice has sparked apprehensions amongst users concerning the privacy and safety of their personal data. Federated learning emerges as an evolution of centralized machine learning, enabling a collective training of machine learning models by multiple users on their respective devices. Crucially, this is achieved without the direct submission of data to a central server, thereby significantly mitigating the hazards associated with privacy infringements. Since the machine learning algorithms act locally in federated learning, passing just the local model back to the central server, the users’ data remain locally. However, current research work indicates that local models also include user data privacy-related components. Moreover, current privacy-preserving secure aggregation schemes either offer insufficient accuracy or need significantly high computing resources for training. In this work, we propose an efficient and secure aggregation scheme for privacy-preserving federated learning with lower computational costs, which is suitable for those weak IoT devices since the proposed scheme is robust and fault-tolerant, allowing some of the users to dynamically exit or join the system without restarting the federated learning process or triggering abnormal termination. In addition, this scheme with the property of result verification in the situation when the servers return incorrect aggregation results, which can be verified by the users. Extensive experimental evaluations, based on real-world datasets, have substantiated the high accuracy of our proposed scheme. Moreover, in comparison to existing schemes, ours significantly reduces computational and communication costs by at least 85% and 47%, respectively.",
+   "src": "Applied Sciences"
+  }
+ },
+ "10.3390/e25081125": {
+  "doi": "10.3390/e25081125",
+  "openalex_error": "HTTP Error 429: Too Many Requests",
+  "crossref": {
+   "title": "Communication-Efficient and Privacy-Preserving Verifiable Aggregation for Federated Learning",
+   "abs": "Federated learning is a distributed machine learning framework, which allows users to save data locally for training without sharing data. Users send the trained local model to the server for aggregation. However, untrusted servers may infer users’ private information from the provided data and mistakenly execute aggregation protocols to forge aggregation results. In order to ensure the reliability of the federated learning scheme, we must protect the privacy of users’ information and ensure the integrity of the aggregation results. This paper proposes an effective secure aggregation verifiable federated learning scheme, which has both high communication efficiency and privacy protection function. The scheme encrypts the gradients with a single mask technology to securely aggregate gradients, thus ensuring that malicious servers cannot deduce users’ private information from the provided data. Then the masked gradients are hashed to verify the aggregation results. The experimental results show that our protocol is more suited for bandwidth-constraint and offline-users scenarios.",
+   "src": "Entropy"
+  }
+ }
+}

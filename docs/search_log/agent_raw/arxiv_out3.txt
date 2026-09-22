@@ -1,0 +1,101 @@
+====================================================================================================
+QUERY: abs:"homomorphic hash" AND abs:"federated"  ->  1 results
+---
+  arXiv:2603.29688v1 | pub 2026-03-31 | upd 2026-03-31
+  T: Client-Verifiable and Efficient Federated Unlearning in Low-Altitude Wireless Networks
+  A: Yuhua Xu, Mingtao Jiang, Chenfei Hu, Yinglong Wang, Chuan Zhang, Meng Li
+  C: cs.CR
+  ABS: In low-altitude wireless networks (LAWN), federated learning (FL) enables collaborative intelligence among unmanned aerial vehicles (UAVs) and integrated sensing and communication (ISAC) devices while keeping raw sensing data local. Due to the "right to be forgotten" requirements and the high mobility of ISAC devices that frequently enter or leave the coverage region of UAV-assisted servers, the influence of departing devices must be removed from trained models. This necessity motivates the adoption of federated unlearning (FUL) to eliminate historical device contributions from the global model in LAWN. However, existing FUL approaches implicitly assume that the UAV-assisted server executes 
+====================================================================================================
+QUERY: abs:"linear homomorphic hash"  ->  1 results
+---
+  arXiv:2603.29688v1 | pub 2026-03-31 | upd 2026-03-31
+  T: Client-Verifiable and Efficient Federated Unlearning in Low-Altitude Wireless Networks
+  A: Yuhua Xu, Mingtao Jiang, Chenfei Hu, Yinglong Wang, Chuan Zhang, Meng Li
+  C: cs.CR
+  ABS: In low-altitude wireless networks (LAWN), federated learning (FL) enables collaborative intelligence among unmanned aerial vehicles (UAVs) and integrated sensing and communication (ISAC) devices while keeping raw sensing data local. Due to the "right to be forgotten" requirements and the high mobility of ISAC devices that frequently enter or leave the coverage region of UAV-assisted servers, the influence of departing devices must be removed from trained models. This necessity motivates the adoption of federated unlearning (FUL) to eliminate historical device contributions from the global model in LAWN. However, existing FUL approaches implicitly assume that the UAV-assisted server executes 
+====================================================================================================
+QUERY: abs:"verifiable" AND abs:"aggregation" AND abs:"edge servers"  ->  12 results
+---
+  arXiv:1905.06641v2 | pub 2019-05-16 | upd 2019-10-31
+  T: Client-Edge-Cloud Hierarchical Federated Learning
+  A: Lumin Liu, Jun Zhang, S. H. Song, Khaled B. Letaief
+  C: cs.NI,cs.LG
+  ABS: Federated Learning is a collaborative machine learning framework to train a deep learning model without accessing clients' private data. Previous works assume one central parameter server either at the cloud or at the edge. The cloud server can access more data but with excessive communication overhead and long latency, while the edge server enjoys more efficient communications with the clients. To combine their advantages, we propose a client-edge-cloud hierarchical Federated Learning system, supported with a HierFAVG algorithm that allows multiple edge servers to perform partial model aggregation. In this way, the model can be trained faster and better communication-computation trade-offs 
+---
+  arXiv:2103.14272v2 | pub 2021-03-26 | upd 2023-01-08
+  T: Hierarchical Federated Learning with Quantization: Convergence Analysis and System Design
+  A: Lumin Liu, Jun Zhang, Shenghui Song, Khaled B. Letaief
+  C: cs.LG
+  ABS: Federated learning (FL) is a powerful distributed machine learning framework where a server aggregates models trained by different clients without accessing their private data. Hierarchical FL, with a client-edge-cloud aggregation hierarchy, can effectively leverage both the cloud server's access to many clients' data and the edge servers' closeness to the clients to achieve a high communication efficiency. Neural network quantization can further reduce the communication overhead during model uploading. To fully exploit the advantages of hierarchical FL, an accurate convergence analysis with respect to the key system parameters is needed. Unfortunately, existing analysis is loose and does no
+---
+  arXiv:2311.04817v1 | pub 2023-11-08 | upd 2023-11-08
+  T: Decentralized Personalized Online Federated Learning
+  A: Renzhi Wu, Saayan Mitra, Xiang Chen, Anup Rao
+  C: cs.LG,cs.AI
+  ABS: Vanilla federated learning does not support learning in an online environment, learning a personalized model on each client, and learning in a decentralized setting. There are existing methods extending federated learning in each of the three aspects. However, some important applications on enterprise edge servers (e.g. online item recommendation at global scale) involve the three aspects at the same time. Therefore, we propose a new learning setting \textit{Decentralized Personalized Online Federated Learning} that considers all the three aspects at the same time. In this new setting for learning, the first technical challenge is how to aggregate the shared model parameters from neighboring
+---
+  arXiv:2303.10580v1 | pub 2023-03-19 | upd 2023-03-19
+  T: Hierarchical Personalized Federated Learning Over Massive Mobile Edge Computing Networks
+  A: Chaoqun You, Kun Guo, Howard H. Yang, Tony Q. S. Quek
+  C: cs.LG,cs.AI,cs.DC
+  ABS: Personalized Federated Learning (PFL) is a new Federated Learning (FL) paradigm, particularly tackling the heterogeneity issues brought by various mobile user equipments (UEs) in mobile edge computing (MEC) networks. However, due to the ever-increasing number of UEs and the complicated administrative work it brings, it is desirable to switch the PFL algorithm from its conventional two-layer framework to a multiple-layer one. In this paper, we propose hierarchical PFL (HPFL), an algorithm for deploying PFL over massive MEC networks. The UEs in HPFL are divided into multiple clusters, and the UEs in each cluster forward their local updates to the edge server (ES) synchronously for edge model a
+---
+  arXiv:2303.11319v1 | pub 2023-03-20 | upd 2023-03-20
+  T: Over-the-Air Federated Edge Learning with Error-Feedback One-Bit Quantization and Power Control
+  A: Yuding Liu, Dongzhu Liu, Guangxu Zhu, Qingjiang Shi, Caijun Zhong
+  C: cs.IT,eess.SP
+  ABS: Over-the-air federated edge learning (Air-FEEL) is a communication-efficient framework for distributed machine learning using training data distributed at edge devices. This framework enables all edge devices to transmit model updates simultaneously over the entire available bandwidth, allowing for over-the-air aggregation. A one-bit digital over-the-air aggregation (OBDA) scheme has been recently proposed, featuring one-bit gradient quantization at edge devices and majority-voting based decoding at the edge server. However, the low-resolution one-bit gradient quantization slows down the model convergence and leads to performance degradation. On the other hand, the aggregation errors caused 
+---
+  arXiv:2601.00418v2 | pub 2026-01-01 | upd 2026-05-20
+  T: Secure, Verifiable, and Scalable Multi-Client Data Sharing via Consensus-Based Privacy-Preserving Data Distribution
+  A: Prajwal Panth, Sahaj Raj Malla
+  C: cs.CR,cs.DC,cs.LG
+  ABS: We propose the Consensus-Based Privacy-Preserving Data Distribution (CPPDD) framework, a lightweight and post-setup autonomous protocol for secure multi-client data aggregation. The framework enforces unanimous-release confidentiality through a dual-layer protection mechanism that combines per-client affine masking with priority-driven sequential consensus locking. Decentralized integrity is verified via step (sigma_S) and data (sigma_D) checksums, facilitating autonomous malicious deviation detection and atomic abort without requiring persistent coordination. The design supports scalar, vector, and matrix payloads with O(N*D) computation and communication complexity, optional edge-server of
+---
+  arXiv:2308.06503v1 | pub 2023-08-12 | upd 2023-08-12
+  T: Integrated Sensing-Communication-Computation for Over-the-Air Edge AI Inference
+  A: Zeming Zhuang, Dingzhu Wen, Yuanming Shi, Guangxu Zhu, Sheng Wu, Dusit Niyato
+  C: cs.IT
+  ABS: Edge-device co-inference refers to deploying well-trained artificial intelligent (AI) models at the network edge under the cooperation of devices and edge servers for providing ambient intelligent services. For enhancing the utilization of limited network resources in edge-device co-inference tasks from a systematic view, we propose a task-oriented scheme of integrated sensing, computation and communication (ISCC) in this work. In this system, all devices sense a target from the same wide view to obtain homogeneous noise-corrupted sensory data, from which the local feature vectors are extracted. All local feature vectors are aggregated at the server using over-the-air computation (AirComp) i
+---
+  arXiv:2212.06596v2 | pub 2022-12-13 | upd 2023-07-05
+  T: Broadband Digital Over-the-Air Computation for Wireless Federated Edge Learning
+  A: Lizhao You, Xinbo Zhao, Rui Cao, Yulin Shao, Liqun Fu
+  C: cs.IT,eess.SP
+  ABS: This paper presents the first orthogonal frequency-division multiplexing(OFDM)-based digital over-the-air computation (AirComp) system for wireless federated edge learning, where multiple edge devices transmit model data simultaneously using non-orthogonal OFDM subcarriers, and the edge server aggregates data directly from the superimposed signal. Existing analog AirComp systems often assume perfect phase alignment via channel precoding and utilize uncoded analog transmission for model aggregation. In contrast, our digital AirComp system leverages digital modulation and channel codes to overcome phase asynchrony, thereby achieving accurate model aggregation for phase-asynchronous multi-user 
+---
+  arXiv:2011.06658v1 | pub 2020-10-30 | upd 2020-10-30
+  T: Fast Convergence Algorithm for Analog Federated Learning
+  A: Shuhao Xia, Jingyang Zhu, Yuhan Yang, Yong Zhou, Yuanming Shi, Wei Chen
+  C: cs.IT,cs.LG,eess.SP
+  ABS: In this paper, we consider federated learning (FL) over a noisy fading multiple access channel (MAC), where an edge server aggregates the local models transmitted by multiple end devices through over-the-air computation (AirComp). To realize efficient analog federated learning over wireless channels, we propose an AirComp-based FedSplit algorithm, where a threshold-based device selection scheme is adopted to achieve reliable local model uploading. In particular, we analyze the performance of the proposed algorithm and prove that the proposed algorithm linearly converges to the optimal solutions under the assumption that the objective function is strongly convex and smooth. We also characteri
+---
+  arXiv:2508.15185v1 | pub 2025-08-21 | upd 2025-08-21
+  T: Integrated Sensing, Communication, and Computation for Over-the-Air Federated Edge Learning
+  A: Dingzhu Wen, Sijing Xie, Xiaowen Cao, Yuanhao Cui, Jie Xu, Yuanming Shi
+  C: cs.IT,cs.LG
+  ABS: This paper studies an over-the-air federated edge learning (Air-FEEL) system with integrated sensing, communication, and computation (ISCC), in which one edge server coordinates multiple edge devices to wirelessly sense the objects and use the sensing data to collaboratively train a machine learning model for recognition tasks. In this system, over-the-air computation (AirComp) is employed to enable one-shot model aggregation from edge devices. Under this setup, we analyze the convergence behavior of the ISCC-enabled Air-FEEL in terms of the loss function degradation, by particularly taking into account the wireless sensing noise during the training data acquisition and the AirComp distortio
+---
+  arXiv:2104.09177v2 | pub 2021-04-19 | upd 2022-09-12
+  T: Research on Resource Allocation for Efficient Federated Learning
+  A: Jianyang Ren, Wanli Ni, Gaofeng Nie, Hui Tian
+  C: eess.SP
+  ABS: As a promising solution to achieve efficient learning among isolated data owners and solve data privacy issues, federated learning is receiving wide attention. Using the edge server as an intermediary can effectively collect sensor data, perform local model training, and upload model parameters for global aggregation. So this paper proposes a new framework for resource allocation in a hierarchical network supported by edge computing. In this framework, we minimize the weighted sum of system cost and learning cost by optimizing bandwidth, computing frequency, power allocation and subcarrier assignment. To solve this challenging mixed-integer non-linear problem, we first decouple the bandwidth
+---
+  arXiv:2607.17877v1 | pub 2026-07-20 | upd 2026-07-20
+  T: Task-Oriented Precoding for Edge Inference over Large-Scale MIMO Systems
+  A: Hongru Li, Zeyan Zhuang, Zixin Wang, Hengtao He, Shenghui Song, Jun Zhang
+  C: cs.IT,eess.SP
+  ABS: Future wireless networks are expected to support networked artificial intelligence (AI) services, where multiple devices transmit learned features to an edge server for distributed inference. This setting calls for task-oriented physical-layer optimization, where wireless transmission should preserve useful information for inference rather than only maximize the rate or reconstruct the transmitted signals. A key physical-layer control variable is the multiple-input multiple-output precoder, which determines how device features are shaped and combined over wireless channels. Existing task-oriented precoding methods typically adapt the precoder to instantaneous channel state information at the
+====================================================================================================
+QUERY: all:"secure aggregation" AND all:"hierarchical" AND all:"verification"  ->  0 results
+====================================================================================================
+QUERY: all:"aggregate signature" AND all:"federated learning"  ->  0 results
+====================================================================================================
+QUERY: abs:"publicly verifiable" AND abs:"federated learning" AND abs:"aggregation"  ->  0 results
+====================================================================================================
+QUERY: abs:"verification" AND abs:"model dimension" AND abs:"secure aggregation"  ->  0 results
+====================================================================================================
+QUERY: all:"edge-assisted federated learning" AND all:"verifiable"  ->  0 results
+DONE

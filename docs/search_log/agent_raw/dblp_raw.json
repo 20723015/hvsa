@@ -1,0 +1,42 @@
+{
+ "verifiable secure aggregation": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "hierarchical secure aggregation": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "hierarchical federated learning aggregation verification": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "homomorphic hash federated": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "verifiable federated learning edge": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "secure aggregation cloud edge": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "aggregation verification outsourcing": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ],
+ "threshold secure aggregation aggregator": [
+  {
+   "error": "Expecting value: line 1 column 1 (char 0)"
+  }
+ ]
+}

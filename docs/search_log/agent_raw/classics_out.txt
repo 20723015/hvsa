@@ -1,0 +1,171 @@
+====================================================================================================
+Q: VerifyNet Secure and Verifiable Federated Learning
+  - 10.1109/tifs.2019.2929409 | 2020 | IEEE Transactions on Information Forensics and Security | cites=784
+      T: VerifyNet: Secure and Verifiable Federated Learning
+      A: Xu, Li, Liu | type: journal-article
+  - 10.1109/tdsc.2023.3272338/mm1 | None |  | cites=0
+      T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”_supp1-3272338.pdf
+      A: Zhang | type: component
+  - 10.36227/techrxiv.21699644.v1 | 2022 |  | cites=0
+      T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+      A: Luo, Wang, Yan | type: posted-content
+  - 10.36227/techrxiv.21699644 | 2022 |  | cites=0
+      T: Comments on “VERSA: Verifiable Secure Aggregation for Cross-Device Federated Learning”
+      A: Luo, Wang, Yan | type: posted-content
+  - 10.21203/rs.3.rs-6827986/v1 | 2025 |  | cites=0
+      T: Enhanced Security Verifiable Secure Aggregation Scheme in Federated Learning
+      A: Yao, Han, Zhou | type: posted-content
+====================================================================================================
+Q: VeriFL Communication-Efficient and Fast Verifiable Aggregation for Federated Learning
+  - 10.1109/tifs.2020.3043139 | 2021 | IEEE Transactions on Information Forensics and Security | cites=308
+      T: VeriFL: Communication-Efficient and Fast Verifiable Aggregation for Federated Learning
+      A: Guo, Liu, Li | type: journal-article
+  - 10.3390/e25081125 | 2023 | Entropy | cites=10
+      T: Communication-Efficient and Privacy-Preserving Verifiable Aggregation for Federated Learning
+      A: Peng, Shen, Gao | type: journal-article
+  - 10.1016/j.ins.2025.122324 | 2025 | Information Sciences | cites=5
+      T: VCFL: Verifiable and communication-efficient federated learning against collusion attack for secure aggregation
+      A: Xie, Zhou, Chen | type: journal-article
+  - 10.2139/ssrn.4836339 | 2024 |  | cites=0
+      T: Towards Efficient and Verifiable Secure Aggregation for Federated Learning
+      A: Ming, Wang, Wang | type: posted-content
+  - 10.1109/iccc62609.2024.10942200 | 2024 | 2024 10th International Conference on Computer and Communications (ICCC) | cites=0
+      T: An Efficient Verifiable Aggregation Scheme with Privacy-Enhanced in Federated Learning
+      A: Li | type: proceedings-article
+====================================================================================================
+Q: Practical Secure Aggregation for Privacy-Preserving Machine Learning
+  - 10.1145/3625343.3625344 | 2023 | Proceedings of the 2023 Asia Conference on Artificial Intelligence, Machine Learning and Robotics | cites=3
+      T: Practical and Efficient Secure Aggregation for Privacy-Preserving Machine Learning
+      A: Zhang, Li, Luo | type: proceedings-article
+  - 10.36227/techrxiv.20004140 | 2022 |  | cites=0
+      T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+      A: Luo | type: posted-content
+  - 10.36227/techrxiv.20004140.v1 | 2022 |  | cites=0
+      T: FSSA: Efficient 3-Round Secure Aggregation for Privacy-Preserving Federated Learning
+      A: Luo | type: posted-content
+  - 10.1109/ecai50035.2020.9223127 | 2020 | 2020 12th International Conference on Electronics, Computers and Artificial Intelligence (ECAI) | cites=18
+      T: Privacy-Preserving Machine Learning Using Federated Learning and Secure Aggregation
+      A: Lia, Togan | type: proceedings-article
+  - 10.2139/ssrn.7360398 | 2026 |  | cites=0
+      T: Privacy-preserving and Secure Machine Learning for Distributed Computing
+      A: Bolledla | type: posted-content
+====================================================================================================
+Q: On-the-fly verification of rateless erasure codes for efficient content distribution
+  - 10.1109/secpri.2004.1301326 | None | IEEE Symposium on Security and Privacy, 2004. Proceedings. 2004 | cites=213
+      T: On-the-fly verification of rateless erasure codes for efficient content distribution
+      A: Krohn, Freedman, Mazieres | type: proceedings-article
+  - 10.1109/roedunet.2011.5993680 | 2011 | 2011 RoEduNet International Conference 10th Edition: Networking in Education and Research | cites=0
+      T: Performance evaluation of rateless erasure correcting codes for content distribution
+      A: Botos, Bota, Stef | type: proceedings-article
+  - 10.1109/glocom.2008.ecp.219 | 2008 | IEEE GLOBECOM 2008 - 2008 IEEE Global Telecommunications Conference | cites=0
+      T: New Rateless Sparse-Graph Codes with Dynamic Degree Distribution for Erasure Channels
+      A: Bao, Li | type: proceedings-article
+  - 10.1007/978-3-540-72606-7_115 | 2007 | Lecture Notes in Computer Science | cites=3
+      T: Outburst: Efficient Overlay Content Distribution with Rateless Codes
+      A: Wu, Li | type: book-chapter
+  - 10.1186/s12859-021-04318-x | 2021 | BMC Bioinformatics | cites=22
+      T: NOREC4DNA: using near-optimal rateless erasure codes for DNA storage
+      A: Schwarz, Freisleben | type: journal-article
+====================================================================================================
+Q: Secure Single-Server Aggregation with (Poly)Logarithmic Overhead
+  - 10.1145/3372297.3417885 | 2020 | Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications Security | cites=392
+      T: Secure Single-Server Aggregation with (Poly)Logarithmic Overhead
+      A: Bell, Bonawitz, Gascón | type: proceedings-article
+  - 10.1109/jiot.2024.3449705 | 2024 | IEEE Internet of Things Journal | cites=5
+      T: VSAFL: Verifiable and Secure Aggregation With (Poly) Logarithmic Overhead in Federated Learning
+      A: He, Zhou, Zhang | type: journal-article
+  - 10.1109/tce.2025.3533750 | 2025 | IEEE Transactions on Consumer Electronics | cites=6
+      T: Secure Aggregation With Logarithmic Overhead for Federated Learning in VANETs
+      A: Cui, Feng, Wang | type: journal-article
+  - 10.56553/popets-2024-0077 | 2024 | Proceedings on Privacy Enhancing Technologies | cites=13
+      T: MicroSecAgg: Streamlined Single-Server Secure Aggregation
+      A: Guo, Polychroniadou, Shi | type: journal-article
+  - 10.1016/j.comnet.2026.112350 | 2026 | Computer Networks | cites=0
+      T: FSSA: Fast secure single-server aggregation with optimal communication rounds
+      A: Luo, Al-Kuwari, Wang | type: journal-article
+====================================================================================================
+Q: ELSA Secure Aggregation for Federated Learning with Malicious Actors
+  - 10.1109/sp46215.2023.10179468 | 2023 | 2023 IEEE Symposium on Security and Privacy (SP) | cites=109
+      T: ELSA: Secure Aggregation for Federated Learning with Malicious Actors
+      A: Rathee, Shen, Wagh | type: proceedings-article
+  - 10.14711/thesis-991013222941803412 | None |  | cites=1
+      T: Secure embedding aggregation for cross-silo federated representation learning
+      A: Tang | type: dissertation
+  - 10.1109/tdsc.2024.3380669 | 2024 | IEEE Transactions on Dependable and Secure Computing | cites=10
+      T: Malicious-Resistant Non-Interactive Verifiable Aggregation for Federated Learning
+      A: Zhu, Gong, Zhang | type: journal-article
+  - 10.2139/ssrn.4693127 | 2024 |  | cites=0
+      T: Federated Learning Secure Model: A Framework for Malicious Clients Detection
+      A: Kolasa, Pilch, Mazurczyk | type: posted-content
+  - 10.46586/tches.v2025.i2.69-93 | 2025 | IACR Transactions on Cryptographic Hardware and Embedded Systems | cites=2
+      T: SeaFlame: Communication-Efficient Secure Aggregation for Federated Learning against Malicious Entities
+      A: Tang, Xu, Liao | type: journal-article
+====================================================================================================
+Q: EIFFeL Ensuring Integrity for Federated Learning
+  - 10.1145/3548606.3560611 | 2022 | Proceedings of the 2022 ACM SIGSAC Conference on Computer and Communications Security | cites=87
+      T: EIFFeL
+      A: Roy Chowdhury, Guo, Jha | type: proceedings-article
+  - 10.21275/sr24615150919 | 2023 | International Journal of Science and Research (IJSR) | cites=3
+      T: Ethical AI and Data Integrity: Ensuring Responsible AI Innovation Through Quantum - Resistant Algorithms and Federated Learning Paradigms
+      A: Joshi | type: journal-article
+  - 10.7717/peerjcs.1778/fig-2 | None |  | cites=0
+      T: Figure 2: Federated learning for ensuring data security and confidentiality in a smart healthcare unit.
+      A:  | type: component
+  - 10.1007/978-3-031-80949-1_11 | 2025 | Advances in Science, Technology &amp; Innovation | cites=0
+      T: Preserving Confidentiality and Ensuring Integrity: A Comprehensive Exploration of Federated Learning and Blockchain Integration for Secure Breast Cancer Detection
+      A: Tyagi, Srivastava, Sahana | type: book-chapter
+  - 10.2139/ssrn.5410050 | 2025 |  | cites=0
+      T: Federated Learning for BYOD-Enabled Mobile Mentorship: Ensuring Privacy in Cloud-Telecom Converged Networks
+      A: Bhavik | type: posted-content
+====================================================================================================
+Q: RoFL Robustness of Secure Federated Learning
+  - 10.1109/sp46215.2023.10179400 | 2023 | 2023 IEEE Symposium on Security and Privacy (SP) | cites=98
+      T: RoFL: Robustness of Secure Federated Learning
+      A: Lycklama, Burkhalter, Viand | type: proceedings-article
+  - 10.14711/thesis-hdl167715 | None |  | cites=0
+      T: Trustworthiness in Vertical Federated Learning: Privacy attacks, Robustness Vulnerabilities, and Secure Protocols
+      A: Yao | type: dissertation
+  - 10.1016/b978-0-44-319037-7.00013-2 | 2024 | Federated Learning | cites=3
+      T: Adversarial robustness in federated learning
+      A: Xie, Wang | type: book-chapter
+  - 10.1109/icdcsw56584.2022.00033 | 2022 | 2022 IEEE 42nd International Conference on Distributed Computing Systems Workshops (ICDCSW) | cites=0
+      T: ROFL: RObust privacy preserving Federated Learning
+      A: Chattopadhyay, Singh, Chattopadhyay | type: proceedings-article
+  - 10.1109/tdsc.2026.3671267 | 2026 | IEEE Transactions on Dependable and Secure Computing | cites=3
+      T: ClusterGuard: Secure Clustered Aggregation for Federated Learning With Robustness
+      A: Zhao, Wan, Guan | type: journal-article
+====================================================================================================
+Q: Verifiable Privacy-Preserving Aggregation in Federated Learning with Edge Computing
+  - 10.2139/ssrn.5018523 | 2024 |  | cites=1
+      T: Privacy-Preserving and Verifiable Federated Learning with Weighted Average Aggregation in Edge Computing
+      A: Niu, Kong, Chen | type: posted-content
+  - 10.1016/j.comcom.2026.108575 | 2026 | Computer Communications | cites=0
+      T: VDBFL: Verifiable privacy-preserving federated learning with decentralized Byzantine-robust aggregation in edge computing
+      A: Liu, Li, Shen | type: journal-article
+  - 10.1109/tsc.2024.3451183/mm1 | None |  | cites=0
+      T: PriVeriFL: Privacy-Preserving and Aggregation-Verifiable Federated Learning_supp1-3451183.pdf
+      A: Zhang | type: component
+  - 10.1016/j.jnca.2025.104201 | 2025 | Journal of Network and Computer Applications | cites=6
+      T: Privacy-preserving and Verifiable Federated Learning with weighted average aggregation in edge computing
+      A: Niu, Kong, Chen | type: journal-article
+  - 10.70675/fd526e45z439bz439bz86c4z2c941668ff3c | None |  | cites=0
+      T: Exploring Verifiable and Privacy-Preserving Federated Learning through Differential Privacy and Cryptographic Protocols
+      A: Aziz | type: dissertation
+====================================================================================================
+Q: Secure and Verifiable Federated Learning against poisoning attacks hierarchical
+  - 10.1016/j.compeleceng.2024.109900 | 2025 | Computers and Electrical Engineering | cites=6
+      T: Secure and verifiable federated learning against poisoning attacks in IoMT
+      A: Niu, Zhou, Wang | type: journal-article
+  - 10.1016/j.inffus.2026.104731 | 2027 | Information Fusion | cites=0
+      T: SecHFed: Achieving secure hierarchical federated learning against poisoning attacks without data assumptions
+      A: Gu, Zhu, Hu | type: journal-article
+  - 10.1016/j.knosys.2026.117026 | 2026 | Knowledge-Based Systems | cites=0
+      T: HFedM2ND: A secure hierarchical federated learning framework against poisoning attacks with lightweight multi-layer malicious-node detection
+      A: Ge, Bi, Li | type: journal-article
+  - 10.1145/3802927.3802963 | 2026 | Proceedings of the 2026 5th International Conference on Cryptography, Network Security and Communication Technology | cites=0
+      T: Verifiable Privacy-Preserving Federated Learning Against Poisoning Attacks
+      A: Zhang, Xue, Wang | type: proceedings-article
+  - 10.52202/079017-3314 | 2024 | Advances in Neural Information Processing Systems 37 | cites=30
+      T: RFLPA: A Robust Federated Learning Framework against Poisoning Attacks with Secure Aggregation
+      A: Mai, Yan, Pang | type: proceedings-article
+DONE
