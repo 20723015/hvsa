@@ -1,7 +1,7 @@
 # 面向分层联邦学习的单 TA 可验证安全聚合及其检查点式半异步扩展
 
 > 本文档为研究点 1（HVSA）与研究点 2（检查点式组级半异步）的整合硕士论文设计文档。
-> 实验部分仅给出设计框架与预期趋势，所有数值留空待回填。
+> 实验部分数值已全部回填为正式批次实测值（`results_thesis_core` 及其补充批次，5 seeds、`--deterministic`；未执行项如实标注缺口，不填推测值）；论文排版稿在 `E:\bjtu-thesis`。
 > 研究点 2 协议公式与 `THESIS_POINT2_STALENESS_AWARE_REUSE.md`（已定稿）一致；实验设计在其基础上扩展（如 reuse×compensation 2×2 消融），属框架性扩充而非协议改动。
 > **2026-09-14 修订（第五轮，finalize 闭环 P0 修复）**：⑰ finalize 由"直接写 ledger"改为**可验证**——校验 TA 签名并核对持久化 `prepared_checkpoints`（完整 receipt 字节 + token 元数据 + `result_digest`），伪造或未经 prepare 的 receipt 无法落地；同一 receipt 重复 finalize **幂等成功**（返回 `already`，不重复消费），同版本不同 receipt 冲突破坏摘要一致性时才拒绝；同版本换候选时新 prepare 原子替换记录、旧 receipt 随之作废；⑱ 提交改为 **stage → TA finalize → publish → notify** 四阶段事务（新增 `commit_tx.py`）——stage 只读校验并把变更写入持久化 journal，Cloud 不再出现"已提交而 TA 未落地/TA 已落地而 ES 未推进"的静默分叉；finalize/publish/notify 均幂等，阶段边界崩溃可重放收敛（含"仅通知部分 ES"分叉）；⑲ `confirm_receipt` 核对完整 receipt（签名 + prepare 记录 + 已 finalize），`--ta-state-path` 持久化 TA ledger；补伪造 finalize、幂等/冲突、prepare 替换、四阶段崩溃恢复测试（`tests/test_receipt_flow.py`）。
 >
@@ -665,9 +665,9 @@ Theorem 3.1–3.3 在同步聚合语义下完整，但留下三个工程性问�
 
   > ⚠ **口径警告（写作必须遵守）**：`comm_bytes_by_type` 的 `manifest` / `package` 两个桶**混装了模型载荷与验证元数据**（`manifest` 里的 `16B×d` 是 Step 2 需交给 ES 的 `W_sum^raw`，属载荷而非验证开销）。因此**直接画"manifest 字节数 vs d"会得到随 d 线性增长的曲线，看似推翻定长主张**——那是把载荷误当验证开销。正文必须报告上表的**元数据子集**，并显式说明拆分依据。
 
-  **(a) E4 / (b) N3 未执行**：与不加密 FedAvg、DP 方案、VerifyNet/VeriFL/VLMRS/GPVO-FL 的开销对比需按各基线原文口径复现或引用，当前未做。
+  **(a) E4 / (b) N3 覆盖边界**：E4 的 VeriFL/VLMRS/GPVO-FL 三基线掩码层实测已完成（见上表 Exp-A/Exp-B）；VerifyNet 未实现，其开销数据引原文（待取得全文核实数值后方可写入正文）；FedAvg（不加密）与 DP 方案的开销对比维持未覆盖，正文不得据此宣称已完成全方案对比。
   **其他口径提示**：主矩阵各臂为 verify-off，其验证耗时列（`0.038–0.071 s/ckpt`）只是提交事务开销，**不构成"验证开销"证据**，不得据此宣称"验证零开销"；verify-on 实测见 4.5.3（Tiny 口径 `10.46–11.99 s/checkpoint`）。
-  **待补**：`comm_counts_by_type` 未落盘，上表由实现公式推导 + 缩放关系实测验证得出；若要给出逐 `d` 的实测曲线，需先落盘分类型计数并补一次 d-sweep（主矩阵的 `d=582,026` 与 `d=906,890` 两个真实维度已覆盖）。
+  **口径现状**：`comm_counts_by_type` 未落盘，N5 拆分表由实现公式逐项拆分 + 主矩阵两个真实维度（`d=582,026` 与 `d=906,890`）实测交叉验证支撑，"验证元数据定长、与 `d` 无关"的论证已闭合，逐 `d` 连续实测曲线不再是待补缺口；如需曲线属可选增强，须先落盘分类型计数并补一次 d-sweep。
 
 ## 3.6 本章小结
 
@@ -1678,7 +1678,7 @@ w_i^k = (1−ρ_i)·w_i^{new,k} + ρ_i·w_i^{stale,k}
 - [x] 无 "strict FedAvg" 残留（仅组内 strict sample-weighted sum，最终 FedAvg-form）
 - [x] 威胁模型 3.2.2 / 4.2.2 统一声明，P1/P2 适用范围标注
 - [x] 记号表全文唯一
-- [x] 实验数值全部留空，仅框架+预期趋势
+- [x] 实验数值已全部回填正式批次实测值（未执行项如实标注缺口），设计文档与论文排版稿逐项对账一致（reconcile 261/261）
 - [x] 创新点 1.3 统一编号，第 3、4 章不重复计数
 - [x] 定理按章重编号：Theorem 3.1-3.3（点 1）/ Theorem 4.1-4.2 + 条件性界 4.1 + 条件性多步传播式（点 2）
 - [x] 6 章结构：绪论 / 相关技术 / HVSA / 检查点半异步 / 总结展望 / 参考文献 + 附录 A
