@@ -103,6 +103,7 @@ def dlg_invert(target, model, shape, device, iters, lr, tv_weight,
     """
     tgt_norm = target.norm().clamp_min(1e-12)
     best = None
+    losses = []
     for r in range(restarts):
         torch.manual_seed(seed * 1000 + r)
         x_dummy = torch.randn(*shape, device=device, requires_grad=True)
@@ -118,12 +119,13 @@ def dlg_invert(target, model, shape, device, iters, lr, tv_weight,
             opt.step()
             sched.step()
         loss_val = float(loss.detach())
+        losses.append(loss_val)
         if best is None or loss_val < best[0]:
             best = (loss_val, x_dummy.detach().clone(),
                     y_dummy.detach().clone())
         if verbose:
             print("      restart %d/%d  loss=%.6e" % (r + 1, restarts, loss_val))
-    return best[1], best[2]
+    return best[1], best[2], losses
 
 
 def to_img(x, shape_hw=(28, 28)):
@@ -141,6 +143,12 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--model", default="CNN", choices=["CNN", "Tiny", "MLP"])
     ap.add_argument("--restarts", type=int, default=4)
+    ap.add_argument("--deterministic", action="store_true",
+                    help="确定性模式：模型初始化固定种子 + CUDA 确定性算法"
+                         "（2026-09-28 收官批次 C 起冻结产物用此协议，保证逐位可复现）")
+    ap.add_argument("--export", default="",
+                    help="导出重建图像与逐样本指标的 .npz 路径"
+                         "（论文 N2 网格图数据源，2026-09-28 收官批次 C）")
     ap.add_argument("--verbose", action="store_true")
     args = ap.parse_args()
 
@@ -151,6 +159,17 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device:", device)
+    if args.deterministic:
+        import random
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
+        torch.cuda.manual_seed_all(args.seed)
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+        os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+        torch.use_deterministic_algorithms(True, warn_only=True)
+        print("deterministic mode: ON (seed=%d)" % args.seed)
 
     train_ds, _ = load_data("MNIST")
     ds = train_ds
@@ -158,6 +177,9 @@ def main():
     idx = torch.randperm(len(ds), generator=g)[:args.samples]
 
     _ctor = {"CNN": CNN_MNIST, "Tiny": Tiny_MNIST, "MLP": MLP_MNIST}[args.model]
+    if args.deterministic:
+        # 全局模型初始化也入种子协议（此前未定，是明文组跨运行漂移来源之一）
+        torch.manual_seed(args.seed)
     model = _ctor().to(device).eval()
     _dim = sum(pp.numel() for pp in model.parameters())
     print("model: %s  dim=%d" % (args.model, _dim))
@@ -172,6 +194,8 @@ def main():
     print("=" * 78)
 
     res_plain, res_masked = [], []
+    orig_imgs, recs_plain, recs_masked = [], [], []
+    losses_plain_all, losses_masked_all = [], []
     for si, i in enumerate(idx.tolist()):
         xs, ys = [], []
         for j in range(args.batch_size):
@@ -199,19 +223,24 @@ def main():
                      float(mask_t.norm() / target_plain.norm())))
 
         orig = to_img(x)
+        orig_imgs.append(orig)
 
-        rec_p, _ = dlg_invert(target_plain, model, x.shape, device,
-                              args.iters, args.lr, args.tv_weight,
-                              seed=si, restarts=args.restarts,
-                              verbose=args.verbose)
+        rec_p, _, losses_p = dlg_invert(target_plain, model, x.shape, device,
+                                        args.iters, args.lr, args.tv_weight,
+                                        seed=si, restarts=args.restarts,
+                                        verbose=args.verbose)
         img_p = to_img(rec_p)
+        recs_plain.append(img_p)
+        losses_plain_all.append(losses_p)
         p1, s1 = psnr(img_p, orig), ssim(img_p, orig)
 
-        rec_m, _ = dlg_invert(target_masked, model, x.shape, device,
-                              args.iters, args.lr, args.tv_weight,
-                              seed=si, restarts=args.restarts,
-                              verbose=args.verbose)
+        rec_m, _, losses_m = dlg_invert(target_masked, model, x.shape, device,
+                                        args.iters, args.lr, args.tv_weight,
+                                        seed=si, restarts=args.restarts,
+                                        verbose=args.verbose)
         img_m = to_img(rec_m)
+        recs_masked.append(img_m)
+        losses_masked_all.append(losses_m)
         p2, s2 = psnr(img_m, orig), ssim(img_m, orig)
 
         res_plain.append((p1, s1))
@@ -230,6 +259,22 @@ def main():
     print("  掩码组: PSNR = %6.2f ± %5.2f dB   SSIM = %.4f ± %.4f"
           % (ma[:, 0].mean(), ma[:, 0].std(ddof=1) if len(ma) > 1 else 0,
              ma[:, 1].mean(), ma[:, 1].std(ddof=1) if len(ma) > 1 else 0))
+    if args.export:
+        np.savez_compressed(
+            args.export,
+            model=args.model,
+            orig=np.array(orig_imgs),
+            rec_plain=np.array(recs_plain),
+            rec_masked=np.array(recs_masked),
+            plain_psnr=pa[:, 0], plain_ssim=pa[:, 1],
+            masked_psnr=ma[:, 0], masked_ssim=ma[:, 1],
+            samples=args.samples, iters=args.iters,
+            restarts=args.restarts, seed=args.seed,
+            batch_size=args.batch_size, tv_weight=args.tv_weight,
+            losses_plain=np.array(losses_plain_all),
+            losses_masked=np.array(losses_masked_all))
+        print("  导出: %s" % args.export)
+
     print()
     print("  判据 (3.5.4 预期, 以 SSIM 为准): 明文 SSIM>0.5 且 掩码 SSIM<0.10")
     ok = (pa[:, 1].mean() > 0.5) and (ma[:, 1].mean() < 0.10)
