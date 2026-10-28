@@ -44,7 +44,7 @@ print(f"  次数: {N_CALLS}, 平均: {mock_avg:.2f}ms, 总计: {sum(mock_times)*
 print("\n[DeepSeek Agent]")
 try:
     reasoner_ds = LLMReasoner(backend='deepseek',
-        api_key='sk-3e9e91fe32854905a95a6bce072c4457', model='deepseek-chat')
+        api_key=os.environ.get("HVSA_LLM_API_KEY", ""), model='deepseek-chat')
     ds_times = []
     for i in range(N_CALLS):
         t0 = time.perf_counter()

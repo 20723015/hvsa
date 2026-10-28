@@ -1,0 +1,12 @@
+{
+  "created_utc": "2026-10-25T04:22:40.808028+00:00",
+  "actual_worker_pid": 40008,
+  "flags": 16777736,
+  "launcher_exit_survival_probe_completed": true,
+  "command_job_member_count": 3,
+  "breakaway_probe_outer_job_member_count": 27,
+  "worker_in_command_job": false,
+  "worker_in_outer_job": true,
+  "interpretation": "Probe escaped immediate command job; actual worker is still in an outer job. This does not guarantee survival of app exit, operating-system exit or loss of power.",
+  "launch_record_sha256": "e6a0d04f32d99c29fec45df8d769e80d650bc60e32f0d9337706b3b938609cdb"
+}

@@ -392,6 +392,8 @@ def build_report(by, runs, allow_partial=False):
     n_runs = len(runs)
     det = {bool(r.get('deterministic')) for r in runs}
     hashes = {r.get('config_hash') for r in runs if r.get('config_hash')}
+    json_out = {'runs': n_runs, 'main_table': {}, 'comparisons': {},
+                'equal_time': {}, 'ablation': {}, 'equal_time_budget': {}}
     lines.append(f"- 纳入运行: {n_runs} 次 (已排除 repeat 与失败运行)")
     lines.append(f"- 严格确定性 (--deterministic): "
                  f"{'全部开启' if det == {True} else f'存在未开启: {det}'}")
@@ -414,6 +416,7 @@ def build_report(by, runs, allow_partial=False):
                 else:
                     flag = '' if (st['n'] >= 5 or allow_partial) else f" ⚠n={st['n']}"
                     cells.append(f"{st['mean']:.2f} ± {st['sd']:.2f}{flag}")
+                    json_out['main_table'][f"{arm}|{ds}|{part}"] = st
             lines.append(f"| {ds} | {part} | " + " | ".join(cells) + " |")
     lines.append("")
 
@@ -422,8 +425,6 @@ def build_report(by, runs, allow_partial=False):
     lines.append("")
     lines.append("| 比较 | 数据集 | 分布 | Δmean | 95% CI | dz | 正种子 | n | 判定 |")
     lines.append("|---|---|---|---|---|---|---|---|---|")
-    json_out = {'runs': n_runs, 'main_table': {}, 'comparisons': {},
-                'equal_time': {}, 'ablation': {}, 'equal_time_budget': {}}
     for hi, lo, short, desc in COMPARISONS:
         for ds in DATASETS:
             for part in PARTS:

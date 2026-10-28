@@ -324,11 +324,44 @@ class EdgeServer:
             logger.error(f"EdgeServer {self.id}: 验证失败! 收到空结果。")
             return False
 
+        # The protocol wire domain is a signed 64-bit vector of the public
+        # dimension. LHH.Hash alone also accepts floats (via int truncation),
+        # flattened matrices and arbitrary Python integers. Those representations
+        # must not reach verification/model reconstruction: adding the EC group
+        # order to an object-array coordinate preserves its hash but changes the
+        # reconstructed model. The int64 domain is much smaller than that order.
+        public_dim = getattr(self.lhh_pp, 'dim', None)
+        if public_dim is None and isinstance(self.lhh_pp, list):
+            public_dim = len(self.lhh_pp)
+        if (not isinstance(global_plaintext_model_int, np.ndarray)
+                or global_plaintext_model_int.dtype.kind != 'i'
+                or global_plaintext_model_int.dtype.itemsize != 8
+                or global_plaintext_model_int.shape != (public_dim,)):
+            logger.error(f"EdgeServer {self.id}: 聚合结果必须为公开维度的一维 int64 向量")
+            return False
+
         # 1. 刷新 ES 公钥列表
         try:
             self.all_es_pub_keys = self.ta.get_all_es_public_keys()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"EdgeServer {self.id}: 无法获取本轮 ES 验证名单: {e}")
+            return False
+
+        # RP1 is synchronous: the evidence must cover the full registered ES
+        # roster exactly once. Signatures authenticate individual entries but
+        # do not establish completeness or prevent duplicating a valid entry.
+        # Without this check the cloud could remove/add H_k and simultaneously
+        # subtract/add its known masked group sum, preserving the LHH equation.
+        try:
+            expected_edges = set(self.all_es_pub_keys)
+            evidence_edges = [item['edge_id'] for item in es_hash_list]
+            if (not expected_edges or len(evidence_edges) != len(expected_edges)
+                    or set(evidence_edges) != expected_edges):
+                logger.error(f"EdgeServer {self.id}: ES 证据名单缺失、重复或含未知组")
+                return False
+        except (TypeError, KeyError):
+            logger.error(f"EdgeServer {self.id}: ES 证据名单格式错误")
+            return False
 
         # 2. 验证签名并自行聚合哈希 (RHS)
         aggregated_h_all_rhs = None

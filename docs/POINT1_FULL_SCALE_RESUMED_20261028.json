@@ -1,0 +1,68 @@
+{
+  "human_requested_resume": true,
+  "observed_at": "2026-10-28T15:58:18.955580+08:00",
+  "coordinator": {
+    "pid": 78304,
+    "created": 1793173855.708664,
+    "command": [
+      "D:\\Anaconda\\python.exe",
+      "-u",
+      "E:\\hvsa\\tmp\\run_full_scale_detached_resume_20261028.py"
+    ]
+  },
+  "worker": {
+    "pid": 76524,
+    "created": 1793174010.3102465,
+    "command": [
+      "D:\\Anaconda\\python.exe",
+      "-u",
+      "-m",
+      "experiments.point1_compare.run_full_scale_point",
+      "--point",
+      "50,5,100000"
+    ]
+  },
+  "postprocessor": {
+    "pid": 77548,
+    "created": 1793174238.963653,
+    "command": [
+      "D:\\Anaconda\\python.exe",
+      "-u",
+      "E:\\hvsa\\tmp\\postprocess_full_scale_20261028.py"
+    ]
+  },
+  "accepted_calls": 325,
+  "accepted_cells": 25,
+  "remaining_fresh_calls": 39,
+  "full_calls": 364,
+  "full_cells": 28,
+  "batch": "E:/hvsa/results/point1_compare/20261028-155330-066916_full_scale_resume_batch/batch.json",
+  "run": "E:/hvsa/results/point1_compare/20261028-155332-676533_full_scale_point",
+  "log_directory": "E:\\hvsa\\tmp\\point1_full_scale_resume_20261028",
+  "postprocess_log_directory": "E:\\hvsa\\tmp\\point1_full_scale_postprocess_20261028",
+  "resume_tests_passed": 11,
+  "resume_test_receipt_sha256": "c113131d22bfb4ae87344956b655e950ed70d967848f0049db38d11647ac87b1",
+  "original_execution_sources_unchanged": true,
+  "completed_points_preserved": 6,
+  "initializations_returned": 3,
+  "old_prefixes_excluded": [
+    {
+      "d": 10000,
+      "calls": 24
+    },
+    {
+      "d": 100000,
+      "calls": 21
+    }
+  ],
+  "private_state_concatenated": false,
+  "power_operations": false,
+  "postprocess": "Wait exact parent exit, require normal full-batch validation, then actual 17 tests and full report/three PNGs.",
+  "postprocess_source_sha256": {
+    "tmp/postprocess_full_scale_20261028.py": "d8ed08628362ca233efa13f13b64285eed3e4afc52bc2b5b78b320749f32aeb2",
+    "tmp/launch_full_scale_postprocess_20261028.py": "1b0d38503bba4317b0214d8259a874587d602f4b6b717fe019fb994daf32cce9"
+  },
+  "final_actual_png_review_required": true,
+  "thesis_v8_generated": false,
+  "goal_complete": false
+}

@@ -223,8 +223,11 @@ def _outcome(**kw):
 
 
 def test_summarize_class_rejection_rate_and_inapplicable():
+    # 口径 (阶段 4.4): 拒绝率/达标数以"适用且已注入"(attempted 且
+    # applicable) 为分母; 不适用单元 (如 v=0 的 history_missing) 单列,
+    # 不得计入分母或记为"攻击被采纳"。
     recs = [_outcome() for _ in range(3)]
-    recs.append(_outcome(applicable=False, attempted=False, detected=False))
+    recs.append(_outcome(applicable=False, attempted=True, detected=False))
     recs.append(_outcome(detected=False, accepted=True, detection_stage='commit'))
     s = rae.summarize_class('raw_sum', recs, [{'tag': 't', 'attack': 'tamper_global',
                                                'units': 5, 'wall_s': 1, 'rc': 0}],
@@ -235,6 +238,11 @@ def test_summarize_class_rejection_rate_and_inapplicable():
     assert s['inapplicable'] == 1
     assert s['detection_stages'] == {'lhh': 3}
     assert s['attempted_by_attack'] == {'tamper_global': 4}
+    # 未注入 (attempted=False) 的记录既不计入分母也不算不适用
+    s2 = rae.summarize_class(
+        'x', [_outcome(), _outcome(applicable=False, attempted=False)],
+        [], units_wanted=1)
+    assert s2['attempted'] == 1 and s2['inapplicable'] == 0
 
 
 def test_attack_report_rejects_short_or_missing_member_coverage():
@@ -266,13 +274,17 @@ def test_summarize_clean_false_reject_rate():
 
 
 def test_attack_classes_cover_plan_four_families():
-    # 计划要求四类: raw sum / manifest+replay / 权重来源 / 补偿参数
+    # 计划要求四类: raw sum / manifest+replay / 权重来源 / 补偿参数;
+    # 阶段 4.4 新增两类: drop_replace (漏聚合) / history_missing (省略共识历史)
     assert set(rae.CLASSES) == {'raw_sum', 'manifest_replay',
-                                'weight_source', 'comp_param'}
+                                'weight_source', 'comp_param',
+                                'drop_replace', 'history_missing'}
     assert 'tamper_global' in rae.CLASSES['raw_sum'][0]
     assert 'replay' in rae.CLASSES['manifest_replay'][0]
     assert 'weight_forge' in rae.CLASSES['weight_source'][0]
     assert 'alpha_tamper' in rae.CLASSES['comp_param'][0]
+    assert 'drop_replace_pkg' in rae.CLASSES['drop_replace'][0]
+    assert 'history_missing' in rae.CLASSES['history_missing'][0]
     # 补偿参数类必须开 σ (>0) 才可能产生 alphas
     assert '--staleness-sigma' in rae.CLASSES['comp_param'][1]
     # 权重来源类必须使权重存在 (V-PDA 或 σ-agg)

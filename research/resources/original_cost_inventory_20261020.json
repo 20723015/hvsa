@@ -1,0 +1,199 @@
+{
+  "kind": "one_shot_decided_cost_batch",
+  "pid": 61400,
+  "started": "2026-10-20T21:23:51.558446+08:00",
+  "status": "completed_decided_minimum_matrix",
+  "scope": "four explicitly decided implementation workpoints; not an equal-security ranking",
+  "pilot": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261019-182131-848006_decided_baseline_pilot",
+    "manifest_sha256": "2dbd2dd593d3f2c3801e0fc9be78ff70d94b59f1f7efcfcb94ee1e8cafa310b8"
+  },
+  "decisions_sha256": "9a4d53c8865403682af04d4b560d6d10d0501f7ca740807ed5616f6976dfe0a8",
+  "critical_source_sha256": {
+    "user.py": "a199deaa009e1c929d83531385b163441c54dc5279d078541a61711c8ccdb561",
+    "edge.py": "95a59a086d4841349a930d1ceef29c168aedb1d900e55d4ab666cbda2168fd19",
+    "ta.py": "39af384997a0a1911dc6216b1614b98e40f7d0a7a4be12991d5ea3987241f1cc",
+    "cloud.py": "6422ae1317e754e7485079b748ada80f3829e3abce239af994a1b2cab751abf9",
+    "utils.py": "5f4ddd5ce692b188221119859201cc86ec2ddcc46045b143dd07628465d65673",
+    "experiments/point1_compare/configs/baseline_decisions_20261019.json": "9a4d53c8865403682af04d4b560d6d10d0501f7ca740807ed5616f6976dfe0a8",
+    "experiments/point1_compare/adapters/common.py": "c0b9767762a0e0823b5b84e55c0259b0b43ac1cb1add50f4a2e41f717776665b",
+    "experiments/point1_compare/adapters/hvsa_point1.py": "f24bd19c278d7a21278468a02fcb4a6dc8f1107a2434f11dc4d537566c084fb8",
+    "experiments/point1_compare/adapters/gpvo_full.py": "60f14ef8c9925c7e9ceafb334c5e17aff323f2ac60eb2de8b48fcd999f28caa6",
+    "experiments/point1_compare/adapters/gpvo_decided.py": "fc20e39ab2e054a7240cd7ae4d96bce161aece15f15b81b9c58007a8c44f23fb",
+    "experiments/point1_compare/adapters/vlmrs_fullgraph.py": "1d7ce9a0a20df9f3906be3da2af6a2add6986bb15fd9eb5ccef0d19e37713acd",
+    "experiments/point1_compare/adapters/vlmrs_verification.py": "3f7245936e44ec92c5e1665ea77d2d6115525ca98b3ef5cb684b49ccd9b67e0a",
+    "experiments/point1_compare/adapters/sharing.py": "55fde0b505a153b720f286ff876c55c016ef5eea0813cce71f4fa7ddd129ea98",
+    "experiments/point1_compare/artifacts.py": "c5247bff1693f3f6c7600f3a190d081d51b529bf2cedcd944223e2ce407f2c7d",
+    "experiments/point1_compare/run_decided_comparison.py": "1decebdf6d7861d5821b4bf166d42fbdb6a3dd7045ffcc68668c49645851a0bf",
+    "experiments/point1_compare/run_decided_batch.py": "75fa6eeb9cf646e30e73da4e9e927ffb0a3283debd52b24e505b4faeaee2e115",
+    "experiments/point1_compare/run_compare.py": "24c89998a985da4596b1aa0d3033c3f7b9675f8b06a886a5b5809c06ef788d51",
+    "experiments/point1_compare/run_performance.py": "65a34d8e08095f7794610c23ecd6a1c9ab3bf41aeb1a407b562de9543e2ca2e2",
+    "experiments/point1_compare/validate_results.py": "af3a5179fea3b7faf5c319e39699375458ffae641253e9edbc174b0a7abfa109",
+    "experiments/point1_compare/watchdog.py": "83fa01e8540ced88bca0cedcf5f0ccac220594b6177e3d7fbc3b09c24e1ecb2c"
+  },
+  "continued_from": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261019-185802-075350_decided_minimum_batch\\batch.json",
+    "sha256": "32c061ebd388fbfa27149303ed353c3e265ca98e449a5a8e3e73953f25deebed"
+  },
+  "continuation_source_sha256": "31fd1f7ad115a44b39bd3d3cbffc22c5cac193a357b36aadf27b943fe89ffe05",
+  "jobs": [
+    {
+      "name": "n20_d1000",
+      "point": [
+        20,
+        5,
+        1000
+      ],
+      "status": "completed",
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "-m",
+        "experiments.point1_compare.run_decided_comparison",
+        "--point",
+        "20,5,1000",
+        "--warmup",
+        "3",
+        "--repeats",
+        "10",
+        "--seed",
+        "42",
+        "--round-timeout",
+        "1800"
+      ],
+      "started": "2026-10-19T18:58:02.085891+08:00",
+      "pid": 22584,
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261019-185804-129508_decided_baseline_cost",
+      "returncode": 0,
+      "finished": "2026-10-19T19:10:05.291202+08:00",
+      "manifest_sha256": "84b59a7a5f86e86cd3ddf1eb2a1a4cac9747e8febfc5db16478056e17b6891fc",
+      "observations": 39,
+      "invalid_observations": 0,
+      "validation_problems": [],
+      "preserved_from": {
+        "path": "E:\\hvsa\\results\\point1_compare\\20261019-185802-075350_decided_minimum_batch\\batch.json",
+        "sha256": "32c061ebd388fbfa27149303ed353c3e265ca98e449a5a8e3e73953f25deebed"
+      }
+    },
+    {
+      "name": "n20_d7850",
+      "point": [
+        20,
+        5,
+        7850
+      ],
+      "status": "completed",
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "-m",
+        "experiments.point1_compare.run_decided_comparison",
+        "--point",
+        "20,5,7850",
+        "--warmup",
+        "3",
+        "--repeats",
+        "10",
+        "--seed",
+        "42",
+        "--round-timeout",
+        "1800"
+      ],
+      "started": "2026-10-19T19:10:06.782447+08:00",
+      "pid": 34980,
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261019-191008-839960_decided_baseline_cost",
+      "returncode": 0,
+      "finished": "2026-10-19T19:46:57.280266+08:00",
+      "manifest_sha256": "1e33c8530ea8930d63418aa60391cf23c5436d24005ec7b54a620b9a5cbd6448",
+      "observations": 39,
+      "invalid_observations": 0,
+      "validation_problems": [],
+      "preserved_from": {
+        "path": "E:\\hvsa\\results\\point1_compare\\20261019-185802-075350_decided_minimum_batch\\batch.json",
+        "sha256": "32c061ebd388fbfa27149303ed353c3e265ca98e449a5a8e3e73953f25deebed"
+      }
+    },
+    {
+      "name": "n50_d1000",
+      "point": [
+        50,
+        5,
+        1000
+      ],
+      "status": "completed",
+      "excluded_interrupted_attempt": {
+        "path": "E:\\hvsa\\results\\point1_compare\\20261019-194702-050153_decided_baseline_cost",
+        "status": "interrupted_by_user",
+        "manifest_sha256": "7c8bb9d26eed9da179ba0454b71d1d6125d8aac54b0a22814e52302253a18c17",
+        "completed_prefix_observations": 2,
+        "reason": "restart incomplete workpoint from fresh state; no paused timing is pooled"
+      },
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "-m",
+        "experiments.point1_compare.run_decided_comparison",
+        "--point",
+        "50,5,1000",
+        "--warmup",
+        "3",
+        "--repeats",
+        "10",
+        "--seed",
+        "42",
+        "--round-timeout",
+        "1800"
+      ],
+      "started": "2026-10-20T21:23:51.568964+08:00",
+      "pid": 56272,
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261020-212353-507188_decided_baseline_cost",
+      "returncode": 0,
+      "finished": "2026-10-20T21:50:23.377758+08:00",
+      "manifest_sha256": "783a449d97105a3a7cf48e8bed86fceecaa7b84e52fa24c5a59177b698a1491c",
+      "observations": 39,
+      "invalid_observations": 0,
+      "validation_problems": []
+    },
+    {
+      "name": "n50_d7850",
+      "point": [
+        50,
+        5,
+        7850
+      ],
+      "status": "completed",
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "-m",
+        "experiments.point1_compare.run_decided_comparison",
+        "--point",
+        "50,5,7850",
+        "--warmup",
+        "3",
+        "--repeats",
+        "10",
+        "--seed",
+        "42",
+        "--round-timeout",
+        "1800"
+      ],
+      "started": "2026-10-20T21:50:31.820532+08:00",
+      "pid": 58044,
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261020-215033-822800_decided_baseline_cost",
+      "returncode": 0,
+      "finished": "2026-10-20T22:37:45.872196+08:00",
+      "manifest_sha256": "db2b8a63ef9da569c2b60f79e514b5b68a480d7ffb938873aa24c9ca0945d01b",
+      "observations": 39,
+      "invalid_observations": 0,
+      "validation_problems": []
+    }
+  ],
+  "resume_policy": "reuse complete N20 points; restart incomplete N50 point; interrupted prefix excluded",
+  "finished": "2026-10-20T22:37:55.895080+08:00",
+  "executed_rounds": 156,
+  "warmup_rounds": 36,
+  "measured_rounds": 120,
+  "preserved_rounds": 78,
+  "newly_executed_rounds": 78
+}

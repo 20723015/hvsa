@@ -1,0 +1,239 @@
+{
+  "valid": true,
+  "errors": [],
+  "hash_checks": 37,
+  "local_markdown_link_checks": 46,
+  "audit_sha256": "95939988f23f1d9312b8073371fdd70b37a211e5cdf2f4c1a9eaca3a22671b84",
+  "links": [
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "../figures/point1_compare/20261026_training_controls/training_accuracy.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "../figures/point1_compare/20261026_training_controls/training_differences.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "POINT1_TRAINING_CONTROL_STAGE_20261026.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "../figures/point1_compare/20261026_training_controls/analysis.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "../figures/point1_compare/20261026_training_controls/analysis_manifest.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "../figures/point1_compare/20261026_training_controls/visual_review.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "POINT1_TRAINING_CONTROL_TEST_RECEIPT_20261026.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "target": "POINT1_TRAINING_CONTROL_EVIDENCE_AUDIT_20261026.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DECLARED_INTEGRITY_RESULTS_20261023.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DECIDED_MINIMUM_COST_COMPARISON_20261020.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261020_decided_minimum_matrix_v2/client_cost.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261020_decided_minimum_matrix_v2/system_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261020_decided_minimum_matrix_v2/communication.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261023_hvsa_paired40_v3/cumulative_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261023_hvsa_paired40_v3/amortized_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_HVSA_PAIRED40_RESULTS_20261023_v3.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_segmented_trajectories/multiround_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_segmented_trajectories/dropout_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_segmented_trajectories/dropout_communication.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_SEGMENTED_TRAJECTORY_RESULTS_20261024.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_SEGMENTED_TRAJECTORY_EVIDENCE_AUDIT_20261024.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_directed_dropout/directed_availability.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DIRECTED_DROPOUT_RESULTS_20261024.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DIRECTED_DROPOUT_EVIDENCE_AUDIT_20261024.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_large_multirun/cumulative_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_large_multirun/amortized_work.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261024_large_multirun/roundwise_work_wire.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_LARGE_MULTIRUN_RESULTS_20261024.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_LARGE_MULTIRUN_EVIDENCE_AUDIT_20261024.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_LARGE_DROPOUT_EVIDENCE_AUDIT_20261025.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261026_training_controls/training_accuracy.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "../figures/point1_compare/20261026_training_controls/training_differences.png",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_TRAINING_CONTROL_RESULTS_20261026.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_TRAINING_CONTROL_EVIDENCE_AUDIT_20261026.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_EXPERIMENT_DELIVERY_20261019.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_NEXT_STAGE_TASKS_20261019.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_BASELINE_DECISIONS_20261019.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DECIDED_MINIMUM_COST_COMPARISON_20261020.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_DECIDED_COST_EVIDENCE_AUDIT_20261020.json",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_IMPLEMENTATION_SUPPLEMENT_20261018.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_HVSA_COST_MATRIX_20261019.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_HVSA_MULTIRUN_DROPOUT_20261019.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_HVSA_ABLATION_20261018.md",
+      "exists": true
+    },
+    {
+      "document": "docs/POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261026_v7.md",
+      "target": "POINT1_MNIST_TRAINING_20261018.md",
+      "exists": true
+    }
+  ]
+}

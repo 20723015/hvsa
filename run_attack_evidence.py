@@ -48,6 +48,13 @@ CLASSES = {
     "comp_param": (["alpha_tamper"],
                    ["--vcm", "--gamma-vcm", "1.0", "--staleness-sigma", "0.5"],
                    "篡改 VCM 补偿衰减系数 α (公开规则复算)"),
+    "drop_replace": (["drop_replace_pkg"],
+                     ["--vcm", "--gamma-vcm", "1.0"],
+                     "漏聚合组包 (manifest 与 raw sum 口径不一致, LHH 检出)"),
+    "history_missing": (["history_missing"],
+                        ["--vcm", "--gamma-vcm", "1.0"],
+                        "省略共识历史 W(v) (Step 0b fail-closed 拒绝; "
+                        "v=0 结构性不可测, 注入分支已加 v≥1 守卫)"),
 }
 
 BASE = ["-K", "3", "--s-max", "3", "--reuse-rule", "none",
@@ -152,20 +159,29 @@ def run_class(cls, members, extra, args, root):
 
 
 def summarize_class(cls, recs, runs, units_wanted):
-    """按类别汇总: 攻击单元/检出/被采纳/不适用 + 阶段分布."""
-    attempted = [r for r in recs if r.get('attempted')]
-    inapplicable = [r for r in recs if not r.get('applicable')]
-    detected = [r for r in attempted if r.get('detected')]
-    accepted = [r for r in attempted if r.get('accepted') and not r.get('detected')]
+    """按类别汇总: 攻击单元/检出/被采纳/不适用 + 阶段分布.
+
+    验收口径 (计划: "各 100 **适用**单元"): 以实际注入 (attempted 且
+    applicable) 的单元计拒绝率与达标数; 不适用单元 (如 v=0 的
+    history_missing、selected<2 的 drop_replace) 单列, 不计入分母 ——
+    否则"未注入即提交"的单元会被误计为攻击被采纳。
+    """
+    injected = [r for r in recs
+                if r.get('attempted') and r.get('applicable')]
+    inapplicable = [r for r in recs
+                    if r.get('attempted') and not r.get('applicable')]
+    detected = [r for r in injected if r.get('detected')]
+    accepted = [r for r in injected
+                if r.get('accepted') and not r.get('detected')]
     stages = Counter(r.get('detection_stage') for r in detected)
-    attempted_by_attack = Counter(r.get('attack') for r in attempted)
-    rate = (len(detected) / len(attempted)) if attempted else None
+    attempted_by_attack = Counter(r.get('attack') for r in injected)
+    rate = (len(detected) / len(injected)) if injected else None
     return {
         'class': cls,
         'units_recorded': len(recs),
         'units_wanted': units_wanted,
-        'attempted': len(attempted),
-        'applicable': len(recs) - len(inapplicable),
+        'attempted': len(injected),
+        'applicable': len(injected),
         'inapplicable': len(inapplicable),
         'detected': len(detected),
         'accepted_attack': len(accepted),

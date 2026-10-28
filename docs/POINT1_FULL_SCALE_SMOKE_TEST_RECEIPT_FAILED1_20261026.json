@@ -1,0 +1,32 @@
+{
+  "run": "E:\\hvsa\\results\\point1_compare\\20261026-232022-822178_full_scale_smoke",
+  "manifest_sha256": "4c0d97b1c52537a912c07d6d3414a4b45a4356a2625d5dc602002d0eeda49e7b",
+  "exit_code": 1,
+  "passed": 9,
+  "failed": 8,
+  "skipped": 0,
+  "seconds": 53.456,
+  "command": [
+    "D:\\Anaconda\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_point1_full_scale.py",
+    "tests/test_point1_windows_artifact_io.py",
+    "-q",
+    "--junitxml=E:\\hvsa\\tmp\\point1_full_scale_tests_smoke\\junit.xml"
+  ],
+  "tested_sources": {
+    "experiments/point1_compare/full_scale_contract.py": "e463ef918ded87b298a1252eebf21947c604e8de8cc38190b4cd36856323157a",
+    "experiments/point1_compare/run_full_scale_point.py": "c3d16294bceed2b7282ed699b8493c903206bfc9c24833a27ed32452ca4d309b",
+    "experiments/point1_compare/run_full_scale_batch.py": "5f05fcac302ecf5d0f9cacf69f3fbfdf4ac739b85d72debd7103076fef725ddb",
+    "experiments/point1_compare/validate_full_scale.py": "0c6d0b3de429c717f72ef5e106e2e7443ed6d2d6f02ed90ffb9e4783c4dc3eb0",
+    "experiments/point1_compare/round_shards.py": "15d557e674f0c4fa690918ba235a1add0fca7d2da78673b03d8fdb6b5a317b76",
+    "experiments/point1_compare/multirun_environment.py": "70528a4f6c2849aaeb4d75c916f91f5de7583506dbacb5775176c41a576c7838",
+    "experiments/point1_compare/windows_artifact_io.py": "3bb14c9674b458ece0aecade8ec2f7d58119f12fd77ae5ca1997bf02370c9ef5",
+    "tests/test_point1_full_scale.py": "550532aaebfded8a8a284592ec5fdeb41d664cdffe93fa923eaa3ee02fda3db4"
+  },
+  "io_test_source_sha256": "2f036b5418488729447dcfa10c493c32c0f2b163cf50f5da13cce722058f5638",
+  "log_directory": "E:\\hvsa\\tmp\\point1_full_scale_tests_smoke",
+  "junit_sha256": "383bdb1bcb81c0a642a62e9c7af6acef4ef8464c032b3d9acaf858bec7e19069",
+  "stdout_sha256": "367f85ecdbf2fc83b4322801e365ca845bf3837fadbf1e9b65ea6934e8f56127"
+}

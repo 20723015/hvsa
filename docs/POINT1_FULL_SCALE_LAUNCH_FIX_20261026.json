@@ -1,0 +1,46 @@
+{
+  "reason": "Nested CREATE_BREAKAWAY_FROM_JOB denied by Windows; no child or protocol call started.",
+  "original_batch": "E:\\hvsa\\results\\point1_compare\\20261026-232853-269930_full_scale_batch\\batch.json",
+  "original_batch_sha256": "bc5b1194f7f11d8f76d938e488da210a241fd2bdefa2619dc68f057f2cd41c8d",
+  "original_lifecycle": {
+    "pid": 94416,
+    "state": "exception",
+    "start_utc": "2026-10-26T15:28:05.685264+00:00",
+    "wrapper_sha256": "eccaa3f78d1246c7a693bfbd96bbed90bc2cda1f274d672239275122a1fbaba3",
+    "return_code": 1,
+    "error": "PermissionError(13, '拒绝访问。', None, 5, None)",
+    "end_utc": "2026-10-26T15:28:53.595237+00:00"
+  },
+  "original_stdout_sha256": "fbd970b05ea064819237fa395172a4cb8c750c3f386183bd3e73b610a7b526ec",
+  "original_stderr_sha256": "6212e6e2f3c1f0e3eee10484d36d01766482dc78c65cb153a25a321448ee90c9",
+  "previous_point_calls": 0,
+  "protocol_or_parameters_changed": false,
+  "unchanged_tested_sources": {
+    "experiments/point1_compare/full_scale_contract.py": "e463ef918ded87b298a1252eebf21947c604e8de8cc38190b4cd36856323157a",
+    "experiments/point1_compare/run_full_scale_point.py": "c3d16294bceed2b7282ed699b8493c903206bfc9c24833a27ed32452ca4d309b",
+    "experiments/point1_compare/validate_full_scale.py": "0c6d0b3de429c717f72ef5e106e2e7443ed6d2d6f02ed90ffb9e4783c4dc3eb0",
+    "experiments/point1_compare/round_shards.py": "15d557e674f0c4fa690918ba235a1add0fca7d2da78673b03d8fdb6b5a317b76",
+    "experiments/point1_compare/multirun_environment.py": "70528a4f6c2849aaeb4d75c916f91f5de7583506dbacb5775176c41a576c7838",
+    "experiments/point1_compare/windows_artifact_io.py": "3bb14c9674b458ece0aecade8ec2f7d58119f12fd77ae5ca1997bf02370c9ef5",
+    "tests/test_point1_full_scale.py": "550532aaebfded8a8a284592ec5fdeb41d664cdffe93fa923eaa3ee02fda3db4"
+  },
+  "orchestration_source_before": "5f05fcac302ecf5d0f9cacf69f3fbfdf4ac739b85d72debd7103076fef725ddb",
+  "orchestration_source_after": "2ff7abf357167ceef5f9f6e06814ce18d4ff3baeeedc159744fd7788082a0d8a",
+  "orchestration_change": "Child detached-group flags 0x208; do not request breakaway a second time.",
+  "inherited_outer_job_limit_remains": true,
+  "not_guaranteed_to_survive_app_or_os_exit": true,
+  "nested_real_process_probe": {
+    "child_pid": 104040,
+    "child_creationflags": "0x00000208",
+    "return_code": 0,
+    "stdout": "NESTED_CHILD_COMPLETED\n",
+    "stderr": ""
+  },
+  "nested_probe_receipt_sha256": "ebb8b1c99f759ba6faa95d9a7c57a9486b4f69fd147bf6a6829b86bf49de0487",
+  "new_wrapper_sha256": "9a788d2148f71bf91d2da2fafc3c0e235777a57291ce169f2d6fd088232f0a67",
+  "new_launcher_sha256": "82390f83213eebafce9bd910d5c40e5a382b5daeff99396b647f657d20e34c32",
+  "core_smoke_tests": 17,
+  "core_smoke_reexecuted_after_launch_only_fix": false,
+  "launcher_gate_receipt_write_repaired": "Explicit UTF-8 for historical lifecycle; no point-worker restart.",
+  "current_coordinator_pid": 88616
+}

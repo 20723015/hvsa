@@ -401,8 +401,11 @@ class TrustedAuthority:
         cloud_server.receive_global_mask(pickle.dumps(msg_cs))
         logger.info(f"TA {self.id} (R{self._current_round}): 全局掩码已发送至 CloudServer。")
 
-        self.h_mask_all = LHH.Hash(self.lhh_pp, global_mask)
-        logger.info(f"TA {self.id} (R{self._current_round}): H_mask 计算完成。")
+        if self.enable_verification:
+            self.h_mask_all = LHH.Hash(self.lhh_pp, global_mask)
+            logger.info(f"TA {self.id} (R{self._current_round}): H_mask 计算完成。")
+        else:
+            self.h_mask_all = None
 
     # ============================================================
     #  研究点2: buffer/checkpoint 半异步方法

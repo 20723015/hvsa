@@ -1,0 +1,18 @@
+{
+  "status": "paused_by_user",
+  "checked_at": "2026-10-24T00:50:38.043979+08:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261023-232909-034709_decided_trajectories",
+  "completed": 252,
+  "e3_complete": 60,
+  "e4_complete": 192,
+  "planned": 300,
+  "remaining": 48,
+  "all_saved_integer_sums_recomputed_exact": true,
+  "source_freeze_unchanged": true,
+  "no_worker_active": true,
+  "manifest_sha256": "1a21400a04e2e594f44eca238a3deed833fef9d1da7c0ea5a9ec7e0747e7e8f9",
+  "saved_prefix_sha256": "3b54c258c2dbde1b70eb3707b6b2dbd793520fb5f0afefa4972772be4eda4248",
+  "stop_receipt_sha256": "f65e1d9413d8442cd20e9be0bb5c51d3d7b358a296b9f295747c8169259a2ca7",
+  "handoff_sha256": "6c35814eb71192f77f278da2ac7e6a7a7dee1831251aaf6f926462021d97fcc6",
+  "scope": "Paused-prefix storage/sums/order/source check only; not final 300-call artifact validation or security certification."
+}

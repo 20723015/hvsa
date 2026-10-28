@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-24T10:20:42.333081+08:00",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu_frequency_mhz": {
+    "current": 2483.0,
+    "min": 0.0,
+    "max": 3601.0
+  },
+  "battery": {
+    "percent": 71,
+    "power_plugged": false
+  },
+  "memory": {
+    "total": 33475293184,
+    "available": 17763639296
+  },
+  "scope": "Read-only observation during suffix epoch. No corresponding earlier snapshot; cannot establish cause of cross-epoch timing differences. No power/settings mutation."
+}

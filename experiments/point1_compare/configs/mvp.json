@@ -1,0 +1,33 @@
+{
+  "experiment": "point1_full_protocol_compare",
+  "stage": "mvp_e1_e5",
+  "description": "E1 正确性 + E5 篡改检查的 MVP 配置：HVSA/GPVO 双方案，小维度先行。VLMRS 待原文冻结后加入（计划阶段 D）。",
+  "schemes": ["hvsa", "gpvo"],
+  "vlmrs_status": "pending_formal_paper_freeze",
+  "correctness_seed": 42,
+  "warmup": 3,
+  "repeats": 10,
+  "verification": "full",
+  "aggregation": "equal_weight_integer_sum_then_average",
+  "e1": {
+    "dims": [32, 257],
+    "n_values": [10, 20],
+    "m_values": [2, 5],
+    "groups": 100,
+    "min_users_per_edge": 2,
+    "vector_mix": {"uniform": 0.8, "zero": 0.1, "boundary": 0.1},
+    "amplitude": 1000000000,
+    "full_dim_replay": {"n": 20, "m": 5, "d": 7850, "groups": 10}
+  },
+  "e5": {
+    "tamper_trials_per_type": 100,
+    "small_dim": 32,
+    "e5_session": {"n": 10, "m": 2},
+    "full_dim_checks": 10,
+    "full_dim_d": 7850
+  },
+  "rsa_commit_bits": 3072,
+  "rsa_commit_exp": "as_written_gt_N2",
+  "prg_round_token": "static_per_paper",
+  "output_root": "results/point1_compare"
+}

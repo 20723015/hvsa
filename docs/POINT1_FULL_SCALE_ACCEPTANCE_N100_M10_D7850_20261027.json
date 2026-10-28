@@ -1,0 +1,67 @@
+{
+  "scope": "One completed new full-E2 point only; full grid remains pending.",
+  "point": [
+    100,
+    10,
+    7850
+  ],
+  "run": "E:\\hvsa\\results\\point1_compare\\20261027-034503-444676_full_scale_point",
+  "manifest_sha256": "fb97ad2c6be2df01c7e78298ed8987afbed54da2ffd2caecaeb356d1216a08e9",
+  "own_archive_validation": {
+    "valid": true,
+    "errors": [],
+    "journal_sha256": "07b075af55399a2b1a9412e8d5e94fc24a8a8ba13bcebf7d9e36336afaab8dd6"
+  },
+  "coordinator_validated_marker": "VALIDATED=n100_m10_d7850",
+  "coordinator_log": "E:\\hvsa\\tmp\\point1_full_scale_detached_v2_20261026\\stdout.log",
+  "prefix_bytes": 14003,
+  "prefix_snapshot": "E:\\hvsa\\tmp\\p1fs_acceptance_n100_m10_d7850_20261027\\parent_stdout_prefix.log",
+  "prefix_sha256": "57c5a51f9783d5c4a9a39a4deb43efe7b348312c7a1f8825b1717c85796aef76",
+  "receipt_source_sha256": "0b8dd9c7150680d150fe4338d32f3b39754e8011fac432c84e0910d32110ccf3",
+  "calls": 26,
+  "warmup_calls": 6,
+  "measured_calls": 20,
+  "valid_calls": 26,
+  "initializations": 2,
+  "per_scheme": [
+    {
+      "scheme": "hvsa",
+      "calls": 13,
+      "warmups": 3,
+      "measured": 10,
+      "valid": 13,
+      "initialized_key_epochs": 1,
+      "designated_verifier_calls": 130
+    },
+    {
+      "scheme": "gpvo_zn2_fresh_prime_e",
+      "calls": 13,
+      "warmups": 3,
+      "measured": 10,
+      "valid": 13,
+      "initialized_key_epochs": 1,
+      "designated_verifier_calls": 130
+    }
+  ],
+  "designated_verifier_calls": 260,
+  "actual_model_recipient_records": 2600,
+  "observed_conditions": {
+    "snapshots": 56,
+    "all_observed_power_plugged": true,
+    "observed_power_transitions": 0,
+    "snapshots_with_other_protocol_workers": 0,
+    "reported_frequency_min_mhz": 2887.0,
+    "reported_frequency_max_mhz": 3601.0,
+    "temperature_and_frequency_locked": false,
+    "interpretation": "Read-only observations, not complete hardware-condition control."
+  },
+  "small_output_sha256": {
+    "correctness.json": "2937bf399362ec2f6eef880e00a5d102f9e18850a0951cc06b18d97240a3c603",
+    "journal.json": "07b075af55399a2b1a9412e8d5e94fc24a8a8ba13bcebf7d9e36336afaab8dd6",
+    "summary.csv": "1c979bf9ed71b77370c48ee109ce91ee1be542be488af20edd406cd19e9175b1",
+    "failures.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "large_phase_and_wire_rehashed_during_next_point": false,
+  "basis": "Point driver and coordinator already executed full streaming validation; receipt checks closed metadata and pinned small outputs.",
+  "crypto_scope": "Cryptographic checks ran in actual protocol calls; offline audit checks inputs/sums/verdict records, not fresh wire-proof execution."
+}

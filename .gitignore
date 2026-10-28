@@ -1,85 +1,44 @@
-# Virtual environment
-.venv/
-
-# Python
+# Raw runs, datasets, rendered media and local tooling stay outside code review.
 __pycache__/
-*.pyc
-*.pyo
-
-# IDE
+*.py[cod]
+.pytest_cache/
+.venv/
 .idea/
-
-# Datasets (too large)
+.vscode/
+.env
+.env.*
+*.pem
+*.key
 data/
-
-# Experiment outputs
-experiments/
-*.npz
-# 批跑/探索产物目录 (含 thesis-core 主表与安全证据批次; 可重跑生成, 不进版本库)
-/results_*/
-
-# 批跑日志与控制台重定向
-/*.log
-*.stdout.txt
-*.stderr.txt
-*.out
-point2_log_*.txt
-review_*_stdout.txt
-review_*_stderr.txt
-
-# 参考文献抽取文本 (由 PDF 重新生成)
-reference/.refext/
-
-# 结果注册表与汇总 (由 collect_point2_results.py 等重新生成)
-point2_results_registry.json
-point2_results_registry.md
-point2_matrix_summary.jsonl
-point2_matrix_report.md
-scratch_*.json
-
-# 本地 agent 工具与草稿
-.agents/
-.claude/
-agent/
-idea-stage/
-skills-lock.json
-
-# 外部全文/评审草稿转储
-_mafsa_fulltext.txt
-help_review.txt
-
-# Root-level generated figures and outputs
-/*.png
-/*.pdf
+results/
+results_*/
 figures/
 outputs/
-results/
-examples/exp_comparison_final.png
-examples/exp_comparison_final.pdf
-
-# Paper working files
+tmp/
+slides/
+projects/
+ppt_work/
+papers/
+reference/
 paper/
-
-# Paper build artifacts
-blocksys/*.aux
-blocksys/*.log
-blocksys/*.bbl
-blocksys/*.blg
-blocksys/*.out
-blocksys/*.toc
-blocksys/*.synctex*
-
-# Archives and temp
+.agents/
+.claude/
+.chart-data-*/
+*.npz
+*.npy
+*.pt
+*.pth
+*.sqlite*
+*.db
+*.log
+*.out
+*.stdout.txt
+*.stderr.txt
+*.png
+*.pdf
+*.pptx
+*.docx
 *.zip
 *.bin
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Misc experiment output patterns
-exp*_log_*.txt
-exp*_supplementary_*.txt
-exp*_CIFAR10_*.txt
-exp*_data_*.txt
-.zcodeignore

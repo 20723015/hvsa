@@ -1084,9 +1084,16 @@ def run_point2_simulation(args: argparse.Namespace):
                         # 减半保证注入值必然偏离公开规则复算值
                         bundle['alphas'] = [a * 0.5 for a in bundle['alphas']]
                 elif args.attack == 'history_missing':
-                    _h = dict(bundle['global_model_history'])
-                    _h.pop(bundle['checkpoint_version'], None)
-                    bundle['global_model_history'] = _h
+                    if bundle['checkpoint_version'] < 1:
+                        # v=0 时 ES 验证不消费共识历史 (edge.py Step 0b 的
+                        # history 检查仅 v>0 生效): 此时省略 W(0) 不改变任何
+                        # 验证结论, 攻击结构性不可测, 注入只会产生
+                        # "未注入却记为接受"的伪阳性单元 → 记不适用。
+                        _applicable = False
+                    else:
+                        _h = dict(bundle['global_model_history'])
+                        _h.pop(bundle['checkpoint_version'], None)
+                        bundle['global_model_history'] = _h
                 attack_applicable = _applicable
                 if _applicable:
                     logger.warning(f"Tick {current_tick}: [ATTACK] {args.attack}")

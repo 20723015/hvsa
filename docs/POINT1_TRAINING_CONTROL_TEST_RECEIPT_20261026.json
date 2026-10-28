@@ -1,0 +1,30 @@
+{
+  "time_utc": "2026-10-26T04:28:27.418719+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261026-041744-080291_training_controls",
+  "manifest_sha256": "0ed1b6aed91ecacb89856f12725717a7ca196ec7bb4eac15f27e14acda5c2e6a",
+  "exit_code": 0,
+  "passed": 10,
+  "failed": 0,
+  "skipped": 0,
+  "seconds": 35.797999999999995,
+  "command": [
+    "D:\\Anaconda\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_point1_training_controls.py",
+    "-q",
+    "--junitxml=E:\\hvsa\\tmp\\point1_training_control_tests_formal_20261026\\junit.xml"
+  ],
+  "tested_sources": {
+    "experiments/point1_compare/training_control_contract.py": "d30b02988be979487a3e3a62cf5dcc45e9d7ba54f91d3e4c65e3bc57365914ab",
+    "experiments/point1_compare/run_training_controls.py": "ebfb75a7640b364634d1b877a60e4ac49e56aac182dd1a394c3db29185dccc7b",
+    "experiments/point1_compare/validate_training_controls.py": "9fd89583e93cf602ca705a33c668b18785edfb1e6b946ecaa5f7baefffca1afc",
+    "experiments/point1_compare/report_training_controls.py": "e4f58594b2692c11e7c28ccddaafed3f08070cbee41c9596d4575f4781c1e4b0",
+    "experiments/point1_compare/artifacts.py": "c5247bff1693f3f6c7600f3a190d081d51b529bf2cedcd944223e2ce407f2c7d",
+    "experiments/point1_compare/multirun_environment.py": "70528a4f6c2849aaeb4d75c916f91f5de7583506dbacb5775176c41a576c7838",
+    "tests/test_point1_training_controls.py": "123500c16068a73c724d5cb111766b5c319fc3f46f8c86e11356e149370ffdc0"
+  },
+  "junit_sha256": "2ad58a2c345f5cc9e905222339338d7d039e00ca5888604e9e508f6e90d9313e",
+  "stdout_sha256": "3319d93137e74796d0c546b7d724495013067296006779afab400e60ada0ac6c",
+  "log_directory": "E:\\hvsa\\tmp\\point1_training_control_tests_formal_20261026"
+}

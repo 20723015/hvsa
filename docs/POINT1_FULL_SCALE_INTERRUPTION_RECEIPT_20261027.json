@@ -1,0 +1,186 @@
+{
+  "observed_utc": "2026-10-27T08:40:17.942306+00:00",
+  "old_batch": "E:\\hvsa\\results\\point1_compare\\20261026-233235-810859_full_scale_batch\\batch.json",
+  "old_batch_sha256": "3a51e19c1caa3898fda9ee7c4bf03d1e78c91257790bd0f6298ec0af661f813d",
+  "verified_no_full_scale_workers": true,
+  "recorded_parent_pid": 88616,
+  "recorded_child_pid": 108796,
+  "lifecycle": {
+    "pid": 88616,
+    "state": "running",
+    "start_utc": "2026-10-26T15:31:49.285776+00:00",
+    "wrapper_sha256": "9a788d2148f71bf91d2da2fafc3c0e235777a57291ce169f2d6fd088232f0a67"
+  },
+  "terminal_evidence": "Actual recorded processes absent and no other full-scale worker found; stored running flags are stale.",
+  "exit_reason": "Unknown: no normal-return or exception record; not inferred from observer interruption.",
+  "old_evidence_sha256": {
+    "E:\\hvsa\\results\\point1_compare\\20261026-233235-810859_full_scale_batch\\batch.json": "3a51e19c1caa3898fda9ee7c4bf03d1e78c91257790bd0f6298ec0af661f813d",
+    "E:\\hvsa\\tmp\\point1_full_scale_detached_v2_20261026\\lifecycle.json": "2985c46950b569b3086fe062b7b3ac4358cbd702784bbd169309abdc037c3806",
+    "E:\\hvsa\\tmp\\point1_full_scale_detached_v2_20261026\\stdout.log": "812631d32a48947224e5a44fac87eb98fe880ddc839e9fc80b83e73ade7ceb98",
+    "E:\\hvsa\\tmp\\point1_full_scale_detached_v2_20261026\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "E:\\hvsa\\results\\point1_compare\\20261026-233239-803036_full_scale_point\\manifest.json": "e360a41018a6c5f272cdc7f87cfeb4b5a3ea98d77d94e355fdab253cb55e31d2",
+    "E:\\hvsa\\results\\point1_compare\\20261026-233239-803036_full_scale_point\\journal.json": "5a4a5fb919e585e4db1b917c9351f1d35c6278b3fb536306d32e5f7dbe4518e0",
+    "E:\\hvsa\\results\\point1_compare\\20261027-010651-357006_full_scale_point\\manifest.json": "19bd3d03f5d2db15d6b329cd239e4c6487bb70a64dde08561d83b7a7ce57032c",
+    "E:\\hvsa\\results\\point1_compare\\20261027-010651-357006_full_scale_point\\journal.json": "b03e7413049c1a1a37170d33225158cbb1c1f1c3c7a8da780e80793bb49d6e60",
+    "E:\\hvsa\\results\\point1_compare\\20261027-032815-044266_full_scale_point\\manifest.json": "69185098d7b960f738772e6ed0752e0778f52c7b84bf51a669ebced824ff0332",
+    "E:\\hvsa\\results\\point1_compare\\20261027-032815-044266_full_scale_point\\journal.json": "8ed2e60d01f06e1f629096f20163194f0260eda039f0103675d2deb4921aab40",
+    "E:\\hvsa\\results\\point1_compare\\20261027-034503-444676_full_scale_point\\manifest.json": "fb97ad2c6be2df01c7e78298ed8987afbed54da2ffd2caecaeb356d1216a08e9",
+    "E:\\hvsa\\results\\point1_compare\\20261027-034503-444676_full_scale_point\\journal.json": "07b075af55399a2b1a9412e8d5e94fc24a8a8ba13bcebf7d9e36336afaab8dd6",
+    "E:\\hvsa\\results\\point1_compare\\20261027-044105-948090_full_scale_point\\manifest.json": "1e5541a073d3de86fefd3d4e63244ef9c94028c2af0515e27766a1ea4bc9dea1",
+    "E:\\hvsa\\results\\point1_compare\\20261027-044105-948090_full_scale_point\\journal.json": "ad16f24e8313671a8e8656023a4c8d59e1e7a835a15088a17388b748f9700f14"
+  },
+  "original_execution_source_sha256": {
+    "experiments/point1_compare/round_shards.py": "15d557e674f0c4fa690918ba235a1add0fca7d2da78673b03d8fdb6b5a317b76",
+    "experiments/point1_compare/adapters/sharing.py": "55fde0b505a153b720f286ff876c55c016ef5eea0813cce71f4fa7ddd129ea98",
+    "experiments/point1_compare/run_full_scale_point.py": "c3d16294bceed2b7282ed699b8493c903206bfc9c24833a27ed32452ca4d309b",
+    "experiments/point1_compare/multirun_environment.py": "70528a4f6c2849aaeb4d75c916f91f5de7583506dbacb5775176c41a576c7838",
+    "experiments/point1_compare/watchdog.py": "83fa01e8540ced88bca0cedcf5f0ccac220594b6177e3d7fbc3b09c24e1ecb2c",
+    "utils.py": "5f4ddd5ce692b188221119859201cc86ec2ddcc46045b143dd07628465d65673",
+    "experiments/point1_compare/windows_artifact_io.py": "3bb14c9674b458ece0aecade8ec2f7d58119f12fd77ae5ca1997bf02370c9ef5",
+    "experiments/point1_compare/adapters/hvsa_point1.py": "f24bd19c278d7a21278468a02fcb4a6dc8f1107a2434f11dc4d537566c084fb8",
+    "docs/POINT1_FULL_SCALE_SCAN_STAGE_20261026.md": "52f0a8cf714c26634e439653788d1d9bdb058ae638f747c719d44be4ceb567c5",
+    "experiments/point1_compare/run_decided_comparison.py": "1decebdf6d7861d5821b4bf166d42fbdb6a3dd7045ffcc68668c49645851a0bf",
+    "ta.py": "39af384997a0a1911dc6216b1614b98e40f7d0a7a4be12991d5ea3987241f1cc",
+    "experiments/point1_compare/adapters/gpvo_decided.py": "fc20e39ab2e054a7240cd7ae4d96bce161aece15f15b81b9c58007a8c44f23fb",
+    "experiments/point1_compare/run_compare.py": "24c89998a985da4596b1aa0d3033c3f7b9675f8b06a886a5b5809c06ef788d51",
+    "experiments/point1_compare/configs/baseline_decisions_20261019.json": "9a4d53c8865403682af04d4b560d6d10d0501f7ca740807ed5616f6976dfe0a8",
+    "experiments/point1_compare/artifacts.py": "c5247bff1693f3f6c7600f3a190d081d51b529bf2cedcd944223e2ce407f2c7d",
+    "experiments/point1_compare/adapters/vlmrs_fullgraph.py": "1d7ce9a0a20df9f3906be3da2af6a2add6986bb15fd9eb5ccef0d19e37713acd",
+    "cloud.py": "6422ae1317e754e7485079b748ada80f3829e3abce239af994a1b2cab751abf9",
+    "experiments/point1_compare/adapters/vlmrs_verification.py": "3f7245936e44ec92c5e1665ea77d2d6115525ca98b3ef5cb684b49ccd9b67e0a",
+    "experiments/point1_compare/run_performance.py": "65a34d8e08095f7794610c23ecd6a1c9ab3bf41aeb1a407b562de9543e2ca2e2",
+    "experiments/point1_compare/full_scale_contract.py": "e463ef918ded87b298a1252eebf21947c604e8de8cc38190b4cd36856323157a",
+    "user.py": "a199deaa009e1c929d83531385b163441c54dc5279d078541a61711c8ccdb561",
+    "edge.py": "95a59a086d4841349a930d1ceef29c168aedb1d900e55d4ab666cbda2168fd19",
+    "experiments/point1_compare/run_large_multirun.py": "c8467a22743cc3337fd0e8c8f4e45ef8dea53d4376775f970bc944b774ee7f72",
+    "experiments/point1_compare/adapters/gpvo_full.py": "60f14ef8c9925c7e9ceafb334c5e17aff323f2ac60eb2de8b48fcd999f28caa6",
+    "experiments/point1_compare/adapters/common.py": "c0b9767762a0e0823b5b84e55c0259b0b43ac1cb1add50f4a2e41f717776665b",
+    "experiments/point1_compare/validate_results.py": "af3a5179fea3b7faf5c319e39699375458ffae641253e9edbc174b0a7abfa109",
+    "tests/test_point1_full_scale.py": "550532aaebfded8a8a284592ec5fdeb41d664cdffe93fa923eaa3ee02fda3db4",
+    "experiments/point1_compare/run_decided_batch.py": "75fa6eeb9cf646e30e73da4e9e927ffb0a3283debd52b24e505b4faeaee2e115",
+    "experiments/point1_compare/validate_full_scale.py": "0c6d0b3de429c717f72ef5e106e2e7443ed6d2d6f02ed90ffb9e4783c4dc3eb0",
+    "experiments/point1_compare/run_full_scale_batch.py": "2ff7abf357167ceef5f9f6e06814ce18d4ff3baeeedc159744fd7788082a0d8a"
+  },
+  "preserved_original_cost_points": [
+    {
+      "point": [
+        20,
+        5,
+        7850
+      ],
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261019-191008-839960_decided_baseline_cost",
+      "manifest_sha256": "1e33c8530ea8930d63418aa60391cf23c5436d24005ec7b54a620b9a5cbd6448",
+      "calls": 39,
+      "warmup_calls": 9,
+      "measured_calls": 30,
+      "source": "preserved completed original cost point"
+    },
+    {
+      "point": [
+        50,
+        5,
+        1000
+      ],
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261020-212353-507188_decided_baseline_cost",
+      "manifest_sha256": "783a449d97105a3a7cf48e8bed86fceecaa7b84e52fa24c5a59177b698a1491c",
+      "calls": 39,
+      "warmup_calls": 9,
+      "measured_calls": 30,
+      "source": "preserved completed original cost point"
+    },
+    {
+      "point": [
+        50,
+        5,
+        7850
+      ],
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261020-215033-822800_decided_baseline_cost",
+      "manifest_sha256": "db2b8a63ef9da569c2b60f79e514b5b68a480d7ffb938873aa24c9ca0945d01b",
+      "calls": 39,
+      "warmup_calls": 9,
+      "measured_calls": 30,
+      "source": "preserved completed original cost point"
+    }
+  ],
+  "preserved_full_points": [
+    {
+      "name": "n100_m5_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261026-233239-803036_full_scale_point",
+      "manifest_sha256": "e360a41018a6c5f272cdc7f87cfeb4b5a3ea98d77d94e355fdab253cb55e31d2",
+      "calls": 39,
+      "warmup_calls": 9,
+      "measured_calls": 30,
+      "validation_errors": []
+    },
+    {
+      "name": "n200_m5_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-010651-357006_full_scale_point",
+      "manifest_sha256": "19bd3d03f5d2db15d6b329cd239e4c6487bb70a64dde08561d83b7a7ce57032c",
+      "calls": 39,
+      "warmup_calls": 9,
+      "measured_calls": 30,
+      "validation_errors": []
+    },
+    {
+      "name": "n100_m2_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-032815-044266_full_scale_point",
+      "manifest_sha256": "69185098d7b960f738772e6ed0752e0778f52c7b84bf51a669ebced824ff0332",
+      "calls": 26,
+      "warmup_calls": 6,
+      "measured_calls": 20,
+      "validation_errors": []
+    },
+    {
+      "name": "n100_m10_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-034503-444676_full_scale_point",
+      "manifest_sha256": "fb97ad2c6be2df01c7e78298ed8987afbed54da2ffd2caecaeb356d1216a08e9",
+      "calls": 26,
+      "warmup_calls": 6,
+      "measured_calls": 20,
+      "validation_errors": []
+    }
+  ],
+  "accepted_main_calls": 247,
+  "accepted_main_cells": 19,
+  "interrupted": {
+    "name": "n50_m5_d10000",
+    "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-044105-948090_full_scale_point",
+    "manifest_sha256": "1e5541a073d3de86fefd3d4e63244ef9c94028c2af0515e27766a1ea4bc9dea1",
+    "journal_sha256": "ad16f24e8313671a8e8656023a4c8d59e1e7a835a15088a17388b748f9700f14",
+    "journal_entries": 27,
+    "returned_calls": 24,
+    "valid_calls": 24,
+    "warmup_calls": 9,
+    "measured_calls": 15,
+    "designated_verifier_calls": 480,
+    "prefix_validation_errors": [],
+    "excluded_from_main_cost_and_call_denominators": true,
+    "recovery": "New full point, fresh initialization, all 3 warmups + 10 measured; do not append to lost private-key state."
+  },
+  "unchanged_scope": {
+    "cells": 28,
+    "calls": 364,
+    "warmups": 84,
+    "measured": 280,
+    "remaining_points": [
+      [
+        50,
+        5,
+        10000
+      ],
+      [
+        50,
+        5,
+        30000
+      ],
+      [
+        50,
+        5,
+        100000
+      ]
+    ],
+    "remaining_calls": 117
+  },
+  "audit_source": "E:\\hvsa\\tmp\\audit_interrupted_full_scale_20261027.py",
+  "audit_source_sha256": "e91b4a48f8623cc79c80ea718b3c602f77a3babbb038709af92305eed1bf7964"
+}

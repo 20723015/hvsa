@@ -1,0 +1,379 @@
+{
+  "created_utc": "2026-10-25T15:31:51.284341+00:00",
+  "passed": true,
+  "audit_sha256": "326babd639ecc17c317a76bb98b0c977dd939f9f32532d9e68758066ac19a60b",
+  "hash_checks": 42,
+  "local_markdown_links": 50,
+  "checked": [
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\manifest.json",
+      "sha256": "8422daf157685861ba22350d7a368f4dd9c9afbfc50447133ca84d8efe69f688"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\raw.jsonl",
+      "sha256": "fbde14288c5d870af09720c6fe233a94fd06c8ea94227a0472451163eb63271b"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\messages.csv",
+      "sha256": "b5966addc6e5cb0b476ae8a85732d4115453581a53b1a974c85451dc3714aac9"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\correctness.json",
+      "sha256": "7f5ec465da1368055cede43eed52aa42eebc5ed3ccdb890bc78762ad7b4bdccb"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\summary.csv",
+      "sha256": "5f5002b0b94efd43bda078da8d3f23a14cf0eb81cafbaffe85d4e0da35bf614d"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\failures.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\journal.json",
+      "sha256": "63d9ff9360811351b92d7e178957c59ab8c94614f414c4a60fc28d99b357520d"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "sha256": "bc67d233f2b7ca12a9a7eeadb62289f394200c4efd6e7529103967eccb9430cc"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "sha256": "235fd4c6c82788e48a38751ffa68c7b4e0c5c2c2d1f2574e52da9e2077d860c0"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v5.md",
+      "sha256": "54d402149c2eea525244d4f4c893e30c025a857a34d290cf6fc3dbe88f30a719"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_TEST_RECEIPT_20261025.json",
+      "sha256": "a09d4d75721a5fa5780c87a72a02ffcaea19422b4fa00276f77238dffd993d36"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_WINDOWS_ARTIFACT_IO_TEST_RECEIPT_20261025_v2.json",
+      "sha256": "4dad2530bc4f31a86c51534f6db534a711d5e6dbc0a946ba5a5610dc55696d43"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\analysis_manifest.json",
+      "sha256": "c2103470f6507d41160a86e6ecbcb098c42407049a5ec0958ab4724ca670da55"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\visual_review.json",
+      "sha256": "1b2fb4a91878aa6d5bf936f49c2d5b4714e2d5dd8d977c8c31322cf1132f1014"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\analysis.json",
+      "sha256": "a83b73c5171a84609cbd5429a46d13847a9e38dfd7a6decb8e05c50c7158687f"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\large_dropout_contract.py",
+      "sha256": "c087bf81d213ba17dccd5ef89bd1ac8d08d6292cb606b78365ad2afabe401ce4"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\report_large_dropout.py",
+      "sha256": "7921ad300a0bcdaf25681e862fcc75e5dd510561bf0573c06bcf6d5dc6fef1da"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\roles_by_dropout.png",
+      "sha256": "85c3619183eca7b7fdf69211c1e66031ff71052bfabf7c621800c8017a986baa"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\roles_by_dropout.svg",
+      "sha256": "d8dcbbaee1f1e7cfe9b5fdfec2b90b8764c882fa7138433d0f906a0493927a85"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\validate_large_dropout.py",
+      "sha256": "b2ef1da3c5dddf81c81dedb92c0946625d80cbcc069fb8b52e9e0133d8dbd726"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\wire_by_dropout.png",
+      "sha256": "5959be47c275569383c52244216cf1be3914b2cbfe2a5ba1105a175cb868fd75"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\wire_by_dropout.svg",
+      "sha256": "258437fb028cd11dad1c6b6ca6698f33be1ab64db5f6c00476ab884f1f50f1f5"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\work_by_dropout.png",
+      "sha256": "a3b4c38dac2ba5293f4ccd74c342c5da5155b5b823b248f42c441a5fa8597e67"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\work_by_dropout.svg",
+      "sha256": "a766bc79667a8d1b70be464cf76018e2af26dc9b21d075adb0b2116880820b03"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\visual_review.json",
+      "sha256": "1b2fb4a91878aa6d5bf936f49c2d5b4714e2d5dd8d977c8c31322cf1132f1014"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\delivery_source.py",
+      "sha256": "593ccc5fedbfd1ce7959cf6e462b1a1ef27bca6e863d71388d0f4ec2ab86446a"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\launch.json",
+      "sha256": "eb10fc56a49b6bd57ff01e9ff72ccd779dbe504f1ffad31762977be693f62bc1"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\lifecycle.json",
+      "sha256": "62901d01e69106ea3817ef4cec2d546f5c66098879bd60837e169388f8c43388"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_LARGE_DROPOUT_INTERRUPTION_RECEIPT_20261025.json",
+      "sha256": "89947b738c02bca6240e5318039d684a7a6f2dbc9b206e85d493a9fee218a13d"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md",
+      "sha256": "43d73e9789c24279308e5dda3366b00619cf74b3cf67dfd0be61c379cb91532b"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_LARGE_DROPOUT_LAUNCH_AUDIT_20261025.json",
+      "sha256": "6a95d3c709cf64bb3c79f6bb6798ad4ca99e19c20692878768ee5f38643891a8"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_LARGE_DROPOUT_RESTART_STAGE_20261025.md",
+      "sha256": "d929af927fcdd852fe63ece7b83f08a2592a371c174aedbaafca7dd308b90b33"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_LARGE_DROPOUT_SECOND_INTERRUPTION_20261025.json",
+      "sha256": "7d23dc6f12f4ec53370f091203f592dce549e00f1050dd20b21d55d3cc3f0c57"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\POINT1_WINDOWS_ARTIFACT_IO_TEST_RECEIPT_20261025_v2.json",
+      "sha256": "4dad2530bc4f31a86c51534f6db534a711d5e6dbc0a946ba5a5610dc55696d43"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\restart_provenance\\stdout.log",
+      "sha256": "676b74be88adb59a8fe2a0d8d710fb441d6f367dfa70d3051e17455d2c472866"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261024-205219-495276_large_dropout\\manifest.json",
+      "sha256": "d93a0925a51cbfe5846c31cfc84c358b1fd589781f910b2b9815c85ee87625ef"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261024-205219-495276_large_dropout\\journal.json",
+      "sha256": "8c204454d8cbc8ff4f736eb7e883b7344f61ad296a14665e9671b9bcc0fc70f5"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-120448-140273_large_dropout\\manifest.json",
+      "sha256": "6e78a5bbca08f3c1b14f9338524be2ec82ecbd8bceea8d469e434c585bb8822d"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261025-120448-140273_large_dropout\\journal.json",
+      "sha256": "fdd9d196233753d57d64949a1959bd53762986de4ddcce27e09b29dd1bbe1637"
+    },
+    {
+      "path": "E:\\hvsa\\docs\\POINT1_LARGE_MULTIRUN_RESULTS_20261024.md",
+      "sha256": "45204b61b8f46037ae016c6603dfb82e4cb4893f05b58c25424c17449e7ea2d7"
+    },
+    {
+      "path": "E:\\hvsa\\results\\point1_compare\\20261024-140222-824926_large_multirun\\manifest.json",
+      "sha256": "cfc26d910d4abd9002a02b3441f4513b98e888d22f07ee80227dc8b77085f878"
+    }
+  ],
+  "links": [
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESTART_STAGE_20261025.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_WINDOWS_ARTIFACT_IO_TEST_RECEIPT_20261025_v2.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\work_by_dropout.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\wire_by_dropout.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\roles_by_dropout.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_STAGE_20261024.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\manifest.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout\\checkpoints\\final_validation.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\analysis.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\analysis_manifest.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\visual_review.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_TEST_RECEIPT_20261025.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_EVIDENCE_AUDIT_20261025.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DECLARED_INTEGRITY_RESULTS_20261023.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DECIDED_MINIMUM_COST_COMPARISON_20261020.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261020_decided_minimum_matrix_v2\\client_cost.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261020_decided_minimum_matrix_v2\\system_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261020_decided_minimum_matrix_v2\\communication.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261023_hvsa_paired40_v3\\cumulative_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261023_hvsa_paired40_v3\\amortized_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_HVSA_PAIRED40_RESULTS_20261023_v3.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_segmented_trajectories\\multiround_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_segmented_trajectories\\dropout_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_segmented_trajectories\\dropout_communication.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_SEGMENTED_TRAJECTORY_RESULTS_20261024.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_SEGMENTED_TRAJECTORY_EVIDENCE_AUDIT_20261024.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_directed_dropout\\directed_availability.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DIRECTED_DROPOUT_RESULTS_20261024.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DIRECTED_DROPOUT_EVIDENCE_AUDIT_20261024.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_large_multirun\\cumulative_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_large_multirun\\amortized_work.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\figures\\point1_compare\\20261024_large_multirun\\roundwise_work_wire.png"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_MULTIRUN_RESULTS_20261024.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_MULTIRUN_EVIDENCE_AUDIT_20261024.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_EVIDENCE_AUDIT_20261025.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_EXPERIMENT_DELIVERY_20261019.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_NEXT_STAGE_TASKS_20261019.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_BASELINE_DECISIONS_20261019.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DECIDED_MINIMUM_COST_COMPARISON_20261020.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_DECIDED_COST_EVIDENCE_AUDIT_20261020.json"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_IMPLEMENTATION_SUPPLEMENT_20261018.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_HVSA_COST_MATRIX_20261019.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_HVSA_MULTIRUN_DROPOUT_20261019.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_HVSA_ABLATION_20261018.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+      "target": "E:\\hvsa\\docs\\POINT1_MNIST_TRAINING_20261018.md"
+    },
+    {
+      "document": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESTART_STAGE_20261025.md",
+      "target": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_STAGE_20261024.md"
+    }
+  ]
+}

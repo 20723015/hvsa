@@ -16,7 +16,8 @@ from datetime import datetime
 
 ROOT = r"E:\hvsa"
 OUT = os.path.join(ROOT, "results_thesis_core_attack")
-CLASSES = ["raw_sum", "manifest_replay", "weight_source", "comp_param", "clean"]
+CLASSES = ["raw_sum", "manifest_replay", "weight_source", "comp_param",
+           "drop_replace", "history_missing", "clean"]
 
 
 def main():

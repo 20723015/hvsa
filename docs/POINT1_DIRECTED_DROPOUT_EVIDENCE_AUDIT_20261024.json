@@ -1,0 +1,95 @@
+{
+  "created_utc": "2026-10-24T05:24:55.325623+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261024-130537-130119_directed_dropout",
+  "source_files": {
+    "manifest.json": "af5eff83b2f1008446aa0973e31d54b487011b283b0eed8f8d1888d087550b8b",
+    "raw.jsonl": "0f36c3ee872bd6bedb2a9c93259c5de6b3e63326b7916e41fc9d558b47e38d61",
+    "messages.csv": "5a2a7dc73b9d0b73acce2cce68dc1188916ab2857554a83093027d0e0cc97928",
+    "correctness.json": "b93b867cfc5c895af0c112c2265b582b9573c32b98c6aa63fc3e1af31b044097",
+    "summary.csv": "8cfbe7be19be1d75e19c0a4fe948b38e2d924ed40907eda32d988cb4c6f61fbf",
+    "failures.jsonl": "44c866d6af398af5051bf8245c4fad53616b6e9e7d8e5938b47991f5ed493bef"
+  },
+  "records": 108,
+  "correct_full_verified": 87,
+  "unavailable": 21,
+  "unexpected_outcomes": 0,
+  "common_input_pools": 3,
+  "initializations": 3,
+  "designated_verifier_calls": 717,
+  "unavailable_is_not_tamper_rejection": true,
+  "zero_recipient_complete_rounds": [
+    {
+      "scheme": "gpvo_zn2_fresh_prime_e",
+      "index": 0,
+      "case": "all_after"
+    },
+    {
+      "scheme": "hvsa",
+      "index": 0,
+      "case": "all_after"
+    },
+    {
+      "scheme": "hvsa",
+      "index": 1,
+      "case": "all_after"
+    },
+    {
+      "scheme": "gpvo_zn2_fresh_prime_e",
+      "index": 1,
+      "case": "all_after"
+    },
+    {
+      "scheme": "hvsa",
+      "index": 2,
+      "case": "all_after"
+    },
+    {
+      "scheme": "gpvo_zn2_fresh_prime_e",
+      "index": 2,
+      "case": "all_after"
+    }
+  ],
+  "actual_validator_sha256": "5321b7c87fed320b07defc0f2f925fedcef1902d5b7327645288b495b553a5fd",
+  "validator_revision_artifacts": {
+    "derivations/validate_directed_dropout_v2.py": "061e0578c182a9e403edfd3048f6730fbd557393a72ce8b119fc7e5fe604fdac",
+    "derivations/validate_directed_dropout_v3.py": "2ff19552caa65c97ef03b6a798fedfc9545985e9798d23524e8578f530827c9f",
+    "derivations/validate_directed_dropout_v4.py": "5321b7c87fed320b07defc0f2f925fedcef1902d5b7327645288b495b553a5fd",
+    "derivations/validator_revision.json": "d13ac8f78499fd16f71861f630b9b6f07a054bad33404b0931094bd90b28e13a",
+    "derivations/validator_revision_v3.json": "767d0903caee5c797514eccfb3767e4f228ab604fc65118a1e511008557b5662",
+    "derivations/validator_revision_v4.json": "760c572f9fded040ab600f7130b818b9c103ea3bca9f8c0fe9a7ea2e9b935fb8"
+  },
+  "source_protocol_unchanged": true,
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261024_directed_dropout\\analysis_manifest.json",
+    "sha256": "58baf277366a1080861551e30908459f8a102e5d25a596443273e449683bf51f"
+  },
+  "test_receipt": {
+    "path": "E:\\hvsa\\docs\\POINT1_DIRECTED_DROPOUT_TEST_RECEIPT_20261024.json",
+    "sha256": "93ad192c7122e1da9bab00cbf02d4d46156565dc064dc174210d9b7607f9351a",
+    "passed": 9
+  },
+  "visual_review": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261024_directed_dropout\\visual_review.json",
+    "sha256": "c9413b0e350f4c75e5e92ae53013a55797a3b529b45264ad0d43bcffcf1815e0"
+  },
+  "result_report": {
+    "path": "E:\\hvsa\\docs\\POINT1_DIRECTED_DROPOUT_RESULTS_20261024.md",
+    "sha256": "d19b865cd74fb29408c82f02016593a078ae82223e302c9765689ba9e5c5b824"
+  },
+  "thesis_v4": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v4.md",
+    "sha256": "67501526c31b42ef7273c043528207d3101375279f679b37203ac82bc625b6cd"
+  },
+  "prior_thesis_v3_unchanged": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v3.md",
+    "sha256": "102622670075ee37cb4bdbde8e5b7e8a7d0d9fcc430c6cfd2f20f1f2447446d0"
+  },
+  "paused_manifest_unchanged": "1a21400a04e2e594f44eca238a3deed833fef9d1da7c0ea5a9ec7e0747e7e8f9",
+  "paused_prefix_unchanged": "3b54c258c2dbde1b70eb3707b6b2dbd793520fb5f0afefa4972772be4eda4248",
+  "scope": "Directed functional cases; not random success probability, performance ranking or security-equivalence/SOTA proof.",
+  "outstanding": [
+    "Uniform-condition continuous performance",
+    "N50/d7850 three-scheme 50 rounds",
+    "N100/d7850 dropout matrix"
+  ]
+}

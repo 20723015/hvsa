@@ -1,0 +1,3 @@
+# Frozen scientific source inventories hash file bytes, including line endings.
+# Preserve those bytes when the code-review snapshot is checked out elsewhere.
+* -text
