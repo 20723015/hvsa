@@ -1,0 +1,59 @@
+{
+  "created_utc": "2026-10-24T11:36:11.781904+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261024-140222-824926_large_multirun",
+  "manifest_sha256": "cfc26d910d4abd9002a02b3441f4513b98e888d22f07ee80227dc8b77085f878",
+  "output_sha256": {
+    "raw.jsonl": "e35eb31e326a1f2b67ca8faa487352d881a57e42fdd169722a47e1b36de4565e",
+    "messages.csv": "920f59cdc4e2155b6a678c6c951717a00fc7a02686c6c146638334c640982e83",
+    "correctness.json": "43ced980bc5085e90ed12fc5af877bb39f297b155b2d98e05acc200ad68aeb26",
+    "summary.csv": "a884e5d02ec7a3d73eda6c208de64d1a84b6f5552bb9b174897a47d6a9f1e123",
+    "failures.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "journal.json": "b7a1c20e3c3ba519ca5843f44e0acd4334837a2f4c6bca135027b777d23fe068"
+  },
+  "records": 300,
+  "valid_aggregates": 300,
+  "unavailable": 0,
+  "initializations": 6,
+  "designated_verifier_calls": 5000,
+  "observed_conditions": {
+    "snapshots": 612,
+    "all_observed_power_plugged": true,
+    "observed_power_transitions": 0,
+    "snapshots_with_other_protocol_workers": 0,
+    "reported_frequency_min_mhz": 2887.0,
+    "reported_frequency_max_mhz": 3601.0,
+    "temperature_and_frequency_locked": false,
+    "interpretation": "Read-only observations, not complete hardware-condition control."
+  },
+  "source_protocol_unchanged": true,
+  "report": {
+    "path": "E:\\hvsa\\docs\\POINT1_LARGE_MULTIRUN_RESULTS_20261024.md",
+    "sha256": "45204b61b8f46037ae016c6603dfb82e4cb4893f05b58c25424c17449e7ea2d7"
+  },
+  "thesis_v5": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v5.md",
+    "sha256": "54d402149c2eea525244d4f4c893e30c025a857a34d290cf6fc3dbe88f30a719"
+  },
+  "prior_thesis_v4_unchanged": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v4.md",
+    "sha256": "67501526c31b42ef7273c043528207d3101375279f679b37203ac82bc625b6cd"
+  },
+  "tests": {
+    "path": "E:\\hvsa\\docs\\POINT1_LARGE_MULTIRUN_TEST_RECEIPT_20261024.json",
+    "sha256": "ced4cf0e4dc3724aa048b41007e30cb728d6a38be95bad1897930ebc86e18d67",
+    "passed": 10
+  },
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261024_large_multirun\\analysis_manifest.json",
+    "sha256": "caae8a3742e8693feba810a74f31a4df4e44daebb6e62ee6b6dc8848bdb127a1"
+  },
+  "visual_review": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261024_large_multirun\\visual_review.json",
+    "sha256": "0b8495e5efb74fad975a9034af653860ef222aab593a015d99858e0844c30e94"
+  },
+  "outstanding": [
+    "N100/d7850 staged dropout",
+    "E4 single-state monitored-condition traces"
+  ],
+  "scope": "One actual continuous paired trace per scheme; no extrapolation or security-equivalence/SOTA claim."
+}

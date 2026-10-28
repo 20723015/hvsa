@@ -1,0 +1,29 @@
+{
+  "created_at": "2026-10-23T22:15:56.595590+08:00",
+  "status": "passed",
+  "kind": "Archive and analysis consistency receipt, not a security certificate",
+  "run_manifest": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261023-204145-042317_decided_integrity\\manifest.json",
+    "sha256": "f8b377fa55d0bcbcc9ced8dc75c3369a3a744cec2fcc3c2136b0456b55c1bce6"
+  },
+  "honest_contexts": 232,
+  "mutation_calls": 1320,
+  "lifecycle_diagnostics": 3,
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261023_declared_integrity\\analysis_manifest.json",
+    "sha256": "70189628a61b5c765343b0b75c140a7eab857a30bef2442e7174fc7fd768625e"
+  },
+  "report": {
+    "path": "E:\\hvsa\\docs\\POINT1_DECLARED_INTEGRITY_RESULTS_20261023.md",
+    "sha256": "d288cb3ca6b55f7e3db08cda588d4810158960dc2e0342e066c01dd486cf7fa2"
+  },
+  "thesis_draft": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261023.md",
+    "sha256": "b229ad193fc686419648c3843b1c46f97e9b65914d941f3360b0a748b9a122d3"
+  },
+  "test_receipt": {
+    "path": "E:\\hvsa\\docs\\POINT1_DECLARED_INTEGRITY_TEST_RECEIPT_20261023.json",
+    "sha256": "f4081f1187ead241dede14b06fb932111c806a453c854940d9bf23b55588c583"
+  },
+  "scope": "Strict completed-run validation followed by current protocol/source, raw-output and final-analysis digest checks; no protocols rerun for this receipt."
+}

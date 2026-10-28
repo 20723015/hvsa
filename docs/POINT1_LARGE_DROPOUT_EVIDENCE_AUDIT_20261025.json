@@ -1,0 +1,105 @@
+{
+  "created_utc": "2026-10-25T15:30:43.764495+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261025-134815-519112_large_dropout",
+  "manifest_sha256": "8422daf157685861ba22350d7a368f4dd9c9afbfc50447133ca84d8efe69f688",
+  "output_sha256": {
+    "raw.jsonl": "fbde14288c5d870af09720c6fe233a94fd06c8ea94227a0472451163eb63271b",
+    "messages.csv": "b5966addc6e5cb0b476ae8a85732d4115453581a53b1a974c85451dc3714aac9",
+    "correctness.json": "7f5ec465da1368055cede43eed52aa42eebc5ed3ccdb890bc78762ad7b4bdccb",
+    "summary.csv": "5f5002b0b94efd43bda078da8d3f23a14cf0eb81cafbaffe85d4e0da35bf614d",
+    "failures.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "journal.json": "63d9ff9360811351b92d7e178957c59ab8c94614f414c4a60fc28d99b357520d"
+  },
+  "records": 240,
+  "valid_aggregates": 240,
+  "unavailable": 0,
+  "matches_expected": 240,
+  "initializations": 24,
+  "designated_verifier_calls": 7600,
+  "observed_conditions": {
+    "snapshots": 528,
+    "all_observed_power_plugged": true,
+    "observed_power_transitions": 0,
+    "snapshots_with_other_protocol_workers": 0,
+    "reported_frequency_min_mhz": 2887.0,
+    "reported_frequency_max_mhz": 3601.0,
+    "temperature_and_frequency_locked": false,
+    "interpretation": "Read-only observations, not complete hardware-condition control."
+  },
+  "source_protocol_unchanged": true,
+  "report": {
+    "path": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_RESULTS_20261025.md",
+    "sha256": "bc67d233f2b7ca12a9a7eeadb62289f394200c4efd6e7529103967eccb9430cc"
+  },
+  "thesis_v6": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261025_v6.md",
+    "sha256": "235fd4c6c82788e48a38751ffa68c7b4e0c5c2c2d1f2574e52da9e2077d860c0"
+  },
+  "prior_thesis_v5_unchanged": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261024_v5.md",
+    "sha256": "54d402149c2eea525244d4f4c893e30c025a857a34d290cf6fc3dbe88f30a719"
+  },
+  "tests": {
+    "path": "E:\\hvsa\\docs\\POINT1_LARGE_DROPOUT_TEST_RECEIPT_20261025.json",
+    "sha256": "a09d4d75721a5fa5780c87a72a02ffcaea19422b4fa00276f77238dffd993d36",
+    "passed": 12
+  },
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\analysis_manifest.json",
+    "sha256": "c2103470f6507d41160a86e6ecbcb098c42407049a5ec0958ab4724ca670da55"
+  },
+  "visual_review": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261025_large_dropout\\visual_review.json",
+    "sha256": "1b2fb4a91878aa6d5bf936f49c2d5b4714e2d5dd8d977c8c31322cf1132f1014"
+  },
+  "interrupted_prefix": {
+    "records": 146,
+    "excluded_from_new_costs": true,
+    "manifest_sha256": "d93a0925a51cbfe5846c31cfc84c358b1fd589781f910b2b9815c85ee87625ef",
+    "journal_sha256": "8c204454d8cbc8ff4f736eb7e883b7344f61ad296a14665e9671b9bcc0fc70f5"
+  },
+  "second_interrupted_prefix": {
+    "run": "E:\\hvsa\\results\\point1_compare\\20261025-120448-140273_large_dropout",
+    "records": 41,
+    "excluded_from_new_costs": true,
+    "manifest_sha256": "6e78a5bbca08f3c1b14f9338524be2ec82ecbd8bceea8d469e434c585bb8822d",
+    "journal_sha256": "fdd9d196233753d57d64949a1959bd53762986de4ddcce27e09b29dd1bbe1637"
+  },
+  "artifact_io_tests": {
+    "path": "E:\\hvsa\\docs\\POINT1_WINDOWS_ARTIFACT_IO_TEST_RECEIPT_20261025_v2.json",
+    "sha256": "4dad2530bc4f31a86c51534f6db534a711d5e6dbc0a946ba5a5610dc55696d43",
+    "passed": 6
+  },
+  "artifact_io_runtime_override": {
+    "module": "experiments/point1_compare/windows_artifact_io.py",
+    "aliases": [
+      "artifacts.dump_json",
+      "round_shards.dump_json",
+      "run_large_dropout.dump_json"
+    ],
+    "original_writer": "frozen artifacts.dump_json; encoding and atomic replacement retained",
+    "retry_winerrors": [
+      5,
+      32,
+      33
+    ],
+    "max_wait_seconds": 3,
+    "monitor": "append-only stdout; no live JSON reads",
+    "timing": "outside initialization and protocol timing",
+    "stage": "docs/POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md"
+  },
+  "artifact_io_retry_events": 0,
+  "restart_provenance": {
+    "launch.json": "eb10fc56a49b6bd57ff01e9ff72ccd779dbe504f1ffad31762977be693f62bc1",
+    "lifecycle.json": "62901d01e69106ea3817ef4cec2d546f5c66098879bd60837e169388f8c43388",
+    "POINT1_LARGE_DROPOUT_INTERRUPTION_RECEIPT_20261025.json": "89947b738c02bca6240e5318039d684a7a6f2dbc9b206e85d493a9fee218a13d",
+    "POINT1_LARGE_DROPOUT_IO_STAGE_20261025.md": "43d73e9789c24279308e5dda3366b00619cf74b3cf67dfd0be61c379cb91532b",
+    "POINT1_LARGE_DROPOUT_LAUNCH_AUDIT_20261025.json": "6a95d3c709cf64bb3c79f6bb6798ad4ca99e19c20692878768ee5f38643891a8",
+    "POINT1_LARGE_DROPOUT_RESTART_STAGE_20261025.md": "d929af927fcdd852fe63ece7b83f08a2592a371c174aedbaafca7dd308b90b33",
+    "POINT1_LARGE_DROPOUT_SECOND_INTERRUPTION_20261025.json": "7d23dc6f12f4ec53370f091203f592dce549e00f1050dd20b21d55d3cc3f0c57",
+    "POINT1_WINDOWS_ARTIFACT_IO_TEST_RECEIPT_20261025_v2.json": "4dad2530bc4f31a86c51534f6db534a711d5e6dbc0a946ba5a5610dc55696d43",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "676b74be88adb59a8fe2a0d8d710fb441d6f367dfa70d3051e17455d2c472866"
+  },
+  "scope": "Actual continuous per-cell state and paired input traces; hardware conditions not locked; no security-equivalence or SOTA claim."
+}

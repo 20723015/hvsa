@@ -1,0 +1,66 @@
+{
+  "created_utc": "2026-10-24T05:24:30.395231+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261024-130537-130119_directed_dropout",
+  "manifest_sha256": "af5eff83b2f1008446aa0973e31d54b487011b283b0eed8f8d1888d087550b8b",
+  "pytest_args": [
+    "-ra",
+    "tests/test_point1_directed_dropout.py",
+    "-q",
+    "--basetemp",
+    "E:\\hvsa\\tmp\\point1_directed_pytest_e172d57a131b44fd85ae99561bcefa64"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 48.7358226,
+  "cases": [
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_declared_boundaries_and_ring_cuts",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_real_archive_reconciles",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[missing_verifier]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[false_recipient]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[hidden_unavailable]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[changed_output]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[wrong_input]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[short_coverage]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_directed_dropout.py::test_rehashed_forgery_is_rejected[fake_completed]",
+      "phase": "call",
+      "outcome": "passed"
+    }
+  ],
+  "passed": 9,
+  "skipped": 0,
+  "test_source_sha256": "f65121fde0512a80410a163bd925d54456cce35d241d208e4687b080511c15cb",
+  "actual_validator_sha256": "5321b7c87fed320b07defc0f2f925fedcef1902d5b7327645288b495b553a5fd",
+  "validator_revision_receipt_sha256": "760c572f9fded040ab600f7130b818b9c103ea3bca9f8c0fe9a7ea2e9b935fb8"
+}

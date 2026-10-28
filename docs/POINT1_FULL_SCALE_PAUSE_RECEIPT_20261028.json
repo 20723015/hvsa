@@ -1,0 +1,119 @@
+{
+  "paused_at": "2026-10-28T00:31:24.023893+08:00",
+  "reason": "Human asked to save and pause: sleep now, continue later.",
+  "stopped_processes": {
+    "parent": {
+      "pid": 47376,
+      "created": 1793090562.5906365,
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "E:\\hvsa\\tmp\\run_full_scale_detached_resume_20261027.py"
+      ]
+    },
+    "child": {
+      "pid": 43180,
+      "created": 1793104579.8552847,
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-u",
+        "-m",
+        "experiments.point1_compare.run_full_scale_point",
+        "--point",
+        "50,5,100000"
+      ]
+    }
+  },
+  "child_exit_code": 15,
+  "parent_exit_code": 15,
+  "parent_forced_after_wait": false,
+  "no_experiment_worker_remaining": true,
+  "batch": "E:\\hvsa\\results\\point1_compare\\20261027-164245-985387_full_scale_resume_batch\\batch.json",
+  "batch_sha256": "44ca7fef240c89a63c12e16aa8b5230cdd5866d53ea8b98a25efca938bcc1326",
+  "batch_status": "stopped_needs_review",
+  "lifecycle": {
+    "pid": 47376,
+    "state": "returned",
+    "start_utc": "2026-10-27T08:42:45.899753+00:00",
+    "wrapper_sha256": "858073b00c12143050749dcaf62d693d3b42487cc2892217752700c088090569",
+    "return_code": 15,
+    "end_utc": "2026-10-27T16:31:23.267726+00:00"
+  },
+  "completed_points": [
+    {
+      "name": "n100_m5_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261026-233239-803036_full_scale_point",
+      "manifest_sha256": "e360a41018a6c5f272cdc7f87cfeb4b5a3ea98d77d94e355fdab253cb55e31d2",
+      "calls": 39
+    },
+    {
+      "name": "n200_m5_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-010651-357006_full_scale_point",
+      "manifest_sha256": "19bd3d03f5d2db15d6b329cd239e4c6487bb70a64dde08561d83b7a7ce57032c",
+      "calls": 39
+    },
+    {
+      "name": "n100_m2_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-032815-044266_full_scale_point",
+      "manifest_sha256": "69185098d7b960f738772e6ed0752e0778f52c7b84bf51a669ebced824ff0332",
+      "calls": 26
+    },
+    {
+      "name": "n100_m10_d7850",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-034503-444676_full_scale_point",
+      "manifest_sha256": "fb97ad2c6be2df01c7e78298ed8987afbed54da2ffd2caecaeb356d1216a08e9",
+      "calls": 26
+    },
+    {
+      "name": "n50_m5_d10000",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-164249-805448_full_scale_point",
+      "manifest_sha256": "0b079505b54ee5a2ca7c3886b938743f42b5d01ea2503bc8ec56d04d2d473bf5",
+      "calls": 39
+    },
+    {
+      "name": "n50_m5_d30000",
+      "run_dir": "E:\\hvsa\\results\\point1_compare\\20261027-175648-812056_full_scale_point",
+      "manifest_sha256": "c81fe22043e473b6e97f13f12051755fede8c58b08d827cb639692f86f3ac0e8",
+      "calls": 39
+    }
+  ],
+  "accepted_main_calls": 325,
+  "accepted_main_cells": 25,
+  "accepted_main_warmups": 75,
+  "accepted_main_measured_calls": 250,
+  "full_scope": {
+    "cells": 28,
+    "calls": 364,
+    "warmups": 84,
+    "measured": 280
+  },
+  "last_point": "E:\\hvsa\\results\\point1_compare\\20261027-203629-175785_full_scale_point",
+  "manifest_sha256": "2c77ff7b13d4a8e60ab233b023e4a31c01438cc5548580cd2079747fd1989bfd",
+  "journal_sha256": "5c7bad7594570a374d54be119f8ee7d9d4a6360c5a01be545fe0ee8cc8102a83",
+  "resume_rule": "Keep accepted 325 calls / 25 cells; freshly initialize and run all 3+10 calls for each scheme at d100000. Do not concatenate 21 old + 18 new calls.",
+  "private_state_saved": false,
+  "partial_prefix_excluded_from_main_cost": true,
+  "unreturned_work": "Not assigned a completed call or estimated duration.",
+  "source": "E:\\hvsa\\tmp\\pause_full_scale_20261028.py",
+  "source_sha256": "ceeb60de23e4820572eb792c7cb9989fc5b7c6c24ee778f4668a20b3d7e20c64",
+  "prefix": {
+    "validation_errors": [],
+    "calls": 21,
+    "valid_calls": 21,
+    "warmup_calls": 9,
+    "measured_calls": 12,
+    "initializations": 3,
+    "designated_verifier_calls": 420,
+    "model_recipient_records": 1050,
+    "journal_entries": 24
+  },
+  "prefix_validated": true,
+  "closed_evidence_sha256": {
+    "E:\\hvsa\\results\\point1_compare\\20261027-164245-985387_full_scale_resume_batch\\batch.json": "44ca7fef240c89a63c12e16aa8b5230cdd5866d53ea8b98a25efca938bcc1326",
+    "E:\\hvsa\\results\\point1_compare\\20261027-203629-175785_full_scale_point\\manifest.json": "2c77ff7b13d4a8e60ab233b023e4a31c01438cc5548580cd2079747fd1989bfd",
+    "E:\\hvsa\\results\\point1_compare\\20261027-203629-175785_full_scale_point\\journal.json": "5c7bad7594570a374d54be119f8ee7d9d4a6360c5a01be545fe0ee8cc8102a83",
+    "E:\\hvsa\\tmp\\point1_full_scale_resume_20261027\\stdout.log": "7a4158d6e1799d81a09622aa83d8a176be52478b3bc01fdead9516a660e5a781",
+    "E:\\hvsa\\tmp\\point1_full_scale_resume_20261027\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "E:\\hvsa\\tmp\\point1_full_scale_resume_20261027\\lifecycle.json": "ebc49881d07177c7d00162f54104a9510c4b602e71e76b48779b60f6d0294605"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "design_version": "point2-pacing-v0",
+  "date": "2026-10-09",
+  "status": "design_only_not_implemented",
+  "organization": {
+    "groups": 5,
+    "clients_per_group": 4,
+    "one_training_or_pending_package_per_group": true
+  },
+  "aggregation": {
+    "K": 3,
+    "s_max": 3,
+    "n_min": 2,
+    "partial_checkpoint_on_timeout": false,
+    "weights": "actual_adopted_sample_counts_normalized_in_selected_set",
+    "model_update": "current_model_plus_weighted_local_increments",
+    "vcm_gamma": 1,
+    "vcm_decay": 0,
+    "cache_calibration": false,
+    "stale_reuse": false,
+    "server_momentum": 0,
+    "local_progress_normalization": false
+  },
+  "pacing": {
+    "max_wait_ticks": 2,
+    "window_open": "first_closed_slot_after_previous_commit_with_at_least_K_legal_ready_packages",
+    "target_share": "fixed_registered_group_samples_over_all_registered_samples",
+    "share_state": "cumulative_committed_normalized_aggregation_coefficients",
+    "numeric_semantics": "canonical_exact_rational",
+    "objective": "maximum_absolute_deviation_of_next_cumulative_mean_share_from_target",
+    "opening_reference": "FIFO_K_at_window_open",
+    "early_epsilon": 0,
+    "early_condition": "first_slot_before_deadline_with_strict_objective_improvement_over_opening_reference",
+    "selection_tiebreak": [
+      "objective",
+      "maximum_version_age",
+      "sum_version_ages",
+      "sorted_registration_sequences",
+      "sorted_package_tokens"
+    ],
+    "deadline_fallback": "best_legal_exactly_K_subset_at_deadline_even_without_objective_improvement"
+  },
+  "arms": {
+    "A_immediate_fifo": "commit_FIFO_K_at_window_open",
+    "B_fixed_window_fifo": "wait_full_max_window_then_commit_FIFO_K",
+    "C_share_window": "commit_first_strict_improvement_else_best_K_at_deadline"
+  },
+  "event_engine": {
+    "start_slot": 1,
+    "max_commits_per_slot": 1,
+    "phases": [
+      "start_idle_group_tasks",
+      "complete_tasks_and_register_all_packages_for_slot",
+      "close_slot_and_authenticate_log_cutoff",
+      "decide_and_commit_if_required",
+      "expire_remaining_packages_after_version_advance"
+    ],
+    "released_group_restart": "next_slot_on_latest_committed_model",
+    "pending_group_restart": "blocked_until_successful_commit_or_authorized_expiry",
+    "reuse_old_arrival_trace": false,
+    "exogenous_rng_index": ["seed", "namespace", "group_or_user_id", "task_sequence"],
+    "base_delay_generation": "numpy_default_rng_seed_integers_1_through_5_for_five_groups",
+    "delay_ticks": "fixed_per_group_within_run",
+    "pretraining_dropout": 0.1,
+    "upload_loss": 0.0
+  },
+  "authentication": {
+    "clock_authority": "trusted_authority_closed_monotonic_slots",
+    "admission_source": "direct_authenticated_edge_registration",
+    "cutoff": "complete_TA_log_prefix_at_unique_rule_determined_decision_slot",
+    "verify_first_window_and_first_trigger": true,
+    "one_frozen_decision_per_checkpoint": true,
+    "mask_release": "only_for_frozen_decision_and_selected_tokens",
+    "share_effective_at": "TA_finalize_atomic_with_model_digest_version_and_token_consumption",
+    "unregistered_package_visibility_guarantee": false,
+    "denial_of_service_prevention": false
+  },
+  "screening": {
+    "datasets": ["FashionMNIST", "CIFAR10"],
+    "non_iid_alpha": 0.5,
+    "development_seeds": [42, 43, 44],
+    "heldout_seeds_if_promoted": [52, 53, 54, 55, 56],
+    "common_time_budget_ticks": 200,
+    "checkpoint_count_as_primary_budget": false,
+    "primary_contrast": "C_share_window_minus_B_fixed_window_fifo",
+    "work_budget_reporting": "latest_published_model_at_or_before_common_executed_SGD_and_sample_visit_grid",
+    "development_endpoint_gate_pp": 0.5,
+    "development_positive_seed_gate": 2,
+    "endpoint_gate_is_stability_proof": false,
+    "test_curve_parameter_search": false
+  },
+  "local_training": {
+    "model": "CNN",
+    "batch_size": 64,
+    "learning_rate": 0.01,
+    "optimizer": "SGD",
+    "local_momentum": 0.9,
+    "FashionMNIST_epochs": 1,
+    "CIFAR10_epochs": 5,
+    "FashionMNIST_nominal_samples_per_user": 350,
+    "CIFAR10_nominal_samples_per_user": 1500,
+    "actual_weights": "measured_partition_sizes"
+  }
+}

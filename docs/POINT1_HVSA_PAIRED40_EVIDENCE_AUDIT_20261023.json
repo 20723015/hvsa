@@ -1,0 +1,34 @@
+{
+  "created_at": "2026-10-23T23:05:48.498656+08:00",
+  "status": "passed",
+  "kind": "Archive/analysis/visual review receipt, not security certification",
+  "run_manifest": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261023-221650-453546_hvsa_paired_participation\\manifest.json",
+    "sha256": "49b7ac33c46607ffb57dd80aa978c8e9ec407e80d6d2e6cebdf7536ebf06499d"
+  },
+  "new_rounds": 100,
+  "fixed_rounds": 50,
+  "changing_rounds": 50,
+  "uploaded_each_round": 40,
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261023_hvsa_paired40_v3\\analysis_manifest.json",
+    "sha256": "d64abf20580cdfbab74f33945249b1eeb450bfaeeb1b0d3641e542bc6cebf456"
+  },
+  "report": {
+    "path": "E:\\hvsa\\docs\\POINT1_HVSA_PAIRED40_RESULTS_20261023_v3.md",
+    "sha256": "ab08d93488eb6d42c58f8b58b516a51f81c00d624645dd2e8a2b1216dd17c966"
+  },
+  "latest_thesis_draft": {
+    "path": "E:\\hvsa\\docs\\POINT1_THESIS_EXPERIMENT_SECTION_DRAFT_20261023_v2.md",
+    "sha256": "fbb116793d9ae9d70f118ab4ae01d2a60cdaf5d397f139ba740f2e47e283d7b4"
+  },
+  "prior_integrity_audit": {
+    "path": "E:\\hvsa\\docs\\POINT1_DECLARED_INTEGRITY_EVIDENCE_AUDIT_20261023.json",
+    "sha256": "bb4a7c55d04bb36a28540c6bccc84b90544b809a2ce9ddacbc776ec97801c1ca"
+  },
+  "test_receipt": {
+    "path": "E:\\hvsa\\docs\\POINT1_HVSA_PAIRED40_TEST_RECEIPT_20261023.json",
+    "sha256": "6234939bcb3de336242d37277ef6a47966dd67ff8790659ce58a23e04c3086fb"
+  },
+  "scope": "Completed-run strict validation before plots; current core/source hashes, analysis output digests and actual PNG visual inspection. Older raw runs and audited drafts unchanged."
+}

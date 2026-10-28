@@ -1,0 +1,42 @@
+{
+  "status": "decided_by_project_reproducer",
+  "authorisation": "2026-10-19 user: items 1 and 2 are delegated to the assistant",
+  "author_code": false,
+  "paper_security_equivalence_claimed": false,
+  "gpvo": {
+    "scheme": "gpvo_zn2_fresh_prime_e",
+    "lhf_group": "multiplicative units modulo N^2",
+    "rsa_modulus_bits": 3072,
+    "e": "next prime above N^2 plus a random 256-bit offset; coprime to phi(N^2)",
+    "g": "uniform random unit modulo N^2; maximal order not certified",
+    "lhf_generators": "public hash-to-unit, no published discrete logs; cache capacity 131072",
+    "parameter_lifetime": "RSA/LHF public parameters reused across rounds",
+    "session_lifetime": "fresh user/TA X25519 keys and commitment randomisers each round",
+    "dropout": "correct cancellation signs; actual uploaded list",
+    "commitment_source": "cloud supplies aggregate commitment; no added signatures or ledger",
+    "backend": "gmpy2.powmod for integer-group exponents",
+    "security_observation": "coordinated result/commitment change remains possible in this interpretation"
+  },
+  "vlmrs": {
+    "scheme": "vlmrs_fullgraph_public_d",
+    "pairing": "BLS12-381, py-ecc 8.0.0",
+    "hf": "shared keyed linear vector hash; HMAC-derived secret coefficients",
+    "root_exponent": 7,
+    "root_visibility": "public",
+    "graph": "all selected peers, epsilon=1",
+    "threshold": "ceil(2*N_registered/3)",
+    "set_check": "N_selected >= threshold",
+    "long_term_keys": "reuse both masking and encryption DH key pairs",
+    "fresh_per_round": "personal seeds, Shamir coefficients, round-bound PRG streams",
+    "proof_label": "sum, user-bound PRF tags; no added authenticated roster mechanism",
+    "secret_sharing": "actual t-of-N Shamir over 2^521-1",
+    "security_observation": "public-root scaling and later long-term-key history recovery retained and reported"
+  },
+  "measurement": {
+    "input": "identical participant-bound int64 NPZ snapshots across schemes",
+    "timing": "exclusive role work and serial local replay; no estimated RTT",
+    "wire": "real pickle envelopes, one copy per actual receiver; not transport-layer bytes",
+    "initialization": "reported separately; GPVO fresh per-round session is included in each round",
+    "security_differences": "reported separately; costs do not imply equal security or SOTA"
+  }
+}

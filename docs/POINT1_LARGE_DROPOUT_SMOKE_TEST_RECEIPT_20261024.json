@@ -1,0 +1,77 @@
+{
+  "created_utc": "2026-10-24T12:52:10.463867+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261024-204531-229912_large_dropout_smoke",
+  "manifest_sha256": "d23da66241a723ef22631867bb4806613651d7e1654cf7d6f6bd5691c05825a0",
+  "exit_code": 0,
+  "elapsed_seconds": 167.6901882,
+  "cases": [
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_nested_staged_schedule_preserves_uploaded_contributions",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_commit_refuses_overwrite_and_detects_orphans",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_commit_hash_detects_modified_payload",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_actual_archive",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[missing_verifier]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[returned_sum]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[state_reset]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[wrong_roster]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[short_coverage]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[false_recipient]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[discard_after_upload]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_dropout.py::test_rehashed_evidence_cannot_hide_inconsistency[wrong_reconstruction]",
+      "phase": "call",
+      "outcome": "passed"
+    }
+  ],
+  "passed": 12,
+  "skipped": 0,
+  "tested_sources": {
+    "tests/test_point1_large_dropout.py": "e313739c7c9fc956b260f290f12623b25637ec1a919c5d3172a61e165f0215e4",
+    "experiments/point1_compare/validate_large_dropout.py": "b2ef1da3c5dddf81c81dedb92c0946625d80cbcc069fb8b52e9e0133d8dbd726",
+    "experiments/point1_compare/round_shards.py": "15d557e674f0c4fa690918ba235a1add0fca7d2da78673b03d8fdb6b5a317b76",
+    "experiments/point1_compare/large_dropout_contract.py": "c087bf81d213ba17dccd5ef89bd1ac8d08d6292cb606b78365ad2afabe401ce4"
+  }
+}

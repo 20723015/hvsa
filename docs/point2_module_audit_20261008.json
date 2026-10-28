@@ -1,0 +1,316 @@
+{
+  "date": "2026-10-08",
+  "status": "diagnostic_only",
+  "definitions": {
+    "population_sample_share": "sum registered samples in group / all registered samples",
+    "mean_aggregation_coefficient": "mean over committed checkpoints of sum adopted n_i in group / sum adopted n_i across selected groups",
+    "legal_queue_size_before_commit": "replayed completed, sealed (n_min), unconsumed tokens within s_max; completions at one tick are treated as simultaneous",
+    "local_sgd_step_range": "local_epochs * ceil(actual sample size / batch_size)"
+  },
+  "limitations": [
+    "Coefficient share is not a measure of actual gradient contribution or proof of an accuracy-loss cause.",
+    "Group target proportions do not correct within-group dropout or heterogeneous local optimizer progress.",
+    "Queue reconstruction uses the plaintext event oracle, not a production authenticated admission log.",
+    "No new algorithm implementation or training experiment was executed."
+  ],
+  "rows": [
+    {
+      "pair": "CIFAR10_NI_s42",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 1,
+        "edge_1": 4,
+        "edge_2": 4,
+        "edge_3": 3,
+        "edge_4": 3
+      },
+      "local_sgd_step_range": [
+        45,
+        165
+      ],
+      "committed_package_count": {
+        "edge_0": 20,
+        "edge_1": 10,
+        "edge_2": 10,
+        "edge_3": 10,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.20376666666666668,
+        "edge_1": 0.18383333333333332,
+        "edge_2": 0.20833333333333334,
+        "edge_3": 0.2509,
+        "edge_4": 0.15316666666666667
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.35297905982386585,
+        "edge_1": 0.14704350155521798,
+        "edge_2": 0.17353456974601916,
+        "edge_3": 0.20284851913551177,
+        "edge_4": 0.12359434973938525
+      },
+      "legal_queue_size_before_commit": {
+        "3": 20
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s42\\pair_meta.json",
+          "sha256": "4f2d399bdcbd7f7d84d8a79f9b60ca3e97d99e8307ef1d647016539a2d26ab5e"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s42\\event_trace.json",
+          "sha256": "b130b4ddc0b4989b955a11666ff380c8853d1ca32d288d759298d607e8e311d0"
+        }
+      }
+    },
+    {
+      "pair": "CIFAR10_NI_s43",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 3,
+        "edge_1": 4,
+        "edge_2": 3,
+        "edge_3": 1,
+        "edge_4": 3
+      },
+      "local_sgd_step_range": [
+        50,
+        215
+      ],
+      "committed_package_count": {
+        "edge_0": 10,
+        "edge_1": 10,
+        "edge_2": 10,
+        "edge_3": 20,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.20573333333333332,
+        "edge_1": 0.20466666666666666,
+        "edge_2": 0.17546666666666666,
+        "edge_3": 0.11973333333333333,
+        "edge_4": 0.2944
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.20161987814187238,
+        "edge_1": 0.17093617283232215,
+        "edge_2": 0.18176380510476686,
+        "edge_3": 0.2158385138488253,
+        "edge_4": 0.22984163007221342
+      },
+      "legal_queue_size_before_commit": {
+        "3": 19,
+        "4": 1
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s43\\pair_meta.json",
+          "sha256": "a3101dd33450a803c0f06f274b32fb7677d16fca239242fb20c3401f66a412a4"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s43\\event_trace.json",
+          "sha256": "ff67a2b4d909b5d3ef5e2d5262f98154643478b59bdcd2daf2c31541d676e3f7"
+        }
+      }
+    },
+    {
+      "pair": "CIFAR10_NI_s44",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 4,
+        "edge_1": 1,
+        "edge_2": 5,
+        "edge_3": 2,
+        "edge_4": 4
+      },
+      "local_sgd_step_range": [
+        40,
+        320
+      ],
+      "committed_package_count": {
+        "edge_0": 10,
+        "edge_1": 20,
+        "edge_2": 8,
+        "edge_3": 12,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.25826666666666664,
+        "edge_1": 0.23626666666666668,
+        "edge_2": 0.1806,
+        "edge_3": 0.15046666666666667,
+        "edge_4": 0.1744
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.18694797169298996,
+        "edge_1": 0.3863087959208194,
+        "edge_2": 0.12296510316697144,
+        "edge_3": 0.1413203205884656,
+        "edge_4": 0.16245780863075351
+      },
+      "legal_queue_size_before_commit": {
+        "3": 15,
+        "4": 5
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s44\\pair_meta.json",
+          "sha256": "fac6fdc1c69281e55155f55c108e3e105ad91b6a169717ca1155f40b7c01c1b7"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\CIFAR10_NI_s44\\event_trace.json",
+          "sha256": "2eaaf71a1e28a573e97ddcb0eae5eb159a14358372bad5fe91261f103e395ea1"
+        }
+      }
+    },
+    {
+      "pair": "FashionMNIST_NI_s42",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 1,
+        "edge_1": 4,
+        "edge_2": 4,
+        "edge_3": 3,
+        "edge_4": 3
+      },
+      "local_sgd_step_range": [
+        3,
+        10
+      ],
+      "committed_package_count": {
+        "edge_0": 20,
+        "edge_1": 10,
+        "edge_2": 10,
+        "edge_3": 10,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.191,
+        "edge_1": 0.19914285714285715,
+        "edge_2": 0.19957142857142857,
+        "edge_3": 0.14971428571428572,
+        "edge_4": 0.26057142857142856
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.33711155714913466,
+        "edge_1": 0.16178548480786176,
+        "edge_2": 0.16966576571536737,
+        "edge_3": 0.12183645803878465,
+        "edge_4": 0.20960073428885165
+      },
+      "legal_queue_size_before_commit": {
+        "3": 20
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s42\\pair_meta.json",
+          "sha256": "0b9d7bc3e93ff8e738a66f973062c7a26d8146b38ec58b5475e4f65fba8763fa"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s42\\event_trace.json",
+          "sha256": "b130b4ddc0b4989b955a11666ff380c8853d1ca32d288d759298d607e8e311d0"
+        }
+      }
+    },
+    {
+      "pair": "FashionMNIST_NI_s43",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 3,
+        "edge_1": 4,
+        "edge_2": 3,
+        "edge_3": 1,
+        "edge_4": 3
+      },
+      "local_sgd_step_range": [
+        2,
+        10
+      ],
+      "committed_package_count": {
+        "edge_0": 10,
+        "edge_1": 10,
+        "edge_2": 10,
+        "edge_3": 20,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.156,
+        "edge_1": 0.1647142857142857,
+        "edge_2": 0.18957142857142859,
+        "edge_3": 0.2945714285714286,
+        "edge_4": 0.19514285714285715
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.12099546190319008,
+        "edge_1": 0.12752581413764283,
+        "edge_2": 0.1532871339303034,
+        "edge_3": 0.4548899485114248,
+        "edge_4": 0.1433016415174389
+      },
+      "legal_queue_size_before_commit": {
+        "3": 19,
+        "4": 1
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s43\\pair_meta.json",
+          "sha256": "bd6fdc6a41e82dd1d5cc60bf4faed33fc9683b91a4eee4eec62a52b99c35f4e2"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s43\\event_trace.json",
+          "sha256": "ff67a2b4d909b5d3ef5e2d5262f98154643478b59bdcd2daf2c31541d676e3f7"
+        }
+      }
+    },
+    {
+      "pair": "FashionMNIST_NI_s44",
+      "checkpoints": 20,
+      "edge_delays": {
+        "edge_0": 4,
+        "edge_1": 1,
+        "edge_2": 5,
+        "edge_3": 2,
+        "edge_4": 4
+      },
+      "local_sgd_step_range": [
+        3,
+        19
+      ],
+      "committed_package_count": {
+        "edge_0": 10,
+        "edge_1": 20,
+        "edge_2": 8,
+        "edge_3": 12,
+        "edge_4": 10
+      },
+      "population_sample_share": {
+        "edge_0": 0.24157142857142858,
+        "edge_1": 0.17257142857142857,
+        "edge_2": 0.17342857142857143,
+        "edge_3": 0.20757142857142857,
+        "edge_4": 0.20485714285714285
+      },
+      "mean_aggregation_coefficient": {
+        "edge_0": 0.17933665615154154,
+        "edge_1": 0.29759999878703003,
+        "edge_2": 0.1386769005149167,
+        "edge_3": 0.19371675492976628,
+        "edge_4": 0.19066968961674546
+      },
+      "legal_queue_size_before_commit": {
+        "3": 15,
+        "4": 5
+      },
+      "sources": {
+        "pair_meta.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s44\\pair_meta.json",
+          "sha256": "e5780a52d37ac455b4afc804414524443a97de3cbf09288fcd6e51ac4109899b"
+        },
+        "event_trace.json": {
+          "path": "E:\\hvsa\\results_cache_calibration\\screen_20261008\\FashionMNIST_NI_s44\\event_trace.json",
+          "sha256": "2eaaf71a1e28a573e97ddcb0eae5eb159a14358372bad5fe91261f103e395ea1"
+        }
+      }
+    }
+  ]
+}

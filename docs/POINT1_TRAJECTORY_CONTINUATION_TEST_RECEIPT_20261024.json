@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "tests_passed": 7,
+  "tests_skipped": 0,
+  "duration_seconds": 42.26,
+  "actual_prefix_export": "E:/hvsa/results/point1_compare/20261024-101137-669367_trajectory_prefix_export",
+  "prefix_manifest_sha256": "7874921aa59e78dc3eb093d51440bbf22b9c4529f53e1c90dff3a284e26c2640",
+  "source_sha256": {
+    "experiments/point1_compare/validate_trajectory_segments.py": "73f4c3b9b408c81a1abccea08bad3765827b83e1e6601f88046db3aa9719056c",
+    "experiments/point1_compare/continue_decided_trajectories.py": "e84fb1002e7a216cf0efe7f8d3b38d4699f7c00c5ceed20a2b015ab41dfe402e",
+    "experiments/point1_compare/trajectory_segment_contract.py": "c8d41efaf9a5fabb0d08f43b63c09fa9749f6d31f085dd33d9dd6588b1a17646",
+    "tests/test_point1_trajectory_segments.py": "7dffa1a7f71092043566d8664a483a82727fce3d36bb3d3afe28be7a6333cd0e"
+  },
+  "command": "POINT1_TRAJECTORY_PREFIX_TEST_RUN=<actual export> D:/Anaconda/python.exe -m pytest tests/test_point1_trajectory_segments.py -q --basetemp <new verified workspace path>",
+  "scope": "Actual 252-call prefix strict reconciliation, exact 48-case suffix schedule and atomically rehashed lineage/roster/verifier/initialization/false-completion forgery rejection. No repeat cryptographic run."
+}

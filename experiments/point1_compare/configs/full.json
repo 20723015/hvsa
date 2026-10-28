@@ -1,0 +1,33 @@
+{
+  "experiment": "point1_full_protocol_compare",
+  "stage": "full_matrix",
+  "description": "计划 §6.1 的矩阵规格；配置存在不代表全部基线可运行或实验完成。d=100000 须先单次实跑核实成本；VLMRS及GPVO原文等价审查未通过前不进入正式比较。状态见最新补全报告。",
+  "schemes": ["hvsa", "gpvo", "vlmrs"],
+  "vlmrs_status": "pending_formal_paper_freeze",
+  "correctness_seed": 42,
+  "training_seeds": [42, 43, 44],
+  "warmup": 3,
+  "repeats": 10,
+  "verification": "full",
+  "aggregation": "equal_weight_integer_sum_then_average",
+  "n_scan": {"values": [20, 50, 100, 200], "m": 5, "d": 7850},
+  "d_scan": {"values": [1000, 7850, 10000, 30000, 100000], "n": 50, "m": 5, "note": "d=100000 先单次试跑；主图止于真实完成的最大维度"},
+  "m_scan": {"schemes": ["hvsa", "gpvo"], "values": [2, 5, 10], "n": 100, "d": 7850},
+  "round_scan": {"values": [1, 10, 50], "n": 50, "m": 5, "d": 7850},
+  "dropout": {
+    "rates": [0.0, 0.1, 0.2, 0.3],
+    "trajectory_seeds": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "n_selected": 100,
+    "m": 5,
+    "d": 7850,
+    "phases": ["before_upload", "after_upload"]
+  },
+  "ablation": {
+    "mask_layers": {"n": 50, "m": 5, "d": [7850, 30000]},
+    "verification_onoff": {"n": 50, "m": 5, "d": [7850, 30000]}
+  },
+  "rsa_commit_bits": 3072,
+  "rsa_commit_exp": "as_written_gt_N2",
+  "prg_round_token": "static_per_paper",
+  "output_root": "results/point1_compare"
+}

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-12",
+  "scope": "mathematical_design_checks_only_not_training_or_crypto_or_commit_protocol_tests",
+  "script": "tmp/checkpoint_moment_design_20261012/check_math.py",
+  "config": "docs/point2_checkpoint_moment_v0_20261012.json",
+  "check_count": 14,
+  "passed": true,
+  "checks": [
+    {
+      "check": "cold_start_equals_base_alignment",
+      "passed": true
+    },
+    {
+      "check": "stage_does_not_mutate_committed_input",
+      "passed": true
+    },
+    {
+      "check": "same_candidate_retry_is_deterministic",
+      "passed": true
+    },
+    {
+      "check": "fresh_base_equals_aggregate_mean",
+      "passed": true
+    },
+    {
+      "check": "zero_training_increment_keeps_current_model",
+      "passed": true
+    },
+    {
+      "check": "zero_history_denominator_falls_back",
+      "passed": true
+    },
+    {
+      "check": "zero_residual_budget_equals_base_alignment",
+      "passed": true
+    },
+    {
+      "check": "bias_correction_constant_signal",
+      "passed": true
+    },
+    {
+      "check": "same_aggregate_wrong_history_changes_model",
+      "passed": true
+    },
+    {
+      "check": "same_model_can_hide_wrong_next_moment",
+      "passed": true
+    },
+    {
+      "check": "group_norms_not_identifiable_from_checkpoint_sum",
+      "passed": true
+    },
+    {
+      "check": "exactly_representable_encoded_weighted_increment_identity",
+      "passed": true
+    },
+    {
+      "check": "nonfinite_rejected",
+      "passed": true
+    },
+    {
+      "check": "1000_random_residual_geometry_and_formula_equivalence_cases",
+      "passed": true
+    }
+  ],
+  "random_cases": 1000,
+  "random_seed": 20261012,
+  "floating_tolerance": 1e-10,
+  "max_random_residual_bound_roundoff_excess": 1.9984014443252818e-15,
+  "history_counterexample": {
+    "correct_model": [
+      10.5
+    ],
+    "wrong_history_model": [
+      11.499999999996875
+    ],
+    "correct_rho": 0.75,
+    "wrong_rho": 1.2499999999984375
+  },
+  "not_checked": [
+    "training_benefit",
+    "cryptographic_verification",
+    "atomic_commit_recovery",
+    "cross_device_bitwise_reproducibility",
+    "novelty"
+  ]
+}

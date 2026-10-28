@@ -1,0 +1,19 @@
+{
+  "created_utc": "2026-10-25T05:36:39.992755+00:00",
+  "command": "D:/Anaconda/python.exe -m pytest tests/test_point1_windows_artifact_io.py -q",
+  "exit_code": 0,
+  "passed": 5,
+  "skipped": 0,
+  "observed_pytest_seconds": 2.28,
+  "tested_sources": {
+    "experiments/point1_compare/windows_artifact_io.py": "1e5d48e616b3ceeb08d2ebaec3308b4e9822eb1430be72512312a880fac6879e",
+    "tests/test_point1_windows_artifact_io.py": "ac0ab6bfac1b0f61e92d112bbd90dc4ba8455745946307d7bd8ae0a63ef0b499"
+  },
+  "checks": [
+    "real transient Windows destination lock",
+    "bounded permanent-lock failure preserves original target",
+    "non-sharing exceptions are not retried",
+    "append-only observer ignores partial line",
+    "artifact aliases restore and protocol method identity unchanged"
+  ]
+}

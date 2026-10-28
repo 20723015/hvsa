@@ -1,0 +1,76 @@
+{
+  "scope": "One completed new full-E2 point only; full grid remains pending.",
+  "point": [
+    100,
+    5,
+    7850
+  ],
+  "run": "E:\\hvsa\\results\\point1_compare\\20261026-233239-803036_full_scale_point",
+  "manifest_sha256": "e360a41018a6c5f272cdc7f87cfeb4b5a3ea98d77d94e355fdab253cb55e31d2",
+  "own_archive_validation": {
+    "valid": true,
+    "errors": [],
+    "journal_sha256": "5a4a5fb919e585e4db1b917c9351f1d35c6278b3fb536306d32e5f7dbe4518e0"
+  },
+  "coordinator_validated_marker": "VALIDATED=n100_m5_d7850",
+  "coordinator_log": "E:\\hvsa\\tmp\\point1_full_scale_detached_v2_20261026\\stdout.log",
+  "prefix_bytes": 4699,
+  "prefix_snapshot": "E:\\hvsa\\tmp\\p1fs_acceptance_n100_m5_d7850_20261027\\parent_stdout_prefix.log",
+  "prefix_sha256": "c4fa09e8d2913d4c349e3594fbc44cf2cc0d3f4fc46dbcbd8dcfe48ae0eba604",
+  "receipt_source_sha256": "0b8dd9c7150680d150fe4338d32f3b39754e8011fac432c84e0910d32110ccf3",
+  "calls": 39,
+  "warmup_calls": 9,
+  "measured_calls": 30,
+  "valid_calls": 39,
+  "initializations": 3,
+  "per_scheme": [
+    {
+      "scheme": "hvsa",
+      "calls": 13,
+      "warmups": 3,
+      "measured": 10,
+      "valid": 13,
+      "initialized_key_epochs": 1,
+      "designated_verifier_calls": 65
+    },
+    {
+      "scheme": "gpvo_zn2_fresh_prime_e",
+      "calls": 13,
+      "warmups": 3,
+      "measured": 10,
+      "valid": 13,
+      "initialized_key_epochs": 1,
+      "designated_verifier_calls": 65
+    },
+    {
+      "scheme": "vlmrs_fullgraph_public_d",
+      "calls": 13,
+      "warmups": 3,
+      "measured": 10,
+      "valid": 13,
+      "initialized_key_epochs": 1,
+      "designated_verifier_calls": 1300
+    }
+  ],
+  "designated_verifier_calls": 1430,
+  "actual_model_recipient_records": 3900,
+  "observed_conditions": {
+    "snapshots": 84,
+    "all_observed_power_plugged": true,
+    "observed_power_transitions": 0,
+    "snapshots_with_other_protocol_workers": 0,
+    "reported_frequency_min_mhz": 2887.0,
+    "reported_frequency_max_mhz": 3601.0,
+    "temperature_and_frequency_locked": false,
+    "interpretation": "Read-only observations, not complete hardware-condition control."
+  },
+  "small_output_sha256": {
+    "correctness.json": "c845cd6d73da9fc9852cbac01569200352f7e4e2012d6643ef03ba3974dd56e0",
+    "journal.json": "5a4a5fb919e585e4db1b917c9351f1d35c6278b3fb536306d32e5f7dbe4518e0",
+    "summary.csv": "703671836755214f06beed867eb9a39d2e94068867f2e7974644d06703163781",
+    "failures.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "large_phase_and_wire_rehashed_during_next_point": false,
+  "basis": "Point driver and coordinator already executed full streaming validation; receipt checks closed metadata and pinned small outputs.",
+  "crypto_scope": "Cryptographic checks ran in actual protocol calls; offline audit checks inputs/sums/verdict records, not fresh wire-proof execution."
+}

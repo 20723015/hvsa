@@ -1,0 +1,13 @@
+# Scientific dependencies recorded in the research environment (Python 3.9.15).
+# CUDA wheel selection is platform dependent; the recorded torch wheel was +cu118.
+numpy==1.26.4
+torch==2.7.0
+torchvision==0.22.0
+cryptography==42.0.8
+ecdsa==0.19.1
+gmpy2==2.1.2
+py-ecc==8.0.0
+matplotlib==3.9.4
+scipy==1.13.1
+psutil==7.0.0
+pytest==8.4.2

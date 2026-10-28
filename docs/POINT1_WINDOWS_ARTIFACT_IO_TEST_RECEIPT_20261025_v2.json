@@ -1,0 +1,13 @@
+{
+  "created_utc": "2026-10-25T05:45:44.015007+00:00",
+  "command": "D:/Anaconda/python.exe -m pytest tests/test_point1_windows_artifact_io.py -q",
+  "exit_code": 0,
+  "passed": 6,
+  "skipped": 0,
+  "observed_pytest_seconds": 2.5,
+  "tested_sources": {
+    "experiments/point1_compare/windows_artifact_io.py": "3bb14c9674b458ece0aecade8ec2f7d58119f12fd77ae5ca1997bf02370c9ef5",
+    "tests/test_point1_windows_artifact_io.py": "2f036b5418488729447dcfa10c493c32c0f2b163cf50f5da13cce722058f5638"
+  },
+  "scope": "Same five I/O invariants with both LF and CRLF append-log cases; original frozen writer and cryptographic sources untouched"
+}

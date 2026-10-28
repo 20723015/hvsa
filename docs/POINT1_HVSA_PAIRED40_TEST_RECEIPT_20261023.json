@@ -1,0 +1,12 @@
+{
+  "recorded_at": "2026-10-23T22:17:55.392344+08:00",
+  "result": "9 passed in 5.09s",
+  "exit_code": 0,
+  "test_file_sha256": "1e2a57516f6ea81cfdcdbc05bbd75a243e7849d0b9a06104b77388a552f4b202",
+  "driver_file_sha256": "a983a7c2d721d90ecb49996cebbdbb086116fcb5ca1b0451806fac71a3102563",
+  "smoke_manifest": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261023-221546-796087_hvsa_paired_participation\\manifest.json",
+    "sha256": "6835624f3e7434ec724c9082d4fffd6b1fa19c10271c2348e866464f9d40c076"
+  },
+  "scope": "Actual 4-round smoke plus passive-observer and six rehashed artifact-forgery checks; separate from formal 100 rounds."
+}

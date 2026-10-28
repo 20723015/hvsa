@@ -1,0 +1,67 @@
+{
+  "created_utc": "2026-10-24T11:29:59.816235+00:00",
+  "run": "E:\\hvsa\\results\\point1_compare\\20261024-140222-824926_large_multirun",
+  "manifest_sha256": "cfc26d910d4abd9002a02b3441f4513b98e888d22f07ee80227dc8b77085f878",
+  "exit_code": 0,
+  "elapsed_seconds": 134.16403169999998,
+  "cases": [
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_paired_schedule_is_equal_count_without_roster_resampling",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_commit_refuses_overwrite_and_detects_orphans",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_commit_hash_detects_modified_payload",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_actual_archive",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[missing_verifier]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[returned_sum]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[state_reset]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[wrong_roster]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[short_coverage]",
+      "phase": "call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/test_point1_large_multirun.py::test_rehashed_evidence_cannot_hide_inconsistency[false_recipient]",
+      "phase": "call",
+      "outcome": "passed"
+    }
+  ],
+  "passed": 10,
+  "skipped": 0,
+  "tested_sources": {
+    "tests/test_point1_large_multirun.py": "851b4916355a8a6fd7502b27d95bc75bafd611da8225d490091d87229dceadf0",
+    "experiments/point1_compare/validate_large_multirun.py": "1036325c9037ad647caaf12975a67c7dddeaf8c5a1a0522e2169d80c06529b55",
+    "experiments/point1_compare/round_shards.py": "15d557e674f0c4fa690918ba235a1add0fca7d2da78673b03d8fdb6b5a317b76",
+    "experiments/point1_compare/large_multirun_contract.py": "1af3df2c46afc619a3a10a858ef5d84b742850406ad794de6abed91ea6b5b168"
+  }
+}

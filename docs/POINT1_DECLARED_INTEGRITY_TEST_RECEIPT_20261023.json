@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-23T21:01:41.366382+08:00",
+  "test_result": "8 passed in 57.35s",
+  "exit_code": 0,
+  "execution_reference": "exec session 93210 completion",
+  "test_source_sha256": {
+    "tests/test_point1_decided_integrity.py": "411dd7702b97471e67f3f0e42799244bc1bec178b4d289cd1e624784cb0c8347",
+    "experiments/point1_compare/validate_decided_integrity.py": "a64ab1157861f87bfce58d01ff248330428e1cb303d1f0034bd3e66f559f557e"
+  },
+  "smoke_manifest": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261023-203510-131505_decided_integrity\\manifest.json",
+    "sha256": "0224eb63fd9c4f8acca6c7163e8cef35306c600ac4d357c5d0dccbcbb93a0474"
+  },
+  "scope": "Real smoke archive: 12 honest contexts and 24 mutation calls; five rehashed forgery classes rejected. Not a formal-run security certificate.",
+  "prior_failure": "Standalone archive decoder lacked the isolated py_ecc path; loader fixed before this passing test invocation. Original smoke files unchanged."
+}

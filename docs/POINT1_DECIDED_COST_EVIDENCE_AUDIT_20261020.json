@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-20T22:40:25.110087+08:00",
+  "kind": "Archive-and-analysis receipt, not a security-equivalence certificate",
+  "status": "passed",
+  "batch": {
+    "path": "E:\\hvsa\\results\\point1_compare\\20261020-212351-556444_decided_minimum_continuation\\batch.json",
+    "sha256": "cce46db69060fb4656d6e50e58349addb9254dd0ad8b49a56b2efddb6dc2d696"
+  },
+  "counts": {
+    "executed_rounds": 156,
+    "warmup_rounds": 36,
+    "measured_rounds": 120,
+    "preserved_rounds": 78,
+    "newly_executed_rounds": 78
+  },
+  "verification_scope": "Batch and analysis each ran strict validate_results. This receipt additionally rechecks manifest/output hashes, valid/count fields, current critical sources, and all final analysis-output hashes without rerunning protocols.",
+  "jobs": [
+    {
+      "name": "n20_d1000",
+      "path": "E:\\hvsa\\results\\point1_compare\\20261019-185804-129508_decided_baseline_cost",
+      "manifest_sha256": "84b59a7a5f86e86cd3ddf1eb2a1a4cac9747e8febfc5db16478056e17b6891fc",
+      "executed_rounds": 39,
+      "warmup_rounds": 9,
+      "measured_rounds": 30,
+      "valid_rounds": 39,
+      "preserved": true
+    },
+    {
+      "name": "n20_d7850",
+      "path": "E:\\hvsa\\results\\point1_compare\\20261019-191008-839960_decided_baseline_cost",
+      "manifest_sha256": "1e33c8530ea8930d63418aa60391cf23c5436d24005ec7b54a620b9a5cbd6448",
+      "executed_rounds": 39,
+      "warmup_rounds": 9,
+      "measured_rounds": 30,
+      "valid_rounds": 39,
+      "preserved": true
+    },
+    {
+      "name": "n50_d1000",
+      "path": "E:\\hvsa\\results\\point1_compare\\20261020-212353-507188_decided_baseline_cost",
+      "manifest_sha256": "783a449d97105a3a7cf48e8bed86fceecaa7b84e52fa24c5a59177b698a1491c",
+      "executed_rounds": 39,
+      "warmup_rounds": 9,
+      "measured_rounds": 30,
+      "valid_rounds": 39,
+      "preserved": false
+    },
+    {
+      "name": "n50_d7850",
+      "path": "E:\\hvsa\\results\\point1_compare\\20261020-215033-822800_decided_baseline_cost",
+      "manifest_sha256": "db2b8a63ef9da569c2b60f79e514b5b68a480d7ffb938873aa24c9ca0945d01b",
+      "executed_rounds": 39,
+      "warmup_rounds": 9,
+      "measured_rounds": 30,
+      "valid_rounds": 39,
+      "preserved": false
+    }
+  ],
+  "analysis_manifest": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261020_decided_minimum_matrix_v2\\analysis_manifest.json",
+    "sha256": "5c2853640b83708fc02e2536f25462021cef7ca5b054da23a2825e38ef929a91"
+  },
+  "report": {
+    "path": "E:\\hvsa\\docs\\POINT1_DECIDED_MINIMUM_COST_COMPARISON_20261020.md",
+    "sha256": "21d5ef00b12fe1c0f12d039e9f5c1d463dd548b73e7d713809bfda7f865b5ef1"
+  },
+  "visual_review": {
+    "path": "E:\\hvsa\\figures\\point1_compare\\20261020_decided_minimum_matrix_v2\\visual_review.json",
+    "sha256": "d7c52ddade081f47cbfb1da0f05d075f86d86af1fec2722fc8056ce2ca41ec80"
+  },
+  "limitations": [
+    "Declared GPVO/VLMRS implementations, not author code or proven paper equivalence.",
+    "No new production-parameter full E5, paired multi-round or dropout matrix in this cost phase.",
+    "No SOTA or deployed-latency conclusion."
+  ]
+}

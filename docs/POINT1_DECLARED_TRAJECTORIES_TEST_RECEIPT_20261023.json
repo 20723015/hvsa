@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "tests_passed": 10,
+  "tests_skipped": 0,
+  "duration_seconds": 8.42,
+  "command": "POINT1_TRAJECTORIES_TEST_RUN=<actual smoke archive> D:/Anaconda/python.exe -m pytest tests/test_point1_decided_trajectories.py -q",
+  "actual_archive": "E:\\hvsa\\results\\point1_compare\\20261023-231922-624228_decided_trajectories_smoke",
+  "manifest_sha256": "a4090d6d871f9856fa9fbd2462ae4ead3376e3d590ccebb191dd5a53e60f7f0b",
+  "source_sha256": {
+    "experiments/point1_compare/run_decided_trajectories.py": "cd68e98deda6639b5f16bde7bdb14de15ea7d11966ff3a01beda5f99590aedc3",
+    "experiments/point1_compare/validate_decided_trajectories.py": "95bcc2b34c54ac252e3c226ddbfc7950a6ccf06a36f2e0c7acd118fae1e5ed41",
+    "tests/test_point1_decided_trajectories.py": "9b694f0841bd2c90219a57905c999d03377a2378d112eba9deca83edb907ac98"
+  },
+  "scope": "Design and rehashed evidence rejection; real crypto smoke contains 24 honest full-verification rounds. No claim of protocol security proof."
+}
